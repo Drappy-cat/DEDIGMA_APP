@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { MascotDimas, MascotGita } from "../components/Mascot";
-import { SkyBg } from "../components/SkyBg";
+
 
 interface ProfilScreenProps {
   onBack: () => void;
@@ -19,7 +19,15 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
   }, []);
 
   return (
-    <SkyBg>
+    <div
+      className="h-full flex flex-col overflow-hidden"
+      style={{
+        backgroundImage: "url('/assets/bg-lobby.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
       <ScreenHeader title="Profil Pengembang 👩‍💻" onBack={onBack} />
       <div className="p-4 max-w-md mx-auto space-y-4 overflow-y-auto">
         <div className="bg-white rounded-3xl shadow-lg p-6 text-center border border-blue-100/30">
@@ -61,7 +69,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
           </div>
         </div>
       </div>
-    </SkyBg>
+    </div>
   );
 };
 export default ProfilScreen;

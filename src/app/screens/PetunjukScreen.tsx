@@ -3,7 +3,7 @@ import { HelpCircle } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { MascotDimas, MascotGita } from "../components/Mascot";
-import { SkyBg } from "../components/SkyBg";
+
 
 interface PetunjukScreenProps {
   onBack: () => void;
@@ -36,7 +36,15 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack }) => {
   }, []);
 
   return (
-    <SkyBg>
+    <div
+      className="h-full flex flex-col overflow-hidden"
+      style={{
+        backgroundImage: "url('/assets/bg-lobby.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
       <ScreenHeader title="Petunjuk Penggunaan 📋" onBack={onBack} />
       <div className="p-4 space-y-4 max-w-2xl mx-auto overflow-y-auto">
         <div className="flex gap-4 items-start">
@@ -84,7 +92,7 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack }) => {
           <MascotGita size="sm" />
         </div>
       </div>
-    </SkyBg>
+    </div>
   );
 };
 export default PetunjukScreen;
