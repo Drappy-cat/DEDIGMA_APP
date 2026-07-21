@@ -92,7 +92,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
 
   return (
     <div
-      className="flex flex-col h-screen overflow-hidden"
+      className="flex flex-col h-full overflow-hidden"
       style={{
         backgroundImage: "url('/assets/bg-lobby.png')",
         backgroundSize: "cover",

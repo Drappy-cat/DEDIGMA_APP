@@ -33,7 +33,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
 
   return (
     <div
-      className="min-h-screen flex flex-col overflow-hidden relative select-none"
+      className="h-full flex flex-col overflow-hidden relative select-none"
       style={{
         backgroundImage: "url('/assets/bg-lobby.png')",
         backgroundSize: "cover",

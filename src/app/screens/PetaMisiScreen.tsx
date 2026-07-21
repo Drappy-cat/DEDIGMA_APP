@@ -31,7 +31,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 
   return (
     <div
-      className="h-screen flex flex-col overflow-hidden relative select-none font-['Nunito']"
+      className="h-full flex flex-col overflow-hidden relative select-none font-['Nunito']"
       style={{
         backgroundImage: "url('/assets/map-base.png')",
         backgroundSize: "cover",

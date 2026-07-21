@@ -104,7 +104,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
   if (done) {
     return (
       <div
-        className="min-h-screen flex flex-col items-center justify-center p-6 text-center select-none font-['Nunito']"
+        className="h-full flex flex-col items-center justify-center p-6 text-center select-none font-['Nunito']"
         style={{
           backgroundImage: "url('/assets/bg-lobby.png')",
           backgroundSize: "cover",
@@ -135,7 +135,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
   return (
     <div
-      className="min-h-screen flex flex-col overflow-hidden font-['Nunito']"
+      className="h-full flex flex-col overflow-hidden font-['Nunito']"
       style={{
         backgroundImage: "url('/assets/bg-lobby.png')",
         backgroundSize: "cover",

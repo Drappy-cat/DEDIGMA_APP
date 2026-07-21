@@ -41,7 +41,7 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
   if (stage === "selesai") {
     return (
       <div
-        className="w-full h-screen overflow-hidden flex flex-col"
+        className="w-full h-full overflow-hidden flex flex-col"
         style={{
           backgroundImage: "url('/assets/bg-lobby.png')",
           backgroundSize: "cover",
@@ -60,7 +60,7 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
 
   return (
     <div
-      className="flex flex-col h-screen overflow-hidden select-none"
+      className="flex flex-col h-full overflow-hidden select-none"
       style={{
         backgroundImage: "url('/assets/bg-lobby.png')",
         backgroundSize: "cover",
