@@ -1,0 +1,127 @@
+1. Deskripsi Umum Produk
+Produk yang dikembangkan dalam penelitian ini berupa media
+pembelajaran interaktif berbasis kearifan lokal Magetan yang diberi nama
+DEDIGMA (Detektif Digital Budaya Magetan). Media ini dirancang untuk
+siswa sekolah dasar sebagai sarana belajar yang mengintegrasikan literasi
+digital dan literasi budaya melalui kegiatan eksplorasi, investigasi, dan
+refleksi budaya lokal. DEDIGMA mengangkat tiga kearifan lokal khas
+Magetan, yaitu Larung Sesaji, Nyadaran, dan Ledhug Suro. Ketiga budaya
+tersebut dikemas dalam bentuk petualangan belajar yang menempatkan siswa
+sebagai seorang "detektif budaya" yang bertugas mencari fakta,
+memverifikasi informasi, dan menemukan nilai-nilai budaya yang terkandung
+dalam setiap tradisi. Media ini dikembangkan dengan tampilan visual yang
+menarik menggunakan kombinasi warna biru sebagai representasi teknologi
+dan literasi digital serta cokelat sebagai representasi budaya dan kearifan
+lokal. Selain itu, media dilengkapi dengan dua maskot utama, yaitu Dimas
+dan Gita, yang berperan sebagai pendamping belajar siswa selama
+menggunakan media.
+2. Karakter Maskot DEDIGMA
+a. Dimas (Detektif Digital)
+Dimas merupakan maskot yang mewakili aspek literasi digital
+dalam media DEDIGMA. Karakter ini digambarkan sebagai siswa yang
+cerdas, kritis, dan gemar mencari informasi menggunakan teknologi.
+Adapun peran Dimas sebagai berikut:
+1) Memberikan petunjuk selama pembelajaran.
+2) 3) 4) Membantu siswa menemukan fakta budaya.
+Mengarahkan siswa untuk memverifikasi informasi.
+Mengajarkan cara memilih sumber informasi yang terpercaya.
+5) Nilai Karakter : berpikir kritis, rasa ingin tahu tinggi, bijak
+menggunakan teknologi dan teliti dalam mencari informasi.
+13
+b. Gita (Penjaga Budaya)
+Gita merupakan maskot yang mewakili aspek literasi budaya.
+Karakter ini digambarkan sebagai siswa yang mencintai budaya daerah
+dan bangga terhadap identitas lokal. Peran Gita antara lain:
+1) Mengenalkan budaya Magetan.
+2) 3) Menjelaskan nilai budaya yang terkandung dalam setiap tradisi.
+Mengajak siswa melestarikan budaya daerah.
+4) Nilai Karakter : cinta budaya lokal, menghargai warisan leluhur,
+bangga terhadap identitas daerah dan menjunjung nilai gotong
+royong.
+3. Fitur-Fitur Media DEDIGMA
+a. Halaman Pembuka: Halaman pembuka merupakan tampilan pertama
+yang muncul saat media dijalankan. Terdapat komponen seperti Logo
+DEDIGMA, maskot Dimas dan Gita, ilustrasi budaya Magetan, tombol
+mulai, tombol petunjuk dan tombol profil pengembang. Fungsi dari
+halaman ini memberikan kesan awal yang menarik dan mengenalkan
+identitas media kepada peserta didik.
+b. Petunjuk Penggunaan: Fitur ini berisi panduan penggunaan media agar
+siswa dapat mengoperasikan seluruh fitur dengan mudah. Terdapat
+komponen antara lain: penjelasan fungsi tombol, cara berpindah halaman
+dan cara mengerjakan aktivitas. Fungsi dari halaman ini untuk membantu
+siswa menggunakan media secara mandiri.
+c. Peta Misi Budaya: Peta Misi Budaya merupakan menu utama yang
+menampilkan tiga materi budaya yang akan dipelajari. Isi Misi tersebut
+antara lain: Larung Sesaji, Nyadaran dan Ledhug Suro. Fungsi dari
+halaman ini memberikan gambaran perjalanan belajar yang akan
+dilakukan siswa.
+d. Materi Budaya Misi Larung Sesaji: Materi ini membahas tradisi
+Larung Sesaji yang dilaksanakan masyarakat Magetan di Telaga
+14
+Sarangan. Materi yang Disajikan berupa pengertian Larung Sesaji,
+sejarah singkat, tujuan pelaksanaan dan nilai budaya yang terkandung.
+Media pendukung yang digunakan berupa video budaya Larung Sesaji,
+foto kegiatan, narasi audio dan infografis.
+e. Materi Budaya Misi Larung Sesaji: Materi ini membahas tradisi
+Nyadaran sebagai bentuk penghormatan kepada leluhur. Materi yang
+disajikan berupa pengertian Nyadaran, roses pelaksanaan, makna tradisi.
+Dan nilai budaya yang terkandung. Media pendukung yang digunakan
+berupa anikasi, ilustrasi kegiatan dan video pembelajaran.
+f. Materi Budaya Misi Ledhug Suro: Materi ini membahas tradisi
+Ledhug Suro sebagai perayaan Tahun Baru Jawa di Magetan.
+Materi yang disajikan berupa Sejarah Ledhug Suro, festival budaya,
+makna filosofis dan keunikan tradisi. Media pendukung berupa video
+festival, galeri foto dan narasi interaktif.
+g. Fitur Utama DEDIGMA
+1) Cari Fakta Budaya: Fitur ini mengajak siswa menemukan
+informasi penting dari materi yang telah dipelajari. Aktivitas siswa
+berupa membaca informasi budaya, menemukan fakta utama dan
+menjawab pertanyaan sederhana. Tujuan dari fitur ini melatih
+kemampuan memahami informasi budaya.
+2) Cek Fakta: Cek Fakta merupakan fitur utama DEDIGMA yang
+melatih siswa memverifikasi informasi budaya. Siswa diminta
+memilih informasi yang benar dari beberapa pilihan informasi.
+Contoh Informasi benar dan informasi keliru tentang Larung Sesaji.
+Tujuan dari fitur ini melatih kemampuan berpikir kritis terhadap
+informasi digital.
+3) Analisis Sumber: Fitur ini melatih siswa memilih sumber informasi
+yang terpercaya. Aktivitas siswa berupa membandingkan beberapa
+sumber informasi, seperti: artikel atau berita resmi pemerintah, buku
+budaya dan blog atau akun pribadi. Fitur ini bertujuan melatih
+kemampuan mengevaluasi kualitas informasi.
+15
+4) Detektif Berita: Fitur ini mengajak siswa mengidentifikasi
+informasi fakta dan hoaks terkait budaya. Aktivitas siswa berupa
+Drag and Drop berita ke kolom fakta dan hoaks. Fitur ini
+membiasakan siswa melakukan verifikasi informasi sebelum
+mempercayainya.
+5) Ruang Refleksi: Ruang refleksi digunakan untuk menuliskan hasil
+pemikiran siswa setelah mempelajari budaya Magetan. Pertanyaan
+refleksi berupa apa yang kamu pelajari hari ini? nilai budaya apa
+yang paling menarik? bagaimana cara melestarikan budaya tersebut?
+Tujuan dari fitur ini menanamkan nilai budaya kepada peserta didik.
+6) Tantangan DEDIGMA: Tantangan DEDIGMA merupakan
+permainan edukatif yang menggabungkan seluruh materi budaya dan
+aktivitas literasi digital. Aktivitas siswa berupa menjawab kuis,
+menyelesaikan misi budaya dan mengumpulkan poin. Tujuan dari
+fitur ini mengukur pemahaman siswa dengan cara yang
+menyenangkan.
+7) Lencana DEDIGMA: Sebagai bentuk penghargaan, siswa akan
+memperoleh lencana setelah menyelesaikan misi. Adapun jenis
+lencana yang disematkan sebagai berikut:
+Penjelajah Budaya: Diberikan setelah menyelesaikan satu
+materi budaya.
+Analis Informasi: Diberikan setelah berhasil menyelesaikan
+aktivitas verifikasi informasi.
+Detektif Digital Budaya Magetan: Diberikan setelah
+menyelesaikan seluruh misi pembelajaran.
+Tujuan dari fitur ini Meningkatkan motivasi dan keterlibatan siswa
+dalam pembelajaran.
+8) Posttest Interkatif: digunakan untuk mengukur tingkat pemahaman
+siswa setelah menggunakan media. Berupa soal pilihan ganda yang
+bertujuan untuk mengukur literasi digital dan literasi budaya siswa.
+9) 16
+Sertifikat Digital: diberikan kepada siswa yang telah menyelesaikan
+seluruh kegiatan pembelajaran. Sertifikat ini bertujuan unutuk
+memberikan apresiasi kepada siswa, menumbuhkan rasa bangga
+terhadap hasil belajar dan memotivasi siswa untuk terus belajar.
