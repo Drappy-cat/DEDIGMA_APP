@@ -1,5 +1,4 @@
 import React from "react";
-import { ChevronLeft, Home, Volume2, VolumeX } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 
 interface ScreenHeaderProps {
@@ -28,40 +27,53 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
   };
 
   return (
-    <div className="bg-gradient-to-r from-blue-700 to-blue-600 text-white px-4 py-3 flex items-center gap-3 shadow-lg select-none">
+    <div className="bg-gradient-to-r from-blue-800 to-blue-700 text-white px-4 py-2.5 flex items-center gap-3 shadow-md select-none border-b border-white/10 relative z-30">
       {onBack && (
         <button
           onClick={handleBack}
-          className="p-1.5 rounded-xl bg-white/20 hover:bg-white/30 transition-colors cursor-pointer"
+          className="p-1 hover:bg-white/10 rounded-xl transition-all cursor-pointer flex items-center justify-center focus:outline-none"
           aria-label="Kembali"
         >
-          <ChevronLeft size={20} />
+          <img
+            src="/assets/btn/exit.png"
+            alt="Kembali"
+            className="w-7 h-7 object-contain active:scale-90 transition-transform"
+          />
         </button>
       )}
 
-      <div className="flex-1">
-        <h2 className="font-['Fredoka'] font-semibold text-lg leading-tight drop-shadow-sm">{title}</h2>
-        {step && <p className="text-blue-200 text-xs font-['Nunito']">{step}</p>}
+      <div className="flex-1 min-w-0">
+        <h2 className="font-['Fredoka'] font-bold text-base leading-tight drop-shadow-sm truncate">{title}</h2>
+        {step && <p className="text-blue-200 text-[10px] font-['Nunito'] font-semibold leading-none mt-0.5">{step}</p>}
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
+        {/* Custom Speaker volume toggle */}
         <button
           onClick={handleVolumeToggle}
-          className={`p-1.5 rounded-xl transition-all cursor-pointer ${
-            audioEnabled ? "bg-white/20 hover:bg-white/30 text-white" : "bg-red-500/20 hover:bg-red-500/30 text-red-200"
-          }`}
+          className="p-1 hover:bg-white/10 rounded-xl transition-all cursor-pointer flex items-center justify-center focus:outline-none"
           aria-label={audioEnabled ? "Matikan Suara" : "Nyalakan Suara"}
         >
-          {audioEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+          <img
+            src="/assets/btn/speaker.png"
+            alt="Suara"
+            className={`w-7 h-7 object-contain active:scale-90 transition-all ${
+              audioEnabled ? "" : "opacity-40 filter grayscale scale-95"
+            }`}
+          />
         </button>
 
         {onHome && (
           <button
             onClick={handleHome}
-            className="p-1.5 rounded-xl bg-white/20 hover:bg-white/30 transition-colors cursor-pointer"
+            className="p-1 hover:bg-white/10 rounded-xl transition-all cursor-pointer flex items-center justify-center focus:outline-none"
             aria-label="Beranda"
           >
-            <Home size={18} />
+            <img
+              src="/assets/btn/home.png"
+              alt="Beranda"
+              className="w-7 h-7 object-contain active:scale-90 transition-transform"
+            />
           </button>
         )}
       </div>
