@@ -7,12 +7,16 @@ interface MascotProps {
 }
 
 export const MascotDimas: React.FC<MascotProps> = ({ size = "md", animate = true }) => {
-  const s = size === "sm" ? "text-4xl" : size === "lg" ? "text-8xl" : "text-6xl";
+  const sizeClasses = {
+    sm: "w-14 h-14",
+    md: "w-28 h-28",
+    lg: "w-44 h-44"
+  };
 
   return (
     <motion.div
-      className="flex flex-col items-center gap-0.5 select-none"
-      whileHover={animate ? { scale: 1.1, y: -4 } : {}}
+      className="flex flex-col items-center select-none"
+      whileHover={animate ? { scale: 1.05, y: -4 } : {}}
       animate={
         animate
           ? {
@@ -26,8 +30,12 @@ export const MascotDimas: React.FC<MascotProps> = ({ size = "md", animate = true
           : {}
       }
     >
-      <span className={`${s} filter drop-shadow`}>🧑‍💻</span>
-      <span className="text-xs font-['Fredoka'] font-semibold text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full shadow-sm">
+      <img
+        src="/assets/dimas-char.png"
+        alt="Dimas Mascot"
+        className={`${sizeClasses[size]} object-contain filter drop-shadow-md`}
+      />
+      <span className="text-[10px] font-['Fredoka'] font-bold text-blue-600 bg-blue-100 px-2.5 py-0.5 rounded-full shadow-sm mt-1">
         Dimas
       </span>
     </motion.div>
@@ -35,12 +43,16 @@ export const MascotDimas: React.FC<MascotProps> = ({ size = "md", animate = true
 };
 
 export const MascotGita: React.FC<MascotProps> = ({ size = "md", animate = true }) => {
-  const s = size === "sm" ? "text-4xl" : size === "lg" ? "text-8xl" : "text-6xl";
+  const sizeClasses = {
+    sm: "w-14 h-14",
+    md: "w-28 h-28",
+    lg: "w-44 h-44"
+  };
 
   return (
     <motion.div
-      className="flex flex-col items-center gap-0.5 select-none"
-      whileHover={animate ? { scale: 1.1, y: -4 } : {}}
+      className="flex flex-col items-center select-none"
+      whileHover={animate ? { scale: 1.05, y: -4 } : {}}
       animate={
         animate
           ? {
@@ -55,8 +67,12 @@ export const MascotGita: React.FC<MascotProps> = ({ size = "md", animate = true 
           : {}
       }
     >
-      <span className={`${s} filter drop-shadow`}>👧</span>
-      <span className="text-xs font-['Fredoka'] font-semibold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full shadow-sm">
+      <img
+        src="/assets/gita-char.png"
+        alt="Gita Mascot"
+        className={`${sizeClasses[size]} object-contain filter drop-shadow-md`}
+      />
+      <span className="text-[10px] font-['Fredoka'] font-bold text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full shadow-sm mt-1">
         Gita
       </span>
     </motion.div>

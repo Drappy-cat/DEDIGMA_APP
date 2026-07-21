@@ -77,15 +77,12 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
       </div>
 
       {/* Sticky footer action button */}
-      <div className="p-4 bg-white border-t border-blue-100 flex-shrink-0">
+      <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
         <Btn
           onClick={handleNext}
-          variant="green"
+          variant="lanjut"
           disabled={!canContinue}
-          className="w-full text-lg justify-center py-3 font-bold"
-        >
-          Selesai Refleksi <ChevronRight size={20} />
-        </Btn>
+        />
         {!canContinue && (
           <p className="text-center text-[10px] text-gray-400 font-semibold mt-1.5 select-none">
             Isi seluruh pertanyaan dengan jawaban minimal 5 karakter untuk melanjutkan.

@@ -58,9 +58,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
       </div>
 
       {/* Action button */}
-      <Btn onClick={onContinue} variant="amber" className="w-full max-w-xs text-xl py-4 justify-center shadow-lg font-bold">
-        Kembali ke Peta Misi 🗺️
-      </Btn>
+      <Btn onClick={onContinue} variant="kembali" />
     </div>
   );
 };

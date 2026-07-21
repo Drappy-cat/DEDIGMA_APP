@@ -7,6 +7,7 @@ export type Screen =
   | "profil"
   | "peta-misi"
   | "mission-flow"
+  | "posttest"
   | "lencana"
   | "sertifikat"
   | "guru-dashboard";

@@ -165,20 +165,15 @@ export const AnalisisSumberScreen: React.FC<AnalisisSumberScreenProps> = ({ miss
       </div>
 
       {/* Sticky footer action button */}
-      <div className="p-4 bg-white border-t border-blue-100 flex-shrink-0">
+      <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
         {!checked ? (
           <Btn
             onClick={handleCheck}
-            variant="primary"
+            variant="periksa"
             disabled={!allAnswered}
-            className="w-full text-lg justify-center py-3 font-bold"
-          >
-            Cek Hasil ✅
-          </Btn>
+          />
         ) : (
-          <Btn onClick={handleNext} variant="green" className="w-full text-lg justify-center py-3 font-bold">
-            Lanjut <ChevronRight size={20} />
-          </Btn>
+          <Btn onClick={handleNext} variant="lanjut" />
         )}
       </div>
     </div>

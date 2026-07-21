@@ -91,7 +91,15 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
   };
 
   return (
-    <SkyBg className="flex flex-col h-screen overflow-hidden">
+    <div
+      className="flex flex-col h-screen overflow-hidden"
+      style={{
+        backgroundImage: "url('/assets/bg-lobby.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
       <ScreenHeader title="Sertifikat Digital 🎓" onBack={onBack} />
 
       <div className="flex-1 overflow-y-auto p-4 flex flex-col items-center gap-4">
@@ -238,12 +246,12 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
               </>
             )}
           </Btn>
-          <Btn onClick={onBack} variant="ghost" className="w-full py-2.5 justify-center" disabled={isGenerating}>
-            Kembali ke Beranda
-          </Btn>
+          <div className="flex justify-center">
+            <Btn onClick={onBack} variant="kembali" disabled={isGenerating} />
+          </div>
         </div>
       </div>
-    </SkyBg>
+    </div>
   );
 };
 export default SertifikatScreen;

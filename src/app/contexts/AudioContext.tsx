@@ -55,17 +55,23 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     stopNarrator();
     if (!audioEnabled) return;
 
-    if (mp3Path) {
-      // Try playing physical MP3 recording
-      const audio = new Audio(mp3Path);
-      currentAudioRef.current = audio;
-      audio.play().catch((err) => {
-        console.warn(`Could not play MP3 narration at ${mp3Path}, falling back to TTS.`, err);
-        playTTS(text);
-      });
-    } else {
+    // Convert the first 20 characters of text to a safe filename slug
+    const cleanSlug = text
+      .toLowerCase()
+      .slice(0, 20)
+      .replace(/[^a-z0-9]/g, "_")
+      .replace(/_+/g, "_");
+    
+    const fallbackPath = `/audio/narasi/${cleanSlug}.mp3`;
+    const targetPath = mp3Path || fallbackPath;
+
+    const audio = new Audio(targetPath);
+    currentAudioRef.current = audio;
+    
+    audio.play().catch(() => {
+      // If the MP3 file is not found or fails to load, gracefully fall back to Indonesian TTS
       playTTS(text);
-    }
+    });
   };
 
   const playTTS = (text: string) => {

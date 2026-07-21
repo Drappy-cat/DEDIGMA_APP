@@ -129,15 +129,11 @@ export const CariFaktaScreen: React.FC<CariFaktaScreenProps> = ({ mission, onNex
       </div>
 
       {/* Action Footer */}
-      <div className="p-4 bg-white border-t border-blue-100 flex gap-3 flex-shrink-0">
+      <div className="p-4 bg-transparent flex gap-3 flex-shrink-0 justify-center">
         {!results ? (
-          <Btn onClick={checkAnswers} variant="primary" disabled={!allFilled} className="flex-1 text-lg justify-center font-bold">
-            Cek Jawaban ✅
-          </Btn>
+          <Btn onClick={checkAnswers} variant="periksa" disabled={!allFilled} />
         ) : (
-          <Btn onClick={handleNext} variant="green" className="flex-1 text-lg justify-center font-bold">
-            Lanjut <ChevronRight size={20} />
-          </Btn>
+          <Btn onClick={handleNext} variant="lanjut" />
         )}
       </div>
     </div>

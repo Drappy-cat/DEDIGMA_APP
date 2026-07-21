@@ -293,10 +293,8 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext }) =
       </div>
 
       {/* Sticky footer action button */}
-      <div className="p-4 bg-white border-t border-blue-100 flex-shrink-0">
-        <Btn onClick={handleNext} variant="primary" className="w-full text-lg justify-center py-3 font-bold">
-          Mulai Aktivitas <ChevronRight size={20} />
-        </Btn>
+      <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
+        <Btn onClick={handleNext} variant="lanjut" />
       </div>
 
       {/* Lightbox for Gallery */}

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { MissionStage, Mission } from "../../types";
 import { MISSIONS, STAGE_ORDER, STAGE_LABELS } from "../../data/missions";
 import { ScreenHeader } from "../../components/ScreenHeader";
-import { SkyBg } from "../../components/SkyBg";
 
 // Sub-screens imports
 import { MateriScreen } from "./MateriScreen";
@@ -41,18 +40,34 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
 
   if (stage === "selesai") {
     return (
-      <SkyBg>
+      <div
+        className="w-full h-screen overflow-hidden flex flex-col"
+        style={{
+          backgroundImage: "url('/assets/bg-lobby.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat"
+        }}
+      >
         <MisiSelesaiScreen
           mission={mission}
           totalScore={avgScore}
           onContinue={() => onComplete(missionId, avgScore)}
         />
-      </SkyBg>
+      </div>
     );
   }
 
   return (
-    <SkyBg className="flex flex-col h-screen overflow-hidden select-none">
+    <div
+      className="flex flex-col h-screen overflow-hidden select-none"
+      style={{
+        backgroundImage: "url('/assets/bg-lobby.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
       {/* Header */}
       <ScreenHeader
         title={`Misi ${missionId}: ${mission.name}`}
@@ -62,7 +77,7 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
       />
 
       {/* Horizontal Stage Progress Bar dots */}
-      <div className="bg-white px-4 py-2 flex gap-1 select-none flex-shrink-0">
+      <div className="bg-white/90 backdrop-blur-sm px-4 py-2 flex gap-1 select-none flex-shrink-0 border-b border-gray-200">
         {STAGE_ORDER.slice(0, -1).map((s, i) => (
           <div
             key={s}
@@ -73,17 +88,27 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
         ))}
       </div>
 
-      {/* Active Stage Body Container */}
-      <div className="flex-1 overflow-hidden flex flex-col bg-white/80 backdrop-blur-sm mx-2 my-2 rounded-3xl shadow-xl border border-white/20">
-        {stage === "materi" && <MateriScreen mission={mission} onNext={() => advance()} />}
-        {stage === "cari-fakta" && <CariFaktaScreen mission={mission} onNext={advance} />}
-        {stage === "cek-fakta" && <CekFaktaScreen mission={mission} onNext={advance} />}
-        {stage === "analisis-sumber" && <AnalisisSumberScreen mission={mission} onNext={advance} />}
-        {stage === "detektif-berita" && <DetektifBeritaScreen mission={mission} onNext={advance} />}
-        {stage === "ruang-refleksi" && <RuangRefleksiScreen mission={mission} onNext={() => advance()} />}
-        {stage === "tantangan" && <TantanganScreen mission={mission} onFinish={(s) => advance(s)} />}
+      {/* Active Stage Body Container with custom border graphics */}
+      <div
+        className="flex-1 overflow-hidden flex flex-col mx-3 my-3 p-6 shadow-2xl relative z-10"
+        style={{
+          backgroundImage: "url('/assets/content-bg.png')",
+          backgroundSize: "100% 100%",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "transparent"
+        }}
+      >
+        <div className="flex-1 overflow-hidden h-full">
+          {stage === "materi" && <MateriScreen mission={mission} onNext={() => advance()} />}
+          {stage === "cari-fakta" && <CariFaktaScreen mission={mission} onNext={advance} />}
+          {stage === "cek-fakta" && <CekFaktaScreen mission={mission} onNext={advance} />}
+          {stage === "analisis-sumber" && <AnalisisSumberScreen mission={mission} onNext={advance} />}
+          {stage === "detektif-berita" && <DetektifBeritaScreen mission={mission} onNext={advance} />}
+          {stage === "ruang-refleksi" && <RuangRefleksiScreen mission={mission} onNext={() => advance()} />}
+          {stage === "tantangan" && <TantanganScreen mission={mission} onFinish={(s) => advance(s)} />}
+        </div>
       </div>
-    </SkyBg>
+    </div>
   );
 };
 export default MissionFlow;

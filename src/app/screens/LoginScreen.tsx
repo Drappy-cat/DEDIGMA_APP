@@ -3,7 +3,6 @@ import { motion } from "motion/react";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { Btn } from "../components/Btn";
-import { SkyBg } from "../components/SkyBg";
 import { Role } from "../types";
 
 export const LoginScreen: React.FC = () => {
@@ -53,7 +52,6 @@ export const LoginScreen: React.FC = () => {
   };
 
   const handleGoogleLogin = () => {
-    // Mock login with Google
     setError("");
     if (role === "guru") {
       loginGuru("Guru Google Demo", "guru.google@dedigma.edu");
@@ -63,19 +61,36 @@ export const LoginScreen: React.FC = () => {
   };
 
   return (
-    <SkyBg className="flex items-center justify-center p-4">
+    <div
+      className="min-h-screen flex items-center justify-center p-4 relative"
+      style={{
+        backgroundImage: "url('/assets/bg-login.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/30 z-0" />
+
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="w-full max-w-sm"
+        className="w-full max-w-sm relative z-10"
       >
         <div className="text-center mb-6 select-none">
-          <div className="text-6xl mb-2">🔍</div>
-          <h1 className="font-['Fredoka'] font-bold text-4xl text-white drop-shadow-lg">DEDIGMA</h1>
-          <p className="font-['Nunito'] text-blue-100 text-sm mt-1">Detektif Digital Budaya Magetan</p>
+          <img
+            src="/assets/logo.png"
+            alt="DEDIGMA Logo"
+            className="w-32 h-32 mx-auto object-contain filter drop-shadow-lg mb-2"
+          />
+          <h1 className="font-['Fredoka'] font-bold text-4xl text-white drop-shadow-md">DEDIGMA</h1>
+          <p className="font-['Nunito'] text-yellow-100 text-sm font-semibold mt-1 drop-shadow-sm">
+            Detektif Digital Budaya Magetan
+          </p>
         </div>
 
-        <div className="bg-white rounded-3xl shadow-2xl p-6 space-y-4">
+        <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-6 space-y-4 border border-white/25">
           <h2 className="font-['Fredoka'] font-semibold text-xl text-blue-800 text-center">Masuk sebagai</h2>
 
           <div className="grid grid-cols-2 gap-3">
@@ -92,10 +107,10 @@ export const LoginScreen: React.FC = () => {
                   ${
                     role === r
                       ? "border-blue-500 bg-blue-50 text-blue-700 scale-105 shadow-md"
-                      : "border-gray-200 text-gray-500 hover:border-blue-300 bg-white"
+                      : "border-gray-250 text-gray-500 hover:border-blue-300 bg-white"
                   }`}
               >
-                <span className="text-3xl">{r === "siswa" ? "🧒" : "👩‍🏫"}</span>
+                <span className="text-3xl select-none">{r === "siswa" ? "🧒" : "👩‍🏫"}</span>
                 {r === "siswa" ? "Siswa" : "Guru"}
               </button>
             ))}
@@ -151,7 +166,7 @@ export const LoginScreen: React.FC = () => {
               )}
 
               {error && (
-                <p className="text-red-500 text-sm font-['Nunito'] text-center bg-red-50 rounded-xl py-2 font-semibold">
+                <p className="text-red-500 text-sm font-['Nunito'] text-center bg-red-50 rounded-xl py-2 font-semibold select-none">
                   {error}
                 </p>
               )}
@@ -160,7 +175,7 @@ export const LoginScreen: React.FC = () => {
                 Masuk 🚀
               </Btn>
 
-              <div className="relative flex py-2 items-center">
+              <div className="relative flex py-1 items-center select-none">
                 <div className="flex-grow border-t border-gray-200"></div>
                 <span className="flex-shrink mx-4 text-gray-400 text-xs font-semibold">atau masuk dengan</span>
                 <div className="flex-grow border-t border-gray-200"></div>
@@ -169,9 +184,9 @@ export const LoginScreen: React.FC = () => {
               <button
                 type="button"
                 onClick={handleGoogleLogin}
-                className="w-full border-2 border-gray-200 hover:border-blue-300 font-['Fredoka'] font-semibold rounded-2xl px-5 py-2.5 transition-all text-gray-600 hover:bg-blue-50 text-sm flex items-center justify-center gap-2 cursor-pointer shadow-sm"
+                className="w-full border-2 border-gray-200 hover:border-blue-300 font-['Fredoka'] font-semibold rounded-2xl px-5 py-2.5 transition-all text-gray-600 hover:bg-blue-50 text-sm flex items-center justify-center gap-2 cursor-pointer shadow-sm bg-white"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 select-none" viewBox="0 0 24 24">
                   <path
                     fill="#EA4335"
                     d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114A5.767 5.767 0 0 1 8.2 12.75a5.767 5.767 0 0 1 5.79-5.765c1.498 0 2.861.56 3.9 1.484l3.182-3.183a10.05 10.05 0 0 0-7.082-2.7C6.183 2.585 2 6.768 2 11.916 2 17.062 6.183 21.246 11.99 21.246c5.787 0 9.77-3.96 9.77-9.743 0-.616-.065-1.2-.178-1.764l-9.342.046Z"
@@ -183,7 +198,7 @@ export const LoginScreen: React.FC = () => {
           )}
         </div>
       </motion.div>
-    </SkyBg>
+    </div>
   );
 };
 export default LoginScreen;
