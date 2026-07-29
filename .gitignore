@@ -12,6 +12,13 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Dokumen Markdown (.md kecuali README.md)
+*.md
+!README.md
+!readme.md
+!**/README.md
+!**/readme.md
+
 # IDE & Editor
 .vscode/*
 !.vscode/extensions.json
