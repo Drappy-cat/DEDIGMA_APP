@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
+import { AnimatePresence, motion } from "motion/react";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { AudioProvider, useAudio } from "./contexts/AudioContext";
-import { Screen, Role } from "./types";
+import { Screen, Role, GameState, createDefaultGameState, calculateBadges } from "./types";
 import { Btn } from "./components/Btn";
+import { TANTANGAN_QUESTIONS } from "./data/missions";
 
 // Screens imports
 import { LoginScreen } from "./screens/LoginScreen";
 import { SplashScreen } from "./screens/SplashScreen";
 import { PetunjukScreen } from "./screens/PetunjukScreen";
+import { TujuanScreen } from "./screens/TujuanScreen";
 import { ProfilScreen } from "./screens/ProfilScreen";
 import { PetaMisiScreen } from "./screens/PetaMisiScreen";
 import { PosttestScreen } from "./screens/PosttestScreen";
@@ -15,6 +18,21 @@ import { LencanaScreen } from "./screens/LencanaScreen";
 import { SertifikatScreen } from "./screens/SertifikatScreen";
 import { GuruDashboardScreen } from "./screens/GuruDashboardScreen";
 import { MissionFlow } from "./screens/mission/MissionFlow";
+
+// Helper: Load/Save GameState from localStorage
+function loadGameState(): GameState {
+  try {
+    const saved = localStorage.getItem("dedigma_game_state");
+    if (saved) return JSON.parse(saved);
+  } catch (e) {
+    console.error("Failed to parse game state", e);
+  }
+  return createDefaultGameState();
+}
+
+function saveGameState(state: GameState) {
+  localStorage.setItem("dedigma_game_state", JSON.stringify(state));
+}
 
 function DemoPanel({
   screen,
@@ -165,6 +183,7 @@ function AppContent() {
   const [completedMissions, setCompletedMissions] = useState<Set<number>>(new Set());
   const [missionScores, setMissionScores] = useState<Record<number, number>>({});
   const [posttestScore, setPosttestScore] = useState<number | null>(null);
+  const [gameState, setGameState] = useState<GameState>(loadGameState());
 
   // Sync screen with auth state
   useEffect(() => {
@@ -173,32 +192,30 @@ function AppContent() {
       setCompletedMissions(new Set());
       setMissionScores({});
       setPosttestScore(null);
+      setGameState(createDefaultGameState());
     } else {
       if (role === "guru") {
         setScreen("guru-dashboard");
       } else {
         setScreen("splash");
 
-        // Load student progress from localStorage
-        const savedMissions = localStorage.getItem("dedigma_completed_missions");
-        const savedScores = localStorage.getItem("dedigma_mission_scores");
-        const savedPosttest = localStorage.getItem("dedigma_posttest_score");
-        if (savedMissions) {
-          try {
-            setCompletedMissions(new Set(JSON.parse(savedMissions)));
-          } catch (e) {
-            console.error("Failed to parse saved missions", e);
+        // Load student progress from GameState
+        const loaded = loadGameState();
+        setGameState(loaded);
+
+        const completed = new Set<number>();
+        const scores: Record<number, number> = {};
+        for (const [idStr, progress] of Object.entries(loaded.missions)) {
+          const id = Number(idStr);
+          if (progress.completed) {
+            completed.add(id);
+            scores[id] = progress.activityScore;
           }
         }
-        if (savedScores) {
-          try {
-            setMissionScores(JSON.parse(savedScores));
-          } catch (e) {
-            console.error("Failed to parse saved scores", e);
-          }
-        }
-        if (savedPosttest) {
-          setPosttestScore(Number(savedPosttest));
+        setCompletedMissions(completed);
+        setMissionScores(scores);
+        if (loaded.posttest.score !== null) {
+          setPosttestScore(loaded.posttest.score);
         }
       }
     }
@@ -212,14 +229,40 @@ function AppContent() {
   const completeMission = (id: number, score: number) => {
     setCompletedMissions((prev) => {
       const next = new Set([...prev, id]);
-      localStorage.setItem("dedigma_completed_missions", JSON.stringify(Array.from(next)));
       return next;
     });
     setMissionScores((prev) => {
       const next = { ...prev, [id]: score };
-      localStorage.setItem("dedigma_mission_scores", JSON.stringify(next));
       return next;
     });
+
+    // Update GameState
+    setGameState((prev) => {
+      const updated = {
+        ...prev,
+        missions: {
+          ...prev.missions,
+          [id]: {
+            ...prev.missions[id],
+            activityScore: score,
+            completed: true
+          }
+        }
+      };
+      // Calculate badges
+      const allScores: Record<number, number> = {};
+      for (const [key, m] of Object.entries(updated.missions)) {
+        if (m.completed) allScores[Number(key)] = m.activityScore;
+      }
+      updated.badges = calculateBadges(allScores);
+      updated.totalScore = Object.values(allScores).length > 0
+        ? Math.round(Object.values(allScores).reduce((a, b) => a + b, 0) / Object.values(allScores).length)
+        : 0;
+
+      saveGameState(updated);
+      return updated;
+    });
+
     setScreen("peta-misi");
   };
 
@@ -248,13 +291,19 @@ function AppContent() {
       <div className="w-full max-w-5xl min-h-screen md:min-h-0 md:h-[700px] bg-white relative overflow-hidden shadow-2xl md:rounded-3xl border border-white/10 flex flex-col">
         {screen === "splash" && (
           <SplashScreen
-            onMulai={() => navigateTo("peta-misi")}
+            onMulai={() => navigateTo("petunjuk")}
             onPetunjuk={() => navigateTo("petunjuk")}
             onProfil={() => navigateTo("profil")}
           />
         )}
 
-        {screen === "petunjuk" && <PetunjukScreen onBack={() => navigateTo("splash")} />}
+        {screen === "petunjuk" && <PetunjukScreen onBack={() => navigateTo("tujuan")} />}
+        {screen === "tujuan" && (
+          <TujuanScreen
+            onNext={() => navigateTo("peta-misi")}
+            onBack={() => navigateTo("petunjuk")}
+          />
+        )}
         {screen === "profil" && <ProfilScreen onBack={() => navigateTo("splash")} />}
 
         {screen === "peta-misi" && (
@@ -293,7 +342,14 @@ function AppContent() {
           <PosttestScreen
             onComplete={(score) => {
               setPosttestScore(score);
-              localStorage.setItem("dedigma_posttest_score", String(score));
+              setGameState((prev) => {
+                const updated = {
+                  ...prev,
+                  posttest: { ...prev.posttest, score }
+                };
+                saveGameState(updated);
+                return updated;
+              });
               navigateTo("lencana");
             }}
             onBack={() => navigateTo("peta-misi")}

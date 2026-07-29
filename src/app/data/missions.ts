@@ -1,4 +1,4 @@
-import { Mission, Student, MissionStage } from "../types";
+import { Mission, Student, MissionStage, ActivityType } from "../types";
 
 export const MISSIONS: Mission[] = [
   {
@@ -11,6 +11,11 @@ export const MISSIONS: Mission[] = [
     textColor: "text-blue-700",
     borderColor: "border-blue-300",
     desc: "Tradisi ritual syukur di Telaga Sarangan yang dilakukan masyarakat Magetan setiap tahun.",
+    activityType: "cek-fakta" as ActivityType,
+    orientasi: {
+      narasi: "Selamat datang di Misi 1! Kali ini kita akan menjelajahi tradisi Larung Sesaji di Telaga Sarangan, Magetan. Tradisi ini sudah berlangsung ratusan tahun sebagai wujud syukur masyarakat kepada Tuhan Yang Maha Esa. Siapkan dirimu untuk menjadi Detektif Budaya!",
+      videoQuery: "larung+sesaji+telaga+sarangan+magetan"
+    },
     content: {
       pengertian:
         "Larung Sesaji adalah tradisi ritual budaya masyarakat Jawa yang dilakukan di perairan atau danau sebagai wujud syukur kepada Tuhan Yang Maha Esa. Di Magetan, tradisi ini dilaksanakan setiap tahun di Telaga Sarangan dengan cara melarung (menghanyutkan) sesaji ke tengah danau.",
@@ -102,6 +107,11 @@ export const MISSIONS: Mission[] = [
     textColor: "text-emerald-700",
     borderColor: "border-emerald-300",
     desc: "Tradisi ziarah kubur dan penghormatan kepada leluhur masyarakat Magetan.",
+    activityType: "analisis-sumber" as ActivityType,
+    orientasi: {
+      narasi: "Selamat datang di Misi 2! Kita akan mengenal tradisi Nyadaran — ziarah kubur dan penghormatan kepada para leluhur yang dilakukan oleh masyarakat Magetan. Di misi ini, kamu akan berlatih menganalisis sumber informasi. Siap?",
+      videoQuery: "tradisi+nyadaran+jawa+menghormati+leluhur"
+    },
     content: {
       pengertian:
         "Nyadaran adalah tradisi ziarah kubur dan membersihkan makam leluhur yang dilakukan masyarakat Jawa, termasuk di Magetan. Tradisi ini dilaksanakan sebagai bentuk penghormatan dan doa kepada arwah para leluhur yang telah mendahului.",
@@ -193,6 +203,11 @@ export const MISSIONS: Mission[] = [
     textColor: "text-orange-700",
     borderColor: "border-orange-300",
     desc: "Festival perayaan Tahun Baru Jawa yang meriah dengan iringan bedug dan kesenian tradisional.",
+    activityType: "detektif-berita" as ActivityType,
+    orientasi: {
+      narasi: "Selamat datang di Misi 3! Kali ini kita akan menyelami tradisi Ledhug Suro — perayaan Tahun Baru Jawa yang meriah di Magetan. Di misi ini, kamu akan berperan sebagai Detektif Berita! Seret kartu berita ke kolom Fakta atau Hoaks. Ayo mulai!",
+      videoQuery: "ledhug+suro+magetan+tahun+baru+jawa"
+    },
     content: {
       pengertian:
         "Ledhug Suro adalah perayaan Tahun Baru Jawa (1 Muharram/Suro) yang ditandai dengan iringan bunyi ledhug (bedug) dan pertunjukan berbagai kesenian tradisional Jawa. 'Ledhug' berarti bunyi bedug yang dipukul menandai pergantian tahun.",
@@ -293,23 +308,40 @@ export const MOCK_STUDENTS: Student[] = [
 ];
 
 export const STAGE_ORDER: MissionStage[] = [
+  "orientasi",
   "materi",
-  "cari-fakta",
-  "cek-fakta",
-  "analisis-sumber",
-  "detektif-berita",
-  "ruang-refleksi",
-  "tantangan",
+  "aktivitas",
+  "refleksi",
   "selesai"
 ];
 
 export const STAGE_LABELS: Record<MissionStage, string> = {
+  orientasi: "Orientasi",
   materi: "Materi",
-  "cari-fakta": "Cari Fakta",
-  "cek-fakta": "Cek Fakta",
-  "analisis-sumber": "Analisis Sumber",
-  "detektif-berita": "Detektif Berita",
-  "ruang-refleksi": "Ruang Refleksi",
-  tantangan: "Tantangan",
+  aktivitas: "Aktivitas",
+  refleksi: "Refleksi",
   selesai: "Selesai"
 };
+
+// Activity label based on mission type
+export const ACTIVITY_LABELS: Record<string, string> = {
+  "cek-fakta": "Cek Fakta",
+  "analisis-sumber": "Analisis Sumber",
+  "detektif-berita": "Detektif Berita"
+};
+
+// Combined challenge questions from all 3 missions for Scene 17
+export const TANTANGAN_QUESTIONS = [
+  // From Larung Sesaji
+  { soal: "Di mana tradisi Larung Sesaji dilaksanakan?", opsi: ["Pantai Selatan", "Telaga Sarangan", "Waduk Gajah Mungkur", "Sungai Bengawan Solo"], jawaban: 1, misiAsal: 1 },
+  { soal: "Apa makna utama dari tradisi Larung Sesaji?", opsi: ["Mencari ikan", "Mengusir roh jahat", "Wujud syukur kepada Tuhan", "Olahraga air"], jawaban: 2, misiAsal: 1 },
+  { soal: "Nilai budaya apa yang tercermin dalam Larung Sesaji?", opsi: ["Persaingan", "Gotong Royong", "Individualisme", "Keserakahan"], jawaban: 1, misiAsal: 1 },
+  // From Nyadaran
+  { soal: "Apa kegiatan utama dalam tradisi Nyadaran?", opsi: ["Larung sesaji ke danau", "Ziarah & bersihkan makam leluhur", "Pertunjukan wayang", "Lomba lari desa"], jawaban: 1, misiAsal: 2 },
+  { soal: "Kapan biasanya tradisi Nyadaran dilakukan?", opsi: ["Hari kemerdekaan", "Menjelang bulan Ramadan", "Hari raya Natal", "Tahun Baru Masehi"], jawaban: 1, misiAsal: 2 },
+  { soal: "Nilai utama yang paling menonjol dalam Nyadaran adalah...", opsi: ["Persaingan", "Keserakahan", "Hormat kepada leluhur", "Kemewahan"], jawaban: 2, misiAsal: 2 },
+  // From Ledhug Suro
+  { soal: "Apa arti kata 'Ledhug' dalam tradisi Ledhug Suro?", opsi: ["Nama makanan khas", "Bunyi bedug/gendang", "Tarian sakral", "Nama tokoh sejarah"], jawaban: 1, misiAsal: 3 },
+  { soal: "Kapan perayaan Ledhug Suro dilaksanakan?", opsi: ["Tahun Baru Masehi", "1 Muharram/Suro (Tahun Baru Jawa)", "Hari Kartini", "Bulan Ramadan"], jawaban: 1, misiAsal: 3 },
+  { soal: "Apa yang membuat Ledhug Suro menjadi unik di Magetan?", opsi: ["Hanya menampilkan tari modern", "Menggabungkan tradisi Islam dan budaya Jawa", "Hanya diikuti oleh pejabat", "Dilarang untuk umum"], jawaban: 1, misiAsal: 3 }
+];
