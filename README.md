@@ -1,5 +1,5 @@
 
-  # Edukasi Media Pembelajaran App
+  # Edukasi Media Pembelajaran App DEDIGMA
 
   This is a code bundle for Edukasi Media Pembelajaran App. The original project is available at https://www.figma.com/design/cnEbb3juMJgOLIvjnYBFaP/Edukasi-Media-Pembelajaran-App.
 
