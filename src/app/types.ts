@@ -94,6 +94,9 @@ export interface Student {
   skor: number;
   waktu: string;
   tanggal: string;
+  activeMission?: string;
+  activeStage?: string;
+  loginTime?: string;
 }
 
 // Badge system

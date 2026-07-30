@@ -42,16 +42,59 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
     toggleAudio();
   };
 
+  // Generate random glitters / falling stars
+  const glitters = React.useMemo(() => {
+    return Array.from({ length: 30 }).map((_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 50}%`, // Mostly in the sky area
+      size: Math.random() * 3 + 1.5,
+      duration: Math.random() * 2 + 2,
+      delay: Math.random() * 3,
+    }));
+  }, []);
+
   return (
-    <div
-      className="h-full flex flex-col overflow-hidden relative select-none"
-      style={{
-        backgroundImage: "url('/assets/bg-lobby.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat"
-      }}
-    >
+    <div className="h-full flex flex-col overflow-hidden relative select-none">
+      {/* Latar Belakang diletakkan sebagai elemen <img> agar SVG dapat dirender dengan baik */}
+      <img
+        src="/assets/bg-lobby.svg"
+        alt="Background"
+        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+      />
+
+      {/* Efek Bintang / Glitter */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {glitters.map((g) => (
+          <motion.div
+            key={g.id}
+            className="absolute flex items-center justify-center text-white drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]"
+            style={{
+              left: g.left,
+              top: g.top,
+              width: g.size * 3, // Perbesar sedikit untuk bentuk bintang
+              height: g.size * 3,
+            }}
+            animate={{
+              opacity: [0, 1, 0],
+              scale: [0, 1.2, 0],
+              y: [0, Math.random() * 30 + 20],
+              rotate: [0, 180], // Tambahkan efek memutar
+            }}
+            transition={{
+              duration: g.duration,
+              repeat: Infinity,
+              delay: g.delay,
+              ease: "easeInOut",
+            }}
+          >
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+              <path d="M12 0C12 0 12 9.5 17 12C12 14.5 12 24 12 24C12 24 12 14.5 7 12C12 9.5 12 0 12 0Z" />
+            </svg>
+          </motion.div>
+        ))}
+      </div>
+
       {/* Top bar header */}
       <div className="flex justify-between items-center px-4 pt-3 relative z-20 flex-shrink-0">
         <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-3 py-1 shadow border border-white/10">

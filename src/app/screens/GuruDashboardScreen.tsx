@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { LogOut, BarChart2, Users, Download, Award } from "lucide-react";
+import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, Plus } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { MOCK_STUDENTS, MISSIONS } from "../data/missions";
@@ -8,9 +8,30 @@ export const GuruDashboardScreen: React.FC = () => {
   const { userName, logout } = useAuth();
   const { playSFX } = useAudio();
   const [filter, setFilter] = useState("Semua");
+  const [searchQuery, setSearchQuery] = useState("");
   const classes = ["Semua", "5A", "5B", "5C"];
 
-  const filtered = filter === "Semua" ? MOCK_STUDENTS : MOCK_STUDENTS.filter((s) => s.kelas === filter);
+  // Lock state: key is `${kelas}-${missionId}`, value is boolean (true = locked, false = open)
+  const [locks, setLocks] = useState<Record<string, boolean>>({});
+
+  const toggleLock = (kelas: string, missionId: number) => {
+    playSFX("click");
+    setLocks((prev) => {
+      const key = `${kelas}-${missionId}`;
+      return { ...prev, [key]: !prev[key] };
+    });
+  };
+
+  const handleLogout = () => {
+    playSFX("click");
+    logout();
+  };
+
+  const filtered = MOCK_STUDENTS.filter((s) => {
+    const matchClass = filter === "Semua" || s.kelas === filter;
+    const matchSearch = s.nama.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchClass && matchSearch;
+  });
 
   const activeStudents = MOCK_STUDENTS.filter((s) => s.misi1 || s.misi2 || s.misi3).length;
   const completedAll = MOCK_STUDENTS.filter((s) => s.misi1 && s.misi2 && s.misi3).length;
@@ -26,15 +47,13 @@ export const GuruDashboardScreen: React.FC = () => {
     avgScore: avgScore
   };
 
-  const handleLogout = () => {
-    playSFX("click");
-    logout();
-  };
+  // Find students who have an active mission
+  const activeNowStudents = MOCK_STUDENTS.filter((s) => s.activeMission);
 
   const exportCSV = () => {
     playSFX("click");
     const headers = ["No", "Nama Siswa", "Kelas", "Misi 1", "Misi 2", "Misi 3", "Skor", "Durasi", "Tanggal"];
-    const rows = MOCK_STUDENTS.map((s, i) => [
+    const rows = filtered.map((s, i) => [
       i + 1,
       s.nama,
       s.kelas,
@@ -46,7 +65,7 @@ export const GuruDashboardScreen: React.FC = () => {
       s.tanggal
     ]);
 
-    const BOM = "\ufeff"; // Ensures Indonesian characters render correctly in Excel
+    const BOM = "\ufeff";
     const csvContent = [headers, ...rows].map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
     const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
@@ -60,131 +79,162 @@ export const GuruDashboardScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-['Nunito'] select-none">
+    <div className="min-h-screen bg-[#183655] flex flex-col font-['Nunito'] select-none">
       {/* Top Header */}
-      <div className="bg-gradient-to-r from-blue-800 to-blue-700 text-white px-5 py-4 flex items-center justify-between shadow-xl">
+      <div className="px-6 py-4 flex items-center justify-between border-b border-white/10">
         <div className="flex items-center gap-3">
-          <span className="text-3xl filter drop-shadow">🔍</span>
+          <div className="bg-[#EAB308] rounded-full p-2 border-2 border-[#183655] ring-2 ring-[#EAB308]">
+            <span className="text-xl">🔍</span>
+          </div>
           <div>
-            <h1 className="font-['Fredoka'] font-bold text-xl leading-tight">DEDIGMA</h1>
-            <p className="text-blue-200 text-xs font-semibold">Dashboard Guru | Pendidik: {userName}</p>
+            <h1 className="font-['Fredoka'] font-bold text-xl leading-tight text-[#EAB308]">MARKAS DETEKTIF</h1>
+            <p className="text-blue-200 text-xs font-semibold tracking-widest uppercase">DEDIGMA — Panel Guru</p>
           </div>
         </div>
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 bg-white/20 hover:bg-white/30 transition-colors rounded-xl px-3 py-2 text-sm font-semibold cursor-pointer text-white"
-        >
-          <LogOut size={16} /> Keluar
-        </button>
+
+        <div className="hidden md:flex items-center bg-[#1E40AF] px-4 py-2 rounded-full border border-blue-600/50">
+          <span className="mr-2 text-lg">👩‍🏫</span>
+          <span className="text-sm font-semibold text-blue-100">"Selamat bertugas! {activeNowStudents.length} detektif cilik sedang aktif."</span>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            onClick={exportCSV}
+            className="flex items-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] transition-colors rounded-full px-4 py-2 text-sm font-bold cursor-pointer text-[#183655]"
+          >
+            <Download size={16} /> Export CSV
+          </button>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 bg-transparent hover:bg-white/10 border-2 border-white/20 transition-colors rounded-full px-4 py-2 text-sm font-bold cursor-pointer text-white"
+          >
+            <LogOut size={16} /> Keluar
+          </button>
+        </div>
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 p-4 max-w-4xl mx-auto w-full space-y-4 overflow-y-auto">
-        {/* Stats Grid Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            { label: "Total Siswa", value: stats.total, emoji: "👥", color: "from-blue-500 to-blue-600" },
-            { label: "Sudah Aktif", value: stats.active, emoji: "✅", color: "from-green-500 to-emerald-600" },
-            { label: "Selesai Semua", value: stats.selesai, emoji: "🏆", color: "from-amber-500 to-orange-500" },
-            { label: "Rata-rata Skor", value: stats.avgScore, emoji: "⭐", color: "from-purple-500 to-indigo-500" }
-          ].map((s, i) => (
-            <div key={i} className={`bg-gradient-to-br ${s.color} text-white rounded-2xl p-4 shadow-lg`}>
-              <span className="text-2xl filter drop-shadow">{s.emoji}</span>
-              <p className="font-['Fredoka'] font-bold text-3xl mt-1 leading-tight">{s.value}</p>
-              <p className="text-white/80 text-xs font-semibold">{s.label}</p>
+      <div className="flex-1 p-6 max-w-6xl mx-auto w-full space-y-6 overflow-y-auto">
+        
+        {/* Stats Cards (4 Columns) */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#2563EB]">
+            <div className="bg-[#2563EB] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
+              <span>🕵️‍♂️</span> Total Detektif
             </div>
-          ))}
+            <div className="p-4 flex flex-col items-center justify-center text-center">
+              <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.total}</span>
+              <span className="text-[#8B4513]/70 text-sm font-semibold">terdaftar</span>
+            </div>
+          </div>
+
+          <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#16A34A]">
+            <div className="bg-[#16A34A] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
+              <span>⚡</span> Sedang Bertugas
+            </div>
+            <div className="p-4 flex flex-col items-center justify-center text-center">
+              <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{activeNowStudents.length}</span>
+              <span className="text-[#8B4513]/70 text-sm font-semibold">aktif sekarang</span>
+            </div>
+          </div>
+
+          <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#D97706]">
+            <div className="bg-[#D97706] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
+              <span>🏆</span> Misi Tuntas
+            </div>
+            <div className="p-4 flex flex-col items-center justify-center text-center">
+              <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.selesai}</span>
+              <span className="text-[#8B4513]/70 text-sm font-semibold">selesai 3 misi</span>
+            </div>
+          </div>
+
+          <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#EAB308]">
+            <div className="bg-[#EAB308] text-[#8B4513] px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-bold">
+              <span>⭐</span> Rata-rata Skor
+            </div>
+            <div className="p-4 flex flex-col items-center justify-center text-center">
+              <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.avgScore}</span>
+              <span className="text-[#8B4513]/70 text-sm font-semibold">keseluruhan</span>
+            </div>
+          </div>
         </div>
 
-        {/* Filters and Actions */}
-        <div className="bg-white rounded-2xl shadow p-4 flex flex-wrap items-center gap-3 border border-gray-100">
-          <div className="flex items-center gap-2">
-            <Users size={18} className="text-blue-600" />
-            <span className="font-['Fredoka'] font-semibold text-blue-700 text-sm">Filter Kelas:</span>
+        {/* Detektif Sedang Menjalankan Misi */}
+        <div className="bg-[#FDF7E6] rounded-3xl p-5 shadow-lg border-4 border-[#D97706]/20">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-['Fredoka'] font-bold text-xl text-[#8B4513] flex items-center gap-2">
+              <span className="bg-[#10B981] w-3 h-3 rounded-full animate-pulse"></span>
+              Detektif Sedang Menjalankan Misi
+            </h3>
+            <span className="bg-[#D1FAE5] text-[#065F46] font-bold px-3 py-1 rounded-full text-xs border border-[#10B981]">
+              {activeNowStudents.length} aktif
+            </span>
           </div>
-          <div className="flex gap-1.5 flex-wrap">
-            {classes.map((c) => (
-              <button
-                key={c}
-                onClick={() => {
-                  playSFX("click");
-                  setFilter(c);
-                }}
-                className={`px-3 py-1.5 rounded-xl font-['Fredoka'] font-bold text-xs cursor-pointer transition-all
-                  ${
-                    filter === c
-                      ? "bg-blue-600 text-white shadow-md scale-105"
-                      : "bg-blue-50 text-blue-600 hover:bg-blue-100"
-                  }`}
-              >
-                {c}
-              </button>
+          
+          <div className="flex gap-4 overflow-x-auto pb-2">
+            {activeNowStudents.map((s, i) => (
+              <div key={i} className="bg-white border-2 border-emerald-200 rounded-2xl p-3 min-w-[240px] flex items-start gap-3 shadow-sm">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 mt-2 flex-shrink-0"></div>
+                <div>
+                  <h4 className="font-bold text-[#1E293B] text-sm">{s.nama}</h4>
+                  <p className="text-xs font-semibold text-gray-500 mt-0.5">
+                    {s.activeMission === "Misi 1" && "⛵"}
+                    {s.activeMission === "Misi 2" && "🌺"}
+                    {s.activeMission === "Misi 3" && "🥁"}
+                    {" "} {s.activeMission} • <span className="text-orange-500">{s.activeStage}</span> • login {s.loginTime}
+                  </p>
+                </div>
+              </div>
             ))}
-          </div>
-          <div className="ml-auto">
-            <button
-              onClick={exportCSV}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white rounded-xl px-4 py-2 font-['Fredoka'] font-semibold text-xs transition-all shadow cursor-pointer"
-            >
-              <Download size={15} /> Export CSV
-            </button>
+            {activeNowStudents.length === 0 && (
+              <p className="text-gray-500 text-sm italic py-2">Tidak ada detektif yang sedang login.</p>
+            )}
           </div>
         </div>
 
-        {/* Student Table */}
-        <div className="bg-white rounded-2xl shadow overflow-hidden border border-gray-100">
-          <div className="bg-blue-600 text-white px-4 py-3 flex items-center gap-2 select-none">
-            <BarChart2 size={18} />
-            <span className="font-['Fredoka'] font-semibold text-sm">Aktivitas Siswa</span>
-            <span className="ml-auto text-blue-200 text-xs font-semibold">{filtered.length} siswa</span>
-          </div>
+        {/* Lock / Unlock Misi per Kelas */}
+        <div className="bg-[#FDF7E6] rounded-3xl p-5 shadow-lg border-4 border-[#D97706]/20">
+          <h3 className="font-['Fredoka'] font-bold text-xl text-[#8B4513] flex items-center gap-2 mb-4">
+            <span>🔓</span> Lock / Unlock Misi per Kelas
+          </h3>
+          
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full">
               <thead>
-                <tr className="bg-blue-50 border-b border-blue-100 select-none">
-                  {["No", "Nama", "Kelas", "Misi 1", "Misi 2", "Misi 3", "Skor", "Durasi", "Tanggal"].map((h) => (
-                    <th
-                      key={h}
-                      className="px-3 py-2.5 text-left font-['Fredoka'] font-bold text-blue-700 text-xs whitespace-nowrap"
-                    >
-                      {h}
-                    </th>
-                  ))}
+                <tr className="border-b border-[#8B4513]/10">
+                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2 w-24">Kelas</th>
+                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">⛵ Larung Sesaji</th>
+                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">🌺 Nyadaran</th>
+                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">🥁 Ledhug Suro</th>
                 </tr>
               </thead>
               <tbody>
-                {filtered.map((s, i) => (
-                  <tr
-                    key={s.id}
-                    className={`border-b border-gray-100 hover:bg-blue-50/30 transition-colors ${
-                      i % 2 === 0 ? "bg-white" : "bg-gray-50/50"
-                    }`}
-                  >
-                    <td className="px-3 py-2.5 text-gray-400 text-xs select-none">{i + 1}</td>
-                    <td className="px-3 py-2.5 font-semibold text-gray-800">{s.nama}</td>
-                    <td className="px-3 py-2.5">
-                      <span className="bg-blue-100 text-blue-700 font-['Fredoka'] font-bold text-[10px] px-2 py-0.5 rounded-full select-none">
-                        {s.kelas}
+                {["5A", "5B", "5C"].map((cls) => (
+                  <tr key={cls} className="border-b border-[#8B4513]/5 last:border-0">
+                    <td className="py-4 px-2">
+                      <span className="bg-[#1D4ED8] text-white font-bold px-4 py-1.5 rounded-full text-sm">
+                        {cls}
                       </span>
                     </td>
-                    {[s.misi1, s.misi2, s.misi3].map((done, mi) => (
-                      <td key={mi} className="px-3 py-2.5 text-center select-none">
-                        <span className={`text-sm ${done ? "text-green-500 font-bold" : "text-gray-300"}`}>
-                          {done ? "✅" : "○"}
-                        </span>
-                      </td>
-                    ))}
-                    <td className="px-3 py-2.5">
-                      <span
-                        className={`font-['Fredoka'] font-bold text-sm ${
-                          s.skor >= 85 ? "text-green-600" : s.skor >= 70 ? "text-amber-600" : s.skor > 0 ? "text-red-500" : "text-gray-300"
-                        }`}
-                      >
-                        {s.skor > 0 ? s.skor : "-"}
-                      </span>
-                    </td>
-                    <td className="px-3 py-2.5 text-gray-500 text-xs select-none">{s.waktu}</td>
-                    <td className="px-3 py-2.5 text-gray-400 text-xs whitespace-nowrap select-none">{s.tanggal}</td>
+                    {[1, 2, 3].map((mId) => {
+                      const isLocked = locks[`${cls}-${mId}`];
+                      return (
+                        <td key={mId} className="py-4 px-2">
+                          <button
+                            onClick={() => toggleLock(cls, mId)}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all border-2
+                              ${isLocked 
+                                ? "bg-red-50 text-red-600 border-red-200 hover:bg-red-100" 
+                                : "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100"
+                              }
+                            `}
+                          >
+                            {isLocked ? <Lock size={12} /> : <Unlock size={12} />}
+                            {isLocked ? "Terkunci" : "Terbuka"}
+                          </button>
+                        </td>
+                      );
+                    })}
                   </tr>
                 ))}
               </tbody>
@@ -192,37 +242,126 @@ export const GuruDashboardScreen: React.FC = () => {
           </div>
         </div>
 
-        {/* Completion Progress Chart */}
-        <div className="bg-white rounded-2xl shadow p-4 border border-gray-100">
-          <h3 className="font-['Fredoka'] font-semibold text-blue-700 text-base mb-3 flex items-center gap-2 select-none">
-            <Award size={18} /> Progres Penyelesaian Misi
-          </h3>
-          <div className="space-y-3">
-            {MISSIONS.map((m) => {
-              const count = MOCK_STUDENTS.filter((s) => s[`misi${m.id}` as keyof typeof s]).length;
-              const pct = Math.round((count / MOCK_STUDENTS.length) * 100);
-              return (
-                <div key={m.id} className="flex items-center gap-3">
-                  <span className="text-xl w-8 text-center select-none">{m.emoji}</span>
-                  <div className="flex-1">
-                    <div className="flex justify-between text-xs text-gray-500 mb-1">
-                      <span className="font-bold">{m.name}</span>
-                      <span className="font-semibold">
-                        {count}/{MOCK_STUDENTS.length} siswa ({pct}%)
-                      </span>
-                    </div>
-                    <div className="h-3 bg-gray-100 rounded-full overflow-hidden shadow-inner">
-                      <div
-                        className={`h-full bg-gradient-to-r ${m.gradient} rounded-full transition-all duration-500`}
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+        {/* Filters and List */}
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <button className="bg-[#EAB308] text-[#183655] font-['Fredoka'] font-bold rounded-full px-4 py-2 text-sm shadow-md border-2 border-transparent flex items-center gap-2">
+              <span>🕵️‍♂️</span> Per Siswa
+            </button>
+            <button className="bg-transparent text-blue-200 border border-blue-400/30 hover:bg-white/5 font-['Fredoka'] font-semibold rounded-full px-4 py-2 text-sm flex items-center gap-2 transition-colors">
+              <span>🏫</span> Per Kelas
+            </button>
+            
+            <div className="h-6 w-px bg-white/20 mx-1 hidden sm:block"></div>
+            
+            <div className="flex gap-2">
+              {classes.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setFilter(c)}
+                  className={`font-['Fredoka'] font-bold rounded-full px-4 py-1.5 text-sm transition-all
+                    ${filter === c 
+                      ? "bg-[#2563EB] text-white shadow border-2 border-blue-400" 
+                      : "bg-[#1E3A8A] text-blue-200 border border-transparent hover:bg-blue-800"
+                    }`}
+                >
+                  {c}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex-1 relative ml-2 min-w-[200px]">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <Search size={14} className="text-blue-300" />
+              </div>
+              <input 
+                type="text" 
+                placeholder="Cari nama detektif..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-[#1E3A8A] text-white border border-blue-500/50 rounded-full py-1.5 pl-9 pr-4 text-sm font-semibold focus:outline-none focus:border-blue-300 focus:bg-[#1E40AF] placeholder-blue-300/70"
+              />
+            </div>
+
+            <button className="bg-[#10B981] hover:bg-[#059669] text-white font-bold rounded-full px-4 py-1.5 text-sm shadow flex items-center gap-1.5 transition-colors ml-auto">
+              <Plus size={16} /> Tambah Siswa
+            </button>
+          </div>
+
+          <div className="bg-[#1E3A8A] rounded-3xl overflow-hidden border border-blue-600/30 shadow-xl">
+            <div className="px-5 py-3 border-b border-blue-600/30 flex justify-between items-center bg-[#1E40AF]">
+              <h3 className="font-['Fredoka'] font-bold text-white flex items-center gap-2">
+                <span>📋</span> Daftar Detektif Cilik
+              </h3>
+              <span className="text-blue-200 text-xs font-semibold">{filtered.length} siswa</span>
+            </div>
+            
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-blue-600/30 text-blue-300 text-xs font-['Fredoka'] text-left">
+                    <th className="px-5 py-3 font-semibold">No</th>
+                    <th className="px-5 py-3 font-semibold">Nama Detektif</th>
+                    <th className="px-5 py-3 font-semibold text-center">Kelas</th>
+                    <th className="px-5 py-3 font-semibold text-center">Misi 1</th>
+                    <th className="px-5 py-3 font-semibold text-center">Misi 2</th>
+                    <th className="px-5 py-3 font-semibold text-center">Misi 3</th>
+                    <th className="px-5 py-3 font-semibold text-center">Skor Akhir</th>
+                    <th className="px-5 py-3 font-semibold">Login Terakhir</th>
+                  </tr>
+                </thead>
+                <tbody className="text-white/90 font-['Nunito']">
+                  {filtered.length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="px-5 py-8 text-center text-blue-300 font-semibold">
+                        Tidak ada siswa yang ditemukan.
+                      </td>
+                    </tr>
+                  ) : (
+                    filtered.map((s, i) => (
+                      <tr key={s.id} className="border-b border-blue-800 hover:bg-[#2563EB]/40 transition-colors">
+                        <td className="px-5 py-3 text-blue-300/70">{i + 1}</td>
+                        <td className="px-5 py-3 font-bold text-white">
+                          {s.nama}
+                          {s.activeMission && (
+                            <span className="ml-2 inline-flex items-center gap-1 text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> {s.activeMission}
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-5 py-3 text-center">
+                          <span className="bg-[#1D4ED8] text-blue-100 text-[10px] font-bold px-2 py-1 rounded-full border border-blue-500/30">
+                            {s.kelas}
+                          </span>
+                        </td>
+                        {[s.misi1, s.misi2, s.misi3].map((done, mi) => (
+                          <td key={mi} className="px-5 py-3 text-center">
+                            {done ? (
+                              <span className="text-emerald-400 font-bold">✅ Selesai</span>
+                            ) : (
+                              <span className="text-blue-300/40 text-xs">○ Belum</span>
+                            )}
+                          </td>
+                        ))}
+                        <td className="px-5 py-3 text-center">
+                          <span className={`font-['Fredoka'] font-bold text-base ${
+                            s.skor >= 85 ? "text-emerald-400" : s.skor >= 70 ? "text-amber-400" : s.skor > 0 ? "text-rose-400" : "text-blue-300/30"
+                          }`}>
+                            {s.skor > 0 ? s.skor : "-"}
+                          </span>
+                        </td>
+                        <td className="px-5 py-3 text-blue-200/60 text-xs">
+                          {s.tanggal} {s.loginTime ? `• ${s.loginTime}` : ""}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
+        
       </div>
     </div>
   );

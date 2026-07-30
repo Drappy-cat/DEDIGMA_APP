@@ -296,11 +296,11 @@ export const MISSIONS: Mission[] = [
 
 export const MOCK_STUDENTS: Student[] = [
   { id: 1, nama: "Budi Santoso", kelas: "5A", misi1: true, misi2: true, misi3: false, skor: 85, waktu: "45 menit", tanggal: "20 Jan 2025" },
-  { id: 2, nama: "Siti Rahayu", kelas: "5A", misi1: true, misi2: true, misi3: true, skor: 95, waktu: "52 menit", tanggal: "20 Jan 2025" },
+  { id: 2, nama: "Siti Rahayu", kelas: "5A", misi1: true, misi2: true, misi3: true, skor: 95, waktu: "52 menit", tanggal: "20 Jan 2025", activeMission: "Misi 3", activeStage: "Tantangan", loginTime: "10:15" },
   { id: 3, nama: "Ahmad Fauzi", kelas: "5B", misi1: true, misi2: false, misi3: false, skor: 70, waktu: "28 menit", tanggal: "21 Jan 2025" },
   { id: 4, nama: "Dewi Kartika", kelas: "5B", misi1: true, misi2: true, misi3: true, skor: 92, waktu: "60 menit", tanggal: "21 Jan 2025" },
-  { id: 5, nama: "Rizky Pratama", kelas: "5C", misi1: true, misi2: true, misi3: false, skor: 78, waktu: "40 menit", tanggal: "22 Jan 2025" },
-  { id: 6, nama: "Nurul Hidayah", kelas: "5C", misi1: true, misi2: true, misi3: true, skor: 88, waktu: "55 menit", tanggal: "22 Jan 2025" },
+  { id: 5, nama: "Rizky Pratama", kelas: "5C", misi1: true, misi2: true, misi3: false, skor: 78, waktu: "40 menit", tanggal: "22 Jan 2025", activeMission: "Misi 2", activeStage: "Cek Fakta", loginTime: "10:42" },
+  { id: 6, nama: "Nurul Hidayah", kelas: "5C", misi1: true, misi2: true, misi3: true, skor: 88, waktu: "55 menit", tanggal: "22 Jan 2025", activeMission: "Misi 3", activeStage: "Ruang Refleksi", loginTime: "10:05" },
   { id: 7, nama: "Fajar Kurniawan", kelas: "5A", misi1: false, misi2: false, misi3: false, skor: 0, waktu: "0 menit", tanggal: "-" },
   { id: 8, nama: "Anisa Putri", kelas: "5B", misi1: true, misi2: true, misi3: false, skor: 75, waktu: "38 menit", tanggal: "23 Jan 2025" },
   { id: 9, nama: "Yoga Permana", kelas: "5C", misi1: true, misi2: false, misi3: false, skor: 65, waktu: "22 menit", tanggal: "23 Jan 2025" },
