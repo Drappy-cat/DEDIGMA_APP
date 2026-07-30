@@ -13,8 +13,13 @@ interface SplashScreenProps {
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk, onProfil }) => {
   const { userName, logout } = useAuth();
-  const { playSFX } = useAudio();
+  const { playSFX, playBGM, toggleAudio, audioEnabled } = useAudio();
   const [showPustaka, setShowPustaka] = useState(false);
+
+  React.useEffect(() => {
+    // Coba putar musik latar secara otomatis saat SplashScreen dimuat
+    playBGM();
+  }, [playBGM]);
 
   const handleLogout = () => {
     playSFX("click");
@@ -23,12 +28,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
 
   const handleAction = (callback: () => void) => {
     playSFX("click");
+    playBGM(); // Pastikan musik bermain jika autoplay browser diblokir sebelumnya
     callback();
   };
 
   const handlePustakaOpen = () => {
     playSFX("click");
     setShowPustaka(true);
+  };
+
+  const handleVolumeToggle = () => {
+    playSFX("click");
+    toggleAudio();
   };
 
   return (
@@ -46,13 +57,31 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
         <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-3 py-1 shadow border border-white/10">
           <span className="font-['Nunito'] font-bold text-white text-xs">👋 Halo, {userName}!</span>
         </div>
-        <button
-          onClick={handleLogout}
-          className="bg-white/20 hover:bg-white/30 rounded-2xl p-1.5 transition-colors cursor-pointer text-white shadow border border-white/10"
-          aria-label="Keluar"
-        >
-          <LogOut size={14} />
-        </button>
+        
+        <div className="flex items-center gap-2">
+          {/* Custom Speaker volume toggle */}
+          <button
+            onClick={handleVolumeToggle}
+            className="bg-white/20 hover:bg-white/30 rounded-2xl p-1.5 transition-colors cursor-pointer text-white shadow border border-white/10 flex items-center justify-center focus:outline-none"
+            aria-label={audioEnabled ? "Matikan Suara" : "Nyalakan Suara"}
+          >
+            <img
+              src="/assets/btn/speaker.png"
+              alt="Suara"
+              className={`w-5 h-5 object-contain active:scale-90 transition-all ${
+                audioEnabled ? "" : "opacity-40 filter grayscale scale-95"
+              }`}
+            />
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="bg-white/20 hover:bg-white/30 rounded-2xl p-1.5 transition-colors cursor-pointer text-white shadow border border-white/10"
+            aria-label="Keluar"
+          >
+            <LogOut size={16} />
+          </button>
+        </div>
       </div>
 
       {/* Content wrapper: Side-by-side on Landscape / Desktop, vertical on Portrait */}

@@ -6,6 +6,8 @@ interface AudioContextType {
   playNarrator: (text: string, mp3Path?: string) => void;
   stopNarrator: () => void;
   playSFX: (type: "success" | "fail" | "click" | "badge") => void;
+  playBGM: (path?: string) => void;
+  stopBGM: () => void;
 }
 
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
@@ -13,6 +15,7 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined);
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const bgmRef = useRef<HTMLAudioElement | null>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
@@ -34,6 +37,11 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       localStorage.setItem("dedigma_audio_enabled", String(next));
       if (!next) {
         stopNarrator();
+        stopBGM();
+      } else {
+        if (bgmRef.current) {
+          bgmRef.current.play().catch(() => {});
+        }
       }
       return next;
     });
@@ -113,6 +121,27 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   };
 
+  const playBGM = (path: string = "/audio/backsound.mp3") => {
+    if (!audioEnabled) return;
+    if (bgmRef.current) {
+      bgmRef.current.pause();
+    }
+    const bgm = new Audio(path);
+    bgm.loop = true;
+    bgm.volume = 0.3; // Default volume for BGM, lower than SFX
+    bgmRef.current = bgm;
+    bgm.play().catch(() => {
+      console.log(`BGM failed to play. Browsers usually require user interaction first.`);
+    });
+  };
+
+  const stopBGM = () => {
+    if (bgmRef.current) {
+      bgmRef.current.pause();
+      bgmRef.current.currentTime = 0;
+    }
+  };
+
   return (
     <AudioContext.Provider
       value={{
@@ -120,7 +149,9 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         toggleAudio,
         playNarrator,
         stopNarrator,
-        playSFX
+        playSFX,
+        playBGM,
+        stopBGM
       }}
     >
       {children}
