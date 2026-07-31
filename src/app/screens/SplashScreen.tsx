@@ -100,84 +100,68 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
         <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-3 py-1 shadow border border-white/10">
           <span className="font-['Nunito'] font-bold text-white text-xs">👋 Halo, {userName}!</span>
         </div>
-        
-        <div className="flex items-center gap-2">
+
+        <div className="flex items-center gap-3 landscape:gap-4">
           {/* Custom Speaker volume toggle */}
           <button
             onClick={handleVolumeToggle}
-            className="bg-white/20 hover:bg-white/30 rounded-2xl p-1.5 transition-colors cursor-pointer text-white shadow border border-white/10 flex items-center justify-center focus:outline-none"
+            className="transition-transform cursor-pointer focus:outline-none hover:scale-110 active:scale-95 flex items-center justify-center"
             aria-label={audioEnabled ? "Matikan Suara" : "Nyalakan Suara"}
           >
             <img
-              src="/assets/btn/speaker.png"
-              alt="Suara"
-              className={`w-5 h-5 object-contain active:scale-90 transition-all ${
-                audioEnabled ? "" : "opacity-40 filter grayscale scale-95"
-              }`}
+              src={audioEnabled ? "/assets/button/sound-on.svg" : "/assets/button/sound-off.svg"}
+              alt={audioEnabled ? "Suara Nyala" : "Suara Mati"}
+              className="w-12 h-12 landscape:w-16 landscape:h-16 object-contain"
             />
           </button>
 
           <button
             onClick={handleLogout}
-            className="bg-white/20 hover:bg-white/30 rounded-2xl p-1.5 transition-colors cursor-pointer text-white shadow border border-white/10"
+            className="transition-transform cursor-pointer focus:outline-none hover:scale-110 active:scale-95 flex items-center justify-center"
             aria-label="Keluar"
           >
-            <LogOut size={16} />
+            <img
+              src="/assets/button/home.svg"
+              alt="Home / Keluar"
+              className="w-12 h-12 landscape:w-16 landscape:h-16 object-contain"
+            />
           </button>
         </div>
       </div>
 
-      {/* Content wrapper: Side-by-side on Landscape / Desktop, vertical on Portrait */}
-      <div className="flex-1 flex flex-col landscape:flex-row items-center justify-center gap-6 landscape:gap-14 px-6 py-3 relative z-10 overflow-y-auto landscape:overflow-hidden">
+      {/* Content wrapper: Central UI with floating mascots */}
+      <div className="flex-1 w-full relative z-10 flex flex-col items-center justify-center px-4 overflow-hidden">
         
-        {/* Left Column: Logo & Mascots */}
-        <div className="flex flex-col items-center text-center max-w-sm flex-shrink-0">
-          {/* Logo Title */}
-          <motion.div
-            initial={{ y: -15, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="mb-2"
-          >
-            <img
-              src="/assets/logo.png"
-              alt="DEDIGMA Logo"
-              className="w-16 h-16 mx-auto object-contain filter drop-shadow-md mb-2 animate-pulse"
-            />
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-1 mb-1 inline-block border border-white/10">
-              <h1 className="font-['Fredoka'] font-bold text-2xl text-white drop-shadow-md leading-none">DEDIGMA</h1>
-              <p className="font-['Fredoka'] font-semibold text-yellow-100 text-[8px] tracking-wider mt-0.5">
-                DETEKTIF DIGITAL BUDAYA MAGETAN
-              </p>
-            </div>
-            <p className="font-['Nunito'] text-white text-[11px] font-bold drop-shadow max-w-xs mx-auto leading-relaxed">
-              🔍 Jelajahi Budaya, Temukan Fakta, Lestarikan Warisan!
-            </p>
-          </motion.div>
-
-          {/* Character Mascots */}
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="flex items-end gap-5 mt-1"
-          >
-            <MascotDimas size="sm" animate={true} />
-            <MascotGita size="sm" animate={true} />
-          </motion.div>
-        </div>
-
-        {/* Right Column: Game Buttons */}
+        {/* Logo Title (Center Top) */}
         <motion.div
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col items-center gap-3 w-full max-w-[220px] landscape:max-w-[250px] flex-shrink-0"
+          initial={{ y: -15, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="mb-6 flex flex-col items-center z-20 pointer-events-auto"
         >
-          <span className="text-[9px] font-bold text-yellow-100/90 tracking-widest uppercase font-['Fredoka'] select-none">
-            Menu Utama
-          </span>
+          <img
+            src="/assets/logo.png"
+            alt="DEDIGMA Logo"
+            className="w-16 h-16 object-contain filter drop-shadow-md mb-2 animate-pulse"
+          />
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-1 mb-1 border border-white/10 text-center">
+            <h1 className="font-['Fredoka'] font-bold text-2xl md:text-4xl text-white drop-shadow-md leading-none">DEDIGMA</h1>
+            <p className="font-['Fredoka'] font-semibold text-yellow-100 text-[8px] md:text-[10px] tracking-wider mt-0.5">
+              DETEKTIF DIGITAL BUDAYA MAGETAN
+            </p>
+          </div>
+          <p className="font-['Nunito'] text-white text-[11px] md:text-xs font-bold drop-shadow text-center max-w-xs leading-relaxed">
+            🔍 Jelajahi Budaya, Temukan Fakta, Lestarikan Warisan!
+          </p>
+        </motion.div>
 
+        {/* Center Game Buttons */}
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="flex flex-col items-center gap-3 w-full max-w-[250px] z-20 pointer-events-auto"
+        >
           {/* Mulai Button */}
           <motion.button
             onClick={() => handleAction(onMulai)}
@@ -186,14 +170,14 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
             className="w-full flex justify-center cursor-pointer focus:outline-none"
           >
             <img
-              src="/assets/btn/mulai.png"
+              src="/assets/button/mulai.svg"
               alt="Mulai Misi Budaya"
               className="w-full h-auto object-contain filter drop-shadow-lg"
             />
           </motion.button>
 
-          {/* Sub buttons row: Petunjuk, Pustaka, Profil */}
-          <div className="grid grid-cols-3 gap-2 mt-0.5 w-full">
+          {/* Sub buttons row: Petunjuk and Profil */}
+          <div className="grid grid-cols-2 gap-3 mt-1 w-full">
             <motion.button
               onClick={() => handleAction(onPetunjuk)}
               whileHover={{ scale: 1.05 }}
@@ -201,21 +185,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
               className="cursor-pointer focus:outline-none flex justify-center"
             >
               <img
-                src="/assets/btn/petunjuk.png"
+                src="/assets/button/petunjuk.svg"
                 alt="Petunjuk"
-                className="w-full h-auto object-contain filter drop-shadow-md"
-              />
-            </motion.button>
-
-            <motion.button
-              onClick={handlePustakaOpen}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="cursor-pointer focus:outline-none flex justify-center"
-            >
-              <img
-                src="/assets/btn/pustaka.png"
-                alt="Pustaka"
                 className="w-full h-auto object-contain filter drop-shadow-md"
               />
             </motion.button>
@@ -227,12 +198,31 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
               className="cursor-pointer focus:outline-none flex justify-center"
             >
               <img
-                src="/assets/btn/profil.png"
+                src="/assets/button/profil.svg"
                 alt="Profil"
                 className="w-full h-auto object-contain filter drop-shadow-md"
               />
             </motion.button>
           </div>
+        </motion.div>
+
+        {/* Mascots positioned left and right */}
+        <motion.div 
+          initial={{ opacity: 0, x: -50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="absolute -left-10 landscape:left-10 -bottom-10 landscape:bottom-0 z-10 pointer-events-auto"
+        >
+          <MascotDimas size="3xl" animate={true} isLobby={true} />
+        </motion.div>
+
+        <motion.div 
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.4 }}
+          className="absolute -right-10 landscape:right-10 -bottom-10 landscape:bottom-0 z-10 pointer-events-auto"
+        >
+          <MascotGita size="3xl" animate={true} isLobby={true} />
         </motion.div>
 
       </div>
