@@ -13,7 +13,7 @@ interface SplashScreenProps {
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk, onProfil }) => {
   const { userName, logout } = useAuth();
-  const { playSFX, playBGM, toggleAudio, audioEnabled } = useAudio();
+  const { playSFX, playBGM, toggleAudio, toggleBGM, toggleNarrator, audioEnabled, bgmEnabled, narratorEnabled } = useAudio();
   const [showPustaka, setShowPustaka] = useState(false);
 
   React.useEffect(() => {
@@ -40,6 +40,16 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
   const handleVolumeToggle = () => {
     playSFX("click");
     toggleAudio();
+  };
+
+  const handleBgmToggle = () => {
+    playSFX("click");
+    toggleBGM();
+  };
+
+  const handleNarratorToggle = () => {
+    playSFX("click");
+    toggleNarrator();
   };
 
   // Generate random glitters / falling stars
@@ -101,8 +111,36 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           <span className="font-['Nunito'] font-bold text-white text-xs">👋 Halo, {userName}!</span>
         </div>
         
-        <div className="flex items-center gap-2">
-          {/* Custom Speaker volume toggle */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* BGM Toggle */}
+          <button
+            onClick={handleBgmToggle}
+            className={`px-2.5 py-1 rounded-2xl transition-all cursor-pointer flex items-center gap-1 border text-xs font-bold shadow backdrop-blur-sm ${
+              bgmEnabled && audioEnabled
+                ? "bg-amber-500/30 border-amber-300/50 text-amber-200"
+                : "bg-white/10 border-white/10 text-white/40 grayscale"
+            }`}
+            title={bgmEnabled ? "Matikan Musik Latar (BGM)" : "Nyalakan Musik Latar (BGM)"}
+          >
+            <span>🎵</span>
+            <span className="hidden sm:inline">{bgmEnabled ? "BGM" : "BGM Off"}</span>
+          </button>
+
+          {/* Narrator Toggle */}
+          <button
+            onClick={handleNarratorToggle}
+            className={`px-2.5 py-1 rounded-2xl transition-all cursor-pointer flex items-center gap-1 border text-xs font-bold shadow backdrop-blur-sm ${
+              narratorEnabled && audioEnabled
+                ? "bg-blue-500/30 border-blue-300/50 text-blue-100"
+                : "bg-white/10 border-white/10 text-white/40 grayscale"
+            }`}
+            title={narratorEnabled ? "Matikan Suara Narator / TTS" : "Nyalakan Suara Narator / TTS"}
+          >
+            <span>🗣️</span>
+            <span className="hidden sm:inline">{narratorEnabled ? "Suara" : "Suara Off"}</span>
+          </button>
+
+          {/* Master Speaker volume toggle */}
           <button
             onClick={handleVolumeToggle}
             className="bg-white/20 hover:bg-white/30 rounded-2xl p-1.5 transition-colors cursor-pointer text-white shadow border border-white/10 flex items-center justify-center focus:outline-none"

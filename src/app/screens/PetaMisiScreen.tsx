@@ -45,7 +45,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
       </div>
 
       {/* Map Content Viewport */}
-      <div className="flex-1 relative w-full h-full">
+      <div className="flex-1 relative w-full h-full pt-12 sm:pt-14">
         {pins.map((pin) => {
           const isCompleted = completedMissions.has(pin.id);
           const isLocked = pin.id > 1 && !completedMissions.has(pin.id - 1);

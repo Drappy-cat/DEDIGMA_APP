@@ -287,8 +287,8 @@ function AppContent() {
 
   // Student Gameplay: Wrapped inside a centered rounded tablet frame container on larger monitors
   return (
-    <div className="min-h-screen w-full bg-slate-900 flex items-center justify-center py-0 md:py-6 px-0 md:px-4 font-['Nunito'] select-none">
-      <div className="w-full max-w-5xl min-h-screen md:min-h-0 md:h-[700px] bg-white relative overflow-hidden shadow-2xl md:rounded-3xl border border-white/10 flex flex-col">
+    <div className="min-h-[100dvh] w-full bg-slate-900 flex items-center justify-center p-0 md:p-4 font-['Nunito'] select-none overflow-hidden">
+      <div className="w-full max-w-5xl h-[100dvh] md:h-[720px] md:max-h-[92vh] bg-white relative overflow-hidden shadow-2xl md:rounded-3xl border border-white/10 flex flex-col">
         <AnimatePresence mode="wait">
           <motion.div
             key={screen}
