@@ -94,11 +94,9 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
           aria-label={audioEnabled ? "Matikan Suara" : "Nyalakan Suara"}
         >
           <img
-            src="/assets/btn/speaker.png"
+            src={audioEnabled ? "/assets/button/sound-on.svg" : "/assets/button/sound-off.svg"}
             alt="Suara"
-            className={`w-7 h-7 object-contain active:scale-90 transition-all ${
-              audioEnabled ? "" : "opacity-40 filter grayscale scale-95"
-            }`}
+            className="w-7 h-7 object-contain active:scale-90 transition-all drop-shadow-sm"
           />
         </button>
 
@@ -109,9 +107,9 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
             aria-label="Beranda"
           >
             <img
-              src="/assets/btn/home.png"
+              src="/assets/button/home.svg"
               alt="Beranda"
-              className="w-7 h-7 object-contain active:scale-90 transition-transform"
+              className="w-7 h-7 object-contain active:scale-90 transition-transform drop-shadow-sm"
             />
           </button>
         )}
