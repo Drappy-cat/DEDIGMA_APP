@@ -9,7 +9,7 @@ interface ScreenHeaderProps {
 }
 
 export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHome, step }) => {
-  const { audioEnabled, toggleAudio, playSFX } = useAudio();
+  const { audioEnabled, bgmEnabled, narratorEnabled, toggleAudio, toggleBGM, toggleNarrator, playSFX } = useAudio();
 
   const handleBack = () => {
     playSFX("click");
@@ -19,6 +19,16 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
   const handleHome = () => {
     playSFX("click");
     if (onHome) onHome();
+  };
+
+  const handleBgmToggle = () => {
+    playSFX("click");
+    toggleBGM();
+  };
+
+  const handleNarratorToggle = () => {
+    playSFX("click");
+    toggleNarrator();
   };
 
   const handleVolumeToggle = () => {
@@ -47,11 +57,40 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
         {step && <p className="text-blue-200 text-[10px] font-['Nunito'] font-semibold leading-none mt-0.5">{step}</p>}
       </div>
 
-      <div className="flex items-center gap-3">
-        {/* Custom Speaker volume toggle */}
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        {/* BGM Toggle */}
+        <button
+          onClick={handleBgmToggle}
+          className={`px-2 py-1 rounded-xl transition-all cursor-pointer flex items-center gap-1 border text-[11px] font-bold ${
+            bgmEnabled && audioEnabled
+              ? "bg-amber-500/20 border-amber-400/50 text-amber-300 shadow"
+              : "bg-white/5 border-white/10 text-white/40 grayscale"
+          }`}
+          title={bgmEnabled ? "Matikan Musik Latar (BGM)" : "Nyalakan Musik Latar (BGM)"}
+        >
+          <span>🎵</span>
+          <span className="hidden sm:inline">{bgmEnabled ? "BGM On" : "BGM Off"}</span>
+        </button>
+
+        {/* Narrator / TTS Toggle */}
+        <button
+          onClick={handleNarratorToggle}
+          className={`px-2 py-1 rounded-xl transition-all cursor-pointer flex items-center gap-1 border text-[11px] font-bold ${
+            narratorEnabled && audioEnabled
+              ? "bg-blue-500/20 border-blue-400/50 text-blue-200 shadow"
+              : "bg-white/5 border-white/10 text-white/40 grayscale"
+          }`}
+          title={narratorEnabled ? "Matikan Suara Narator / TTS" : "Nyalakan Suara Narator / TTS"}
+        >
+          <span>🗣️</span>
+          <span className="hidden sm:inline">{narratorEnabled ? "Suara On" : "Suara Off"}</span>
+        </button>
+
+        {/* Master Speaker volume toggle */}
         <button
           onClick={handleVolumeToggle}
           className="p-1 hover:bg-white/10 rounded-xl transition-all cursor-pointer flex items-center justify-center focus:outline-none"
+          title={audioEnabled ? "Matikan Seluruh Suara" : "Nyalakan Seluruh Suara"}
           aria-label={audioEnabled ? "Matikan Suara" : "Nyalakan Suara"}
         >
           <img

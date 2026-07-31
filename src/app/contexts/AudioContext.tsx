@@ -2,7 +2,11 @@ import React, { createContext, useContext, useState, useEffect, useRef } from "r
 
 interface AudioContextType {
   audioEnabled: boolean;
+  bgmEnabled: boolean;
+  narratorEnabled: boolean;
   toggleAudio: () => void;
+  toggleBGM: () => void;
+  toggleNarrator: () => void;
   playNarrator: (text: string, mp3Path?: string) => void;
   stopNarrator: () => void;
   playSFX: (type: "success" | "fail" | "click" | "badge") => void;
@@ -14,12 +18,14 @@ const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
+  const [bgmEnabled, setBgmEnabled] = useState<boolean>(true);
+  const [narratorEnabled, setNarratorEnabled] = useState<boolean>(true);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const bgmRef = useRef<HTMLAudioElement | null>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  // Initialize SpeechSynthesis
+  // Initialize SpeechSynthesis and saved audio preferences
   useEffect(() => {
     if (typeof window !== "undefined" && window.speechSynthesis) {
       synthRef.current = window.speechSynthesis;
@@ -28,6 +34,16 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const savedAudio = localStorage.getItem("dedigma_audio_enabled");
     if (savedAudio !== null) {
       setAudioEnabled(savedAudio === "true");
+    }
+
+    const savedBgm = localStorage.getItem("dedigma_bgm_enabled");
+    if (savedBgm !== null) {
+      setBgmEnabled(savedBgm === "true");
+    }
+
+    const savedNarrator = localStorage.getItem("dedigma_narrator_enabled");
+    if (savedNarrator !== null) {
+      setNarratorEnabled(savedNarrator === "true");
     }
   }, []);
 
@@ -39,9 +55,33 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         stopNarrator();
         stopBGM();
       } else {
-        if (bgmRef.current) {
+        if (bgmEnabled && bgmRef.current) {
           bgmRef.current.play().catch(() => {});
         }
+      }
+      return next;
+    });
+  };
+
+  const toggleBGM = () => {
+    setBgmEnabled((prev) => {
+      const next = !prev;
+      localStorage.setItem("dedigma_bgm_enabled", String(next));
+      if (!next) {
+        stopBGM();
+      } else if (audioEnabled) {
+        playBGM();
+      }
+      return next;
+    });
+  };
+
+  const toggleNarrator = () => {
+    setNarratorEnabled((prev) => {
+      const next = !prev;
+      localStorage.setItem("dedigma_narrator_enabled", String(next));
+      if (!next) {
+        stopNarrator();
       }
       return next;
     });
@@ -61,7 +101,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const playNarrator = (text: string, mp3Path?: string) => {
     stopNarrator();
-    if (!audioEnabled) return;
+    if (!audioEnabled || !narratorEnabled) return;
 
     // Convert the first 20 characters of text to a safe filename slug
     const cleanSlug = text
@@ -83,7 +123,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const playTTS = (text: string) => {
-    if (!synthRef.current) return;
+    if (!synthRef.current || !narratorEnabled || !audioEnabled) return;
 
     // SpeechSynthesisUtterance setup for Indonesian language
     const utterance = new SpeechSynthesisUtterance(text);
@@ -122,7 +162,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const playBGM = (path: string = "/audio/backsound.mp3") => {
-    if (!audioEnabled) return;
+    if (!audioEnabled || !bgmEnabled) return;
     if (bgmRef.current) {
       bgmRef.current.pause();
     }
@@ -146,7 +186,11 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <AudioContext.Provider
       value={{
         audioEnabled,
+        bgmEnabled,
+        narratorEnabled,
         toggleAudio,
+        toggleBGM,
+        toggleNarrator,
         playNarrator,
         stopNarrator,
         playSFX,

@@ -68,7 +68,7 @@ export const LencanaScreen: React.FC<LencanaScreenProps> = ({
     <div
       className="h-full flex flex-col font-['Nunito']"
       style={{
-        backgroundImage: "url('/assets/bg-lobby.png')",
+        backgroundImage: "url('/assets/bg-lobby.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat"

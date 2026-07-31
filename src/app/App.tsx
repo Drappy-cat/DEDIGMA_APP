@@ -289,89 +289,100 @@ function AppContent() {
   return (
     <div className="min-h-screen w-full bg-slate-900 flex items-center justify-center py-0 md:py-6 px-0 md:px-4 font-['Nunito'] select-none">
       <div className="w-full max-w-5xl min-h-screen md:min-h-0 md:h-[700px] bg-white relative overflow-hidden shadow-2xl md:rounded-3xl border border-white/10 flex flex-col">
-        {screen === "splash" && (
-          <SplashScreen
-            onMulai={() => navigateTo("petunjuk")}
-            onPetunjuk={() => navigateTo("petunjuk")}
-            onProfil={() => navigateTo("profil")}
-          />
-        )}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={screen}
+            initial={{ opacity: 0, scale: 0.98, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 1.02, y: -10 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full h-full flex flex-col relative overflow-hidden"
+          >
+            {screen === "splash" && (
+              <SplashScreen
+                onMulai={() => navigateTo("petunjuk")}
+                onPetunjuk={() => navigateTo("petunjuk")}
+                onProfil={() => navigateTo("profil")}
+              />
+            )}
 
-        {screen === "petunjuk" && <PetunjukScreen onBack={() => navigateTo("tujuan")} />}
-        {screen === "tujuan" && (
-          <TujuanScreen
-            onNext={() => navigateTo("peta-misi")}
-            onBack={() => navigateTo("petunjuk")}
-          />
-        )}
-        {screen === "profil" && <ProfilScreen onBack={() => navigateTo("splash")} />}
+            {screen === "petunjuk" && <PetunjukScreen onBack={() => navigateTo("tujuan")} />}
+            {screen === "tujuan" && (
+              <TujuanScreen
+                onNext={() => navigateTo("peta-misi")}
+                onBack={() => navigateTo("petunjuk")}
+              />
+            )}
+            {screen === "profil" && <ProfilScreen onBack={() => navigateTo("splash")} />}
 
-        {screen === "peta-misi" && (
-          <div className="flex flex-col h-full relative">
-            <PetaMisiScreen
-              completedMissions={completedMissions}
-              onMission={(id) => {
-                setCurrentMissionId(id);
-                navigateTo("mission-flow");
-              }}
-              onBack={() => navigateTo("splash")}
-            />
-            {allMissionsDone && (
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-xs px-4">
-                <Btn
-                  onClick={() => navigateTo(posttestScore === null ? "posttest" : "lencana")}
-                  variant="amber"
-                  className="w-full text-lg px-8 py-4 shadow-2xl justify-center font-bold"
-                >
-                  {posttestScore === null ? "📝 Posttest Interaktif!" : "🏅 Lencana & Sertifikat!"}
-                </Btn>
+            {screen === "peta-misi" && (
+              <div className="flex flex-col h-full relative">
+                <PetaMisiScreen
+                  completedMissions={completedMissions}
+                  onMission={(id) => {
+                    setCurrentMissionId(id);
+                    navigateTo("mission-flow");
+                  }}
+                  onBack={() => navigateTo("splash")}
+                />
+                {allMissionsDone && (
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-xs px-4">
+                    <Btn
+                      onClick={() => navigateTo(posttestScore === null ? "posttest" : "lencana")}
+                      variant="amber"
+                      className="w-full text-lg px-8 py-4 shadow-2xl justify-center font-bold"
+                    >
+                      {posttestScore === null ? "📝 Posttest Interaktif!" : "🏅 Lencana & Sertifikat!"}
+                    </Btn>
+                  </div>
+                )}
               </div>
             )}
-          </div>
-        )}
 
-        {screen === "mission-flow" && (
-          <MissionFlow
-            missionId={currentMissionId}
-            onComplete={completeMission}
-            onHome={() => navigateTo("peta-misi")}
-          />
-        )}
+            {screen === "mission-flow" && (
+              <MissionFlow
+                missionId={currentMissionId}
+                onComplete={completeMission}
+                onHome={() => navigateTo("peta-misi")}
+              />
+            )}
 
-        {screen === "posttest" && (
-          <PosttestScreen
-            onComplete={(score) => {
-              setPosttestScore(score);
-              setGameState((prev) => {
-                const updated = {
-                  ...prev,
-                  posttest: { ...prev.posttest, score }
-                };
-                saveGameState(updated);
-                return updated;
-              });
-              navigateTo("lencana");
-            }}
-            onBack={() => navigateTo("peta-misi")}
-          />
-        )}
+            {screen === "posttest" && (
+              <PosttestScreen
+                onComplete={(score) => {
+                  setPosttestScore(score);
+                  setGameState((prev) => {
+                    const updated = {
+                      ...prev,
+                      posttest: { ...prev.posttest, score }
+                    };
+                    saveGameState(updated);
+                    return updated;
+                  });
+                  navigateTo("lencana");
+                }}
+                onBack={() => navigateTo("peta-misi")}
+              />
+            )}
 
-        {screen === "lencana" && (
-          <LencanaScreen
-            completedMissions={completedMissions}
-            missionScores={missionScores}
-            onNext={() => navigateTo("sertifikat")}
-            onBack={() => navigateTo("peta-misi")}
-          />
-        )}
+            {screen === "lencana" && (
+              <LencanaScreen
+                completedMissions={completedMissions}
+                missionScores={missionScores}
+                onNext={() => navigateTo("sertifikat")}
+                onBack={() => navigateTo("peta-misi")}
+              />
+            )}
 
-        {screen === "sertifikat" && (
-          <SertifikatScreen
-            studentName={userName}
-            missionScores={missionScores}
-            onBack={() => navigateTo("splash")}
-          />
-        )}
+            {screen === "sertifikat" && (
+              <SertifikatScreen
+                studentName={userName}
+                missionScores={missionScores}
+                onBack={() => navigateTo("splash")}
+              />
+            )}
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <DemoPanel
