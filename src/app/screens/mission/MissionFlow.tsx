@@ -64,7 +64,7 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
       <div
         className="w-full h-full overflow-hidden flex flex-col"
         style={{
-          backgroundImage: "url('/assets/bg-lobby.png')",
+          backgroundImage: "url('/assets/bg-lobby.svg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat"
@@ -83,7 +83,7 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
     <div
       className="flex flex-col h-full overflow-hidden select-none"
       style={{
-        backgroundImage: "url('/assets/bg-lobby.png')",
+        backgroundImage: "url('/assets/bg-lobby.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat"

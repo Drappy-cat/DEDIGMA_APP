@@ -14,6 +14,39 @@ export const GuruDashboardScreen: React.FC = () => {
   // Lock state: key is `${kelas}-${missionId}`, value is boolean (true = locked, false = open)
   const [locks, setLocks] = useState<Record<string, boolean>>({});
 
+  // Merge real student data from localStorage if available
+  const allStudents = React.useMemo(() => {
+    try {
+      const savedState = localStorage.getItem("dedigma_game_state");
+      const savedUser = localStorage.getItem("dedigma_username") || "Siswa Terdaftar";
+      if (savedState) {
+        const parsed = JSON.parse(savedState);
+        const m1 = Boolean(parsed.missions?.[1]?.completed);
+        const m2 = Boolean(parsed.missions?.[2]?.completed);
+        const m3 = Boolean(parsed.missions?.[3]?.completed);
+        const totalScore = parsed.totalScore || 0;
+        
+        const realStudent = {
+          id: 999,
+          nama: savedUser,
+          kelas: "5A",
+          misi1: m1,
+          misi2: m2,
+          misi3: m3,
+          skor: totalScore,
+          waktu: "15 Menit",
+          tanggal: new Date().toISOString().split("T")[0]
+        };
+
+        // Filter out if duplicate or prepend as active student
+        return [realStudent, ...MOCK_STUDENTS.filter((s) => s.nama !== savedUser)];
+      }
+    } catch (e) {
+      console.error("Error reading student localStorage:", e);
+    }
+    return MOCK_STUDENTS;
+  }, []);
+
   const toggleLock = (kelas: string, missionId: number) => {
     playSFX("click");
     setLocks((prev) => {
@@ -27,28 +60,28 @@ export const GuruDashboardScreen: React.FC = () => {
     logout();
   };
 
-  const filtered = MOCK_STUDENTS.filter((s) => {
+  const filtered = allStudents.filter((s) => {
     const matchClass = filter === "Semua" || s.kelas === filter;
     const matchSearch = s.nama.toLowerCase().includes(searchQuery.toLowerCase());
     return matchClass && matchSearch;
   });
 
-  const activeStudents = MOCK_STUDENTS.filter((s) => s.misi1 || s.misi2 || s.misi3).length;
-  const completedAll = MOCK_STUDENTS.filter((s) => s.misi1 && s.misi2 && s.misi3).length;
+  const activeStudents = allStudents.filter((s) => s.misi1 || s.misi2 || s.misi3).length;
+  const completedAll = allStudents.filter((s) => s.misi1 && s.misi2 && s.misi3).length;
 
-  const validScores = MOCK_STUDENTS.filter((s) => s.skor > 0);
+  const validScores = allStudents.filter((s) => s.skor > 0);
   const avgScore =
     validScores.length > 0 ? Math.round(validScores.reduce((acc, curr) => acc + curr.skor, 0) / validScores.length) : 0;
 
   const stats = {
-    total: MOCK_STUDENTS.length,
+    total: allStudents.length,
     active: activeStudents,
     selesai: completedAll,
     avgScore: avgScore
   };
 
   // Find students who have an active mission
-  const activeNowStudents = MOCK_STUDENTS.filter((s) => s.activeMission);
+  const activeNowStudents = allStudents.filter((s) => s.misi1 || s.misi2 || s.misi3);
 
   const exportCSV = () => {
     playSFX("click");

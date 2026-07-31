@@ -67,7 +67,7 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
     <div
       className="h-full flex flex-col overflow-hidden font-['Nunito']"
       style={{
-        backgroundImage: "url('/assets/bg-lobby.png')",
+        backgroundImage: "url('/assets/bg-lobby.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat"
