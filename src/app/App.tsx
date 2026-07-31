@@ -13,6 +13,7 @@ import { PetunjukScreen } from "./screens/PetunjukScreen";
 import { TujuanScreen } from "./screens/TujuanScreen";
 import { ProfilScreen } from "./screens/ProfilScreen";
 import { PetaMisiScreen } from "./screens/PetaMisiScreen";
+import { TantanganScreen } from "./screens/mission/TantanganScreen";
 import { PosttestScreen } from "./screens/PosttestScreen";
 import { LencanaScreen } from "./screens/LencanaScreen";
 import { SertifikatScreen } from "./screens/SertifikatScreen";
@@ -306,7 +307,12 @@ function AppContent() {
               />
             )}
 
-            {screen === "petunjuk" && <PetunjukScreen onBack={() => navigateTo("tujuan")} />}
+            {screen === "petunjuk" && (
+              <PetunjukScreen
+                onBack={() => navigateTo("splash")}
+                onNext={() => navigateTo("tujuan")}
+              />
+            )}
             {screen === "tujuan" && (
               <TujuanScreen
                 onNext={() => navigateTo("peta-misi")}
@@ -328,11 +334,23 @@ function AppContent() {
                 {allMissionsDone && (
                   <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-xs px-4">
                     <Btn
-                      onClick={() => navigateTo(posttestScore === null ? "posttest" : "lencana")}
+                      onClick={() =>
+                        navigateTo(
+                          gameState.tantanganScore === null
+                            ? "tantangan"
+                            : posttestScore === null
+                            ? "posttest"
+                            : "lencana"
+                        )
+                      }
                       variant="amber"
                       className="w-full text-lg px-8 py-4 shadow-2xl justify-center font-bold"
                     >
-                      {posttestScore === null ? "📝 Posttest Interaktif!" : "🏅 Lencana & Sertifikat!"}
+                      {gameState.tantanganScore === null
+                        ? "🏆 Tantangan DEDIGMA!"
+                        : posttestScore === null
+                        ? "📝 Posttest Interaktif!"
+                        : "🏅 Lencana & Sertifikat!"}
                     </Btn>
                   </div>
                 )}
@@ -344,6 +362,23 @@ function AppContent() {
                 missionId={currentMissionId}
                 onComplete={completeMission}
                 onHome={() => navigateTo("peta-misi")}
+              />
+            )}
+
+            {screen === "tantangan" && (
+              <TantanganScreen
+                onFinish={(score) => {
+                  setGameState((prev) => {
+                    const updated = {
+                      ...prev,
+                      tantanganScore: score
+                    };
+                    saveGameState(updated);
+                    return updated;
+                  });
+                  navigateTo("posttest");
+                }}
+                onBack={() => navigateTo("peta-misi")}
               />
             )}
 

@@ -3,14 +3,15 @@ import { HelpCircle } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { MascotDimas, MascotGita } from "../components/Mascot";
-
+import { Btn } from "../components/Btn";
 
 interface PetunjukScreenProps {
   onBack: () => void;
+  onNext?: () => void;
 }
 
-export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack }) => {
-  const { playNarrator, stopNarrator } = useAudio();
+export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }) => {
+  const { playNarrator, stopNarrator, playSFX } = useAudio();
 
   const buttons = [
     { icon: "🏠", label: "Tombol Beranda", desc: "Kembali ke halaman utama" },
@@ -35,6 +36,11 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack }) => {
     };
   }, []);
 
+  const handleNext = () => {
+    playSFX("click");
+    if (onNext) onNext();
+  };
+
   return (
     <div
       className="h-full flex flex-col overflow-hidden"
@@ -45,8 +51,8 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack }) => {
         backgroundRepeat: "no-repeat"
       }}
     >
-      <ScreenHeader title="Petunjuk Penggunaan 📋" onBack={onBack} />
-      <div className="p-4 space-y-4 max-w-2xl mx-auto overflow-y-auto">
+      <ScreenHeader title="Petunjuk Penggunaan 📋" onBack={onBack} onHome={onBack} />
+      <div className="flex-1 p-4 space-y-4 max-w-2xl mx-auto overflow-y-auto w-full">
         <div className="flex gap-4 items-start">
           <MascotDimas size="sm" />
           <div className="bg-white rounded-2xl p-3 shadow-md flex-1 border border-blue-100">
@@ -92,6 +98,14 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack }) => {
           <MascotGita size="sm" />
         </div>
       </div>
+
+      {onNext && (
+        <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
+          <Btn onClick={handleNext} variant="lanjut">
+            Pahami Tujuan Misi 🎯
+          </Btn>
+        </div>
+      )}
     </div>
   );
 };

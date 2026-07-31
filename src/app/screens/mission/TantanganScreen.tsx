@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Trophy } from "lucide-react";
-import { Mission } from "../../types";
+import { TANTANGAN_QUESTIONS } from "../../data/missions";
+import { ScreenHeader } from "../../components/ScreenHeader";
 import { useAudio } from "../../contexts/AudioContext";
 
 interface TantanganScreenProps {
-  mission: Mission;
   onFinish: (score: number) => void;
+  onBack?: () => void;
 }
 
-export const TantanganScreen: React.FC<TantanganScreenProps> = ({ mission, onFinish }) => {
+export const TantanganScreen: React.FC<TantanganScreenProps> = ({ onFinish, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
+  const questions = TANTANGAN_QUESTIONS;
   const [current, setCurrent] = useState(0);
   const [selected, setSelected] = useState<number | null>(null);
-  const [answers, setAnswers] = useState<(number | null)[]>(mission.kuis.map(() => null));
+  const [answers, setAnswers] = useState<(number | null)[]>(questions.map(() => null));
   const [done, setDone] = useState(false);
 
-  const q = mission.kuis[current];
-  const totalQ = mission.kuis.length;
+  const q = questions[current];
+  const totalQ = questions.length;
 
   useEffect(() => {
-    playNarrator(`Misi ketujuh: Tantangan DEDIGMA. Jawab kuis pilihan ganda berikut untuk mengetes pemahamanmu.`);
+    playNarrator(`Tantangan DEDIGMA. Jawab kuis pilihan ganda gabungan 3 budaya berikut untuk mengetes pemahamanmu!`);
     return () => {
       stopNarrator();
     };
@@ -46,15 +48,15 @@ export const TantanganScreen: React.FC<TantanganScreenProps> = ({ mission, onFin
         setSelected(null);
       } else {
         setDone(true);
-        const correctCount = newAnswers.filter((a, i) => a === mission.kuis[i].jawaban).length;
+        const correctCount = newAnswers.filter((a, i) => a === questions[i].jawaban).length;
         const finalScore = Math.round((correctCount / totalQ) * 100);
 
         if (finalScore >= 80) {
           playSFX("badge");
-          playNarrator(`Luar biasa! Skor kuis kamu ${finalScore}. Kamu adalah Detektif Pintar!`);
+          playNarrator(`Luar biasa! Skor tantangan kamu ${finalScore}. Kamu adalah Detektif Pintar!`);
         } else {
           playSFX("success");
-          playNarrator(`Selamat! Kamu menyelesaikan kuis dengan skor ${finalScore}.`);
+          playNarrator(`Selamat! Kamu menyelesaikan tantangan dengan skor ${finalScore}.`);
         }
 
         setTimeout(() => onFinish(finalScore), 1500);
@@ -91,6 +93,7 @@ export const TantanganScreen: React.FC<TantanganScreenProps> = ({ mission, onFin
 
   return (
     <div className="flex flex-col h-full font-['Nunito']">
+      <ScreenHeader title="Tantangan DEDIGMA 🏆" onBack={onBack} onHome={onBack} />
       {/* Progress header bar */}
       <div className="bg-white px-4 py-2 border-b border-blue-100 select-none">
         <div className="flex justify-between text-xs text-gray-500 mb-1">
