@@ -25,7 +25,7 @@ export const GuruDashboardScreen: React.FC = () => {
         const m2 = Boolean(parsed.missions?.[2]?.completed);
         const m3 = Boolean(parsed.missions?.[3]?.completed);
         const totalScore = parsed.totalScore || 0;
-        
+
         const realStudent = {
           id: 999,
           nama: savedUser,
@@ -117,16 +117,15 @@ export const GuruDashboardScreen: React.FC = () => {
       <div className="px-6 py-4 flex items-center justify-between border-b border-white/10">
         <div className="flex items-center gap-3">
           <div className="bg-[#EAB308] rounded-full p-2 border-2 border-[#183655] ring-2 ring-[#EAB308]">
-            <span className="text-xl">🔍</span>
+            <Search className="text-[#183655]" size={20} />
           </div>
           <div>
             <h1 className="font-['Fredoka'] font-bold text-xl leading-tight text-[#EAB308]">MARKAS DETEKTIF</h1>
-            <p className="text-blue-200 text-xs font-semibold tracking-widest uppercase">DEDIGMA — Panel Guru</p>
+            <p className="text-blue-200 text-xs font-semibold tracking-widest uppercase">Panel Guru</p>
           </div>
         </div>
 
         <div className="hidden md:flex items-center bg-[#1E40AF] px-4 py-2 rounded-full border border-blue-600/50">
-          <span className="mr-2 text-lg">👩‍🏫</span>
           <span className="text-sm font-semibold text-blue-100">"Selamat bertugas! {activeNowStudents.length} detektif cilik sedang aktif."</span>
         </div>
 
@@ -148,12 +147,12 @@ export const GuruDashboardScreen: React.FC = () => {
 
       {/* Main Content Area */}
       <div className="flex-1 p-6 max-w-6xl mx-auto w-full space-y-6 overflow-y-auto">
-        
+
         {/* Stats Cards (4 Columns) */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#2563EB]">
             <div className="bg-[#2563EB] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
-              <span>🕵️‍♂️</span> Total Detektif
+              Total Detektif
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
               <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.total}</span>
@@ -163,7 +162,7 @@ export const GuruDashboardScreen: React.FC = () => {
 
           <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#16A34A]">
             <div className="bg-[#16A34A] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
-              <span>⚡</span> Sedang Bertugas
+              Sedang Bertugas
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
               <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{activeNowStudents.length}</span>
@@ -173,7 +172,7 @@ export const GuruDashboardScreen: React.FC = () => {
 
           <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#D97706]">
             <div className="bg-[#D97706] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
-              <span>🏆</span> Misi Tuntas
+              Misi Tuntas
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
               <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.selesai}</span>
@@ -183,7 +182,7 @@ export const GuruDashboardScreen: React.FC = () => {
 
           <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#EAB308]">
             <div className="bg-[#EAB308] text-[#8B4513] px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-bold">
-              <span>⭐</span> Rata-rata Skor
+              Rata-rata Skor
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
               <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.avgScore}</span>
@@ -203,7 +202,7 @@ export const GuruDashboardScreen: React.FC = () => {
               {activeNowStudents.length} aktif
             </span>
           </div>
-          
+
           <div className="flex gap-4 overflow-x-auto pb-2">
             {activeNowStudents.map((s, i) => (
               <div key={i} className="bg-white border-2 border-emerald-200 rounded-2xl p-3 min-w-[240px] flex items-start gap-3 shadow-sm">
@@ -211,10 +210,7 @@ export const GuruDashboardScreen: React.FC = () => {
                 <div>
                   <h4 className="font-bold text-[#1E293B] text-sm">{s.nama}</h4>
                   <p className="text-xs font-semibold text-gray-500 mt-0.5">
-                    {s.activeMission === "Misi 1" && "⛵"}
-                    {s.activeMission === "Misi 2" && "🌺"}
-                    {s.activeMission === "Misi 3" && "🥁"}
-                    {" "} {s.activeMission} • <span className="text-orange-500">{s.activeStage}</span> • login {s.loginTime}
+                    {s.activeMission} • <span className="text-orange-500">{s.activeStage}</span> • login {s.loginTime}
                   </p>
                 </div>
               </div>
@@ -228,17 +224,17 @@ export const GuruDashboardScreen: React.FC = () => {
         {/* Lock / Unlock Misi per Kelas */}
         <div className="bg-[#FDF7E6] rounded-3xl p-5 shadow-lg border-4 border-[#D97706]/20">
           <h3 className="font-['Fredoka'] font-bold text-xl text-[#8B4513] flex items-center gap-2 mb-4">
-            <span>🔓</span> Lock / Unlock Misi per Kelas
+            Lock / Unlock Misi per Kelas
           </h3>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[#8B4513]/10">
                   <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2 w-24">Kelas</th>
-                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">⛵ Larung Sesaji</th>
-                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">🌺 Nyadaran</th>
-                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">🥁 Ledhug Suro</th>
+                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">Larung Sesaji</th>
+                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">Nyadaran</th>
+                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">Ledhug Suro</th>
                 </tr>
               </thead>
               <tbody>
@@ -256,8 +252,8 @@ export const GuruDashboardScreen: React.FC = () => {
                           <button
                             onClick={() => toggleLock(cls, mId)}
                             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all border-2
-                              ${isLocked 
-                                ? "bg-red-50 text-red-600 border-red-200 hover:bg-red-100" 
+                              ${isLocked
+                                ? "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"
                                 : "bg-emerald-50 text-emerald-600 border-emerald-200 hover:bg-emerald-100"
                               }
                             `}
@@ -279,22 +275,22 @@ export const GuruDashboardScreen: React.FC = () => {
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
             <button className="bg-[#EAB308] text-[#183655] font-['Fredoka'] font-bold rounded-full px-4 py-2 text-sm shadow-md border-2 border-transparent flex items-center gap-2">
-              <span>🕵️‍♂️</span> Per Siswa
+              Per Siswa
             </button>
             <button className="bg-transparent text-blue-200 border border-blue-400/30 hover:bg-white/5 font-['Fredoka'] font-semibold rounded-full px-4 py-2 text-sm flex items-center gap-2 transition-colors">
-              <span>🏫</span> Per Kelas
+              Per Kelas
             </button>
-            
+
             <div className="h-6 w-px bg-white/20 mx-1 hidden sm:block"></div>
-            
+
             <div className="flex gap-2">
               {classes.map((c) => (
                 <button
                   key={c}
                   onClick={() => setFilter(c)}
                   className={`font-['Fredoka'] font-bold rounded-full px-4 py-1.5 text-sm transition-all
-                    ${filter === c 
-                      ? "bg-[#2563EB] text-white shadow border-2 border-blue-400" 
+                    ${filter === c
+                      ? "bg-[#2563EB] text-white shadow border-2 border-blue-400"
                       : "bg-[#1E3A8A] text-blue-200 border border-transparent hover:bg-blue-800"
                     }`}
                 >
@@ -307,28 +303,24 @@ export const GuruDashboardScreen: React.FC = () => {
               <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
                 <Search size={14} className="text-blue-300" />
               </div>
-              <input 
-                type="text" 
-                placeholder="Cari nama detektif..." 
+              <input
+                type="text"
+                placeholder="Cari nama detektif..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-[#1E3A8A] text-white border border-blue-500/50 rounded-full py-1.5 pl-9 pr-4 text-sm font-semibold focus:outline-none focus:border-blue-300 focus:bg-[#1E40AF] placeholder-blue-300/70"
               />
             </div>
-
-            <button className="bg-[#10B981] hover:bg-[#059669] text-white font-bold rounded-full px-4 py-1.5 text-sm shadow flex items-center gap-1.5 transition-colors ml-auto">
-              <Plus size={16} /> Tambah Siswa
-            </button>
           </div>
 
           <div className="bg-[#1E3A8A] rounded-3xl overflow-hidden border border-blue-600/30 shadow-xl">
             <div className="px-5 py-3 border-b border-blue-600/30 flex justify-between items-center bg-[#1E40AF]">
               <h3 className="font-['Fredoka'] font-bold text-white flex items-center gap-2">
-                <span>📋</span> Daftar Detektif Cilik
+                Daftar Detektif Cilik
               </h3>
               <span className="text-blue-200 text-xs font-semibold">{filtered.length} siswa</span>
             </div>
-            
+
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -370,16 +362,15 @@ export const GuruDashboardScreen: React.FC = () => {
                         {[s.misi1, s.misi2, s.misi3].map((done, mi) => (
                           <td key={mi} className="px-5 py-3 text-center">
                             {done ? (
-                              <span className="text-emerald-400 font-bold">✅ Selesai</span>
+                              <span className="text-emerald-400 font-bold">Selesai</span>
                             ) : (
-                              <span className="text-blue-300/40 text-xs">○ Belum</span>
+                              <span className="text-blue-300/40 text-xs">Belum</span>
                             )}
                           </td>
                         ))}
                         <td className="px-5 py-3 text-center">
-                          <span className={`font-['Fredoka'] font-bold text-base ${
-                            s.skor >= 85 ? "text-emerald-400" : s.skor >= 70 ? "text-amber-400" : s.skor > 0 ? "text-rose-400" : "text-blue-300/30"
-                          }`}>
+                          <span className={`font-['Fredoka'] font-bold text-base ${s.skor >= 85 ? "text-emerald-400" : s.skor >= 70 ? "text-amber-400" : s.skor > 0 ? "text-rose-400" : "text-blue-300/30"
+                            }`}>
                             {s.skor > 0 ? s.skor : "-"}
                           </span>
                         </td>
@@ -394,7 +385,7 @@ export const GuruDashboardScreen: React.FC = () => {
             </div>
           </div>
         </div>
-        
+
       </div>
     </div>
   );
