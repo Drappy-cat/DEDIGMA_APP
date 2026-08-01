@@ -24,9 +24,20 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 
   // Specific absolute positions mapping to the custom map graphic coordinates
   const pins = [
-    { id: 1, name: "Larung Sesaji", emoji: "⛵", location: "Telaga Sarangan", top: "70%", left: "45%", color: "from-blue-600 to-cyan-500" },
-    { id: 2, name: "Nyadaran", emoji: "🌺", location: "Ngebel/Magetan Kidul", top: "45%", left: "55%", color: "from-emerald-600 to-green-500" },
-    { id: 3, name: "Ledhug Suro", emoji: "🥁", location: "Alun-Alun Magetan", top: "25%", left: "30%", color: "from-orange-600 to-amber-500" }
+    { 
+      id: 1, 
+      name: "Larung Sesaji", 
+      emoji: "⛵", 
+      icon: "",
+      image: "/assets/larung sesaji.svg",
+      type: "card",
+      location: "Telaga Sarangan", 
+      top: "70%", 
+      left: "45%", 
+      color: "from-blue-600 to-cyan-500" 
+    },
+    { id: 2, name: "Nyadaran", emoji: "🌺", type: "circle", location: "Ngebel/Magetan Kidul", top: "45%", left: "55%", color: "from-emerald-600 to-green-500" },
+    { id: 3, name: "Ledhug Suro", emoji: "🥁", type: "circle", location: "Alun-Alun Magetan", top: "25%", left: "30%", color: "from-orange-600 to-amber-500" }
   ];
 
   return (
@@ -144,41 +155,44 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                 <motion.button
                   onClick={() => handleSelect(pin.id)}
                   animate={{
-                    y: [0, -6, 0],
-                    filter: [
-                      "drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.4))",
-                      "drop-shadow(0px 0px 15px rgba(255, 215, 0, 0.8))",
-                      "drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.4))"
-                    ]
+                    y: [0, -8],
+                    scale: [1, 1.05]
                   }}
                   transition={{
-                    duration: 2.5,
+                    duration: 1.5,
                     repeat: Infinity,
+                    repeatType: "reverse",
                     ease: "easeInOut",
-                    delay: pin.id * 0.3
+                    delay: pin.id * 0.2
                   }}
                   whileHover={{ scale: 1.12 }}
                   whileTap={{ scale: 0.93 }}
                   className="flex flex-col items-center gap-1.5 cursor-pointer focus:outline-none"
                 >
-                  {/* Glowing outer pin ring */}
+                  {/* Glowing outer pin ring or Card */}
                   <div className="relative">
                     {isCompleted && (
                       <span className="absolute -top-1.5 -right-1.5 z-30 text-xl bg-amber-400 rounded-full border border-white w-6 h-6 flex items-center justify-center shadow-md animate-bounce">
                         ✅
                       </span>
                     )}
-                    <div
-                      className={`w-14 h-14 rounded-full flex items-center justify-center text-3xl border-4 border-white shadow-2xl relative z-10 bg-gradient-to-br ${pin.color}`}
-                    >
-                      {pin.emoji}
-                    </div>
-                    {/* Ring Pulse effect for active uncompleted mission */}
-                    {!isCompleted && (
-                      <span className="absolute inset-0 rounded-full border-4 border-white animate-ping opacity-60 pointer-events-none" />
+                    
+                    {pin.type === "card" ? (
+                      <div className="w-24 h-16 sm:w-28 sm:h-20 rounded-xl overflow-hidden border-4 border-white shadow-2xl relative z-10 flex items-center justify-center bg-white">
+                        <img src={pin.image} alt={pin.name} className="absolute inset-0 w-full h-full object-cover" />
+                        {pin.icon && (
+                          <span className="text-3xl relative z-10 filter drop-shadow-md">{pin.icon}</span>
+                        )}
+                      </div>
+                    ) : (
+                      <div
+                        className={`w-14 h-14 rounded-full flex items-center justify-center text-3xl border-4 border-white shadow-2xl relative z-10 bg-gradient-to-br ${pin.color}`}
+                      >
+                        {pin.emoji}
+                      </div>
                     )}
                   </div>
-                  <div className="bg-white text-gray-800 border-2 border-amber-300 font-['Fredoka'] px-3.5 py-1 rounded-full text-xs font-bold shadow-xl leading-none flex flex-col items-center">
+                  <div className="bg-white text-gray-800 border-2 border-amber-300 font-['Fredoka'] px-3.5 py-1 rounded-full text-xs font-bold shadow-xl leading-none flex flex-col items-center mt-1">
                     <span className="text-[10px] text-gray-400">Misi {pin.id}</span>
                     <span className="mt-0.5">{pin.name}</span>
                   </div>
