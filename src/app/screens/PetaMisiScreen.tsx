@@ -30,7 +30,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
   ];
 
   return (
-    <div
+    <motion.div
       className="h-full flex flex-col overflow-hidden relative select-none font-['Nunito']"
       style={{
         backgroundImage: "url('/assets/peta.svg')",
@@ -38,7 +38,51 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat"
       }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 1, ease: "easeOut" }}
     >
+      {/* Animasi Atmosfer Peta (Awan & Kunang-kunang) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {/* Awan Drifting (Kabut tipis) */}
+        <motion.div
+          className="absolute top-[5%] left-[-20%] w-[30rem] h-32 bg-white/30 blur-[40px] rounded-full"
+          animate={{ x: ["0vw", "120vw"] }}
+          transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div
+          className="absolute top-[25%] left-[-30%] w-[40rem] h-40 bg-white/20 blur-[50px] rounded-full"
+          animate={{ x: ["0vw", "130vw"] }}
+          transition={{ duration: 65, repeat: Infinity, ease: "linear", delay: 15 }}
+        />
+        
+        {/* Kunang-kunang Ajaib (Fireflies) */}
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={`firefly-${i}`}
+            className="absolute bg-amber-200 rounded-full shadow-[0_0_8px_2px_rgba(253,230,138,0.8)]"
+            style={{
+              top: `${10 + Math.random() * 80}%`,
+              left: `${10 + Math.random() * 80}%`,
+              width: `${2 + Math.random() * 3}px`,
+              height: `${2 + Math.random() * 3}px`
+            }}
+            animate={{
+              y: [0, -40 + Math.random() * 10, 0],
+              x: [0, (Math.random() - 0.5) * 50, 0],
+              opacity: [0, 0.7, 0],
+              scale: [0.5, 1.2, 0.5],
+            }}
+            transition={{
+              duration: 4 + Math.random() * 3,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: Math.random() * 5,
+            }}
+          />
+        ))}
+      </div>
+
       {/* Absolute Header overlay */}
       <div className="absolute top-0 inset-x-0 z-30">
         <ScreenHeader title="Peta Misi Budaya" onBack={onBack} onHome={onBack} />
@@ -47,6 +91,20 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
       {/* Map Content Viewport */}
       <div className="flex-1 relative w-full h-full pt-12 sm:pt-14">
         
+        {/* Teks Peta (map-petatxt.svg) */}
+        <motion.div 
+          className="absolute -top-14 sm:-top-20 left-1/2 -translate-x-1/2 z-40 w-64 sm:w-80 md:w-96 pointer-events-none"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ type: "spring", bounce: 0.3, duration: 1, delay: 0.4 }}
+        >
+          <img 
+            src="/assets/map-petatxt.svg" 
+            alt="Peta Budaya" 
+            className="w-full h-auto drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]"
+          />
+        </motion.div>
+
         {/* Jejak Jalur (Dotted Path) */}
         <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full pointer-events-none z-10">
           {/* Jalur dari Gerbang ke Misi 1, Misi 2, Misi 3 */}
@@ -85,6 +143,20 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                 // Active/Completed Pin layout
                 <motion.button
                   onClick={() => handleSelect(pin.id)}
+                  animate={{
+                    y: [0, -6, 0],
+                    filter: [
+                      "drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.4))",
+                      "drop-shadow(0px 0px 15px rgba(255, 215, 0, 0.8))",
+                      "drop-shadow(0px 0px 2px rgba(255, 255, 255, 0.4))"
+                    ]
+                  }}
+                  transition={{
+                    duration: 2.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: pin.id * 0.3
+                  }}
                   whileHover={{ scale: 1.12 }}
                   whileTap={{ scale: 0.93 }}
                   className="flex flex-col items-center gap-1.5 cursor-pointer focus:outline-none"
@@ -115,8 +187,31 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
             </div>
           );
         })}
+
+        {/* Karakter Penunjuk Peta (Dimas & Gita) */}
+        <motion.div 
+          className="absolute bottom-0 left-[-1rem] sm:left-4 z-50 flex items-end drop-shadow-[0_15px_15px_rgba(0,0,0,0.5)] pointer-events-none"
+          initial={{ x: -200, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ type: "spring", bounce: 0.2, duration: 1.2, delay: 0.5 }}
+        >
+          <motion.img 
+            src="/assets/mascot/gita-peta.svg" 
+            alt="Gita" 
+            className="w-44 sm:w-60 h-auto object-contain relative z-10 scale-x-[-1]"
+            animate={{ y: [24, 19, 24] }} // Digeser turun agar sejajar dengan Dimas
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          />
+          <motion.img 
+            src="/assets/mascot/dimas-peta.svg" 
+            alt="Dimas" 
+            className="w-48 sm:w-64 h-auto object-contain -ml-16 sm:-ml-24 relative z-20"
+            animate={{ y: [0, -5, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 export default PetaMisiScreen;
