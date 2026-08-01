@@ -160,7 +160,12 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
       {/* Question container */}
       <div className="flex-1 flex flex-col items-center justify-center p-4">
-        <div
+        <motion.div
+          key={current}
+          initial={{ x: 30, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          exit={{ x: -30, opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
           className="w-full max-w-md p-6 shadow-2xl relative flex flex-col justify-between"
           style={{
             backgroundImage: "url('/assets/content-bg.png')",
@@ -207,7 +212,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
               );
             })}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

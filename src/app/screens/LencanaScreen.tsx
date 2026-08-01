@@ -146,7 +146,7 @@ export const LencanaScreen: React.FC<LencanaScreenProps> = ({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.85, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-white rounded-3xl max-w-sm w-full p-5 relative shadow-2xl border border-amber-200 text-center flex flex-col items-center select-none"
+              className="bg-white rounded-3xl max-w-sm w-full p-5 relative shadow-2xl border border-amber-200 text-center flex flex-col items-center select-none max-h-[90vh] overflow-y-auto"
             >
               <button
                 onClick={() => setSelectedBadge(null)}

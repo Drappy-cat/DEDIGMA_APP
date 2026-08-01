@@ -61,10 +61,10 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
         {/* BGM Toggle */}
         <button
           onClick={handleBgmToggle}
-          className={`px-2 py-1 rounded-xl transition-all cursor-pointer flex items-center gap-1 border text-[11px] font-bold ${
+          className={`px-2.5 py-1 rounded-xl transition-all cursor-pointer flex items-center gap-1 border text-[11px] font-bold backdrop-blur-sm hover:scale-105 active:scale-95 ${
             bgmEnabled && audioEnabled
-              ? "bg-amber-500/20 border-amber-400/50 text-amber-300 shadow"
-              : "bg-white/5 border-white/10 text-white/40 grayscale"
+              ? "bg-amber-500/30 border-amber-300/50 text-amber-200 shadow"
+              : "bg-white/10 border-white/10 text-white/40 grayscale"
           }`}
           title={bgmEnabled ? "Matikan Musik Latar (BGM)" : "Nyalakan Musik Latar (BGM)"}
         >
@@ -75,10 +75,10 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
         {/* Narrator / TTS Toggle */}
         <button
           onClick={handleNarratorToggle}
-          className={`px-2 py-1 rounded-xl transition-all cursor-pointer flex items-center gap-1 border text-[11px] font-bold ${
+          className={`px-2.5 py-1 rounded-xl transition-all cursor-pointer flex items-center gap-1 border text-[11px] font-bold backdrop-blur-sm hover:scale-105 active:scale-95 ${
             narratorEnabled && audioEnabled
-              ? "bg-blue-500/20 border-blue-400/50 text-blue-200 shadow"
-              : "bg-white/5 border-white/10 text-white/40 grayscale"
+              ? "bg-blue-400/30 border-blue-300/50 text-blue-100 shadow"
+              : "bg-white/10 border-white/10 text-white/40 grayscale"
           }`}
           title={narratorEnabled ? "Matikan Suara Narator / TTS" : "Nyalakan Suara Narator / TTS"}
         >
