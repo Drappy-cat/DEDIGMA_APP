@@ -248,7 +248,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -left-10 landscape:left-10 -bottom-10 landscape:bottom-0 z-10 pointer-events-auto"
+          className="absolute -left-4 sm:-left-2 landscape:left-10 -bottom-4 sm:-bottom-2 landscape:bottom-0 z-10 pointer-events-none"
         >
           <MascotDimas size="3xl" animate={true} isLobby={true} />
         </motion.div>
@@ -257,7 +257,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -right-10 landscape:right-10 -bottom-10 landscape:bottom-0 z-10 pointer-events-auto"
+          className="absolute -right-4 sm:-right-2 landscape:right-10 -bottom-4 sm:-bottom-2 landscape:bottom-0 z-10 pointer-events-none"
         >
           <MascotGita size="3xl" animate={true} isLobby={true} />
         </motion.div>

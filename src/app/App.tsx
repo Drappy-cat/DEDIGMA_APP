@@ -1,24 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { AudioProvider, useAudio } from "./contexts/AudioContext";
 import { Screen, Role, GameState, createDefaultGameState, calculateBadges } from "./types";
 import { Btn } from "./components/Btn";
-import { TANTANGAN_QUESTIONS } from "./data/missions";
 
-// Screens imports
-import { LoginScreen } from "./screens/LoginScreen";
-import { SplashScreen } from "./screens/SplashScreen";
-import { PetunjukScreen } from "./screens/PetunjukScreen";
-import { TujuanScreen } from "./screens/TujuanScreen";
-import { ProfilScreen } from "./screens/ProfilScreen";
-import { PetaMisiScreen } from "./screens/PetaMisiScreen";
-import { TantanganScreen } from "./screens/mission/TantanganScreen";
-import { PosttestScreen } from "./screens/PosttestScreen";
-import { LencanaScreen } from "./screens/LencanaScreen";
-import { SertifikatScreen } from "./screens/SertifikatScreen";
-import { GuruDashboardScreen } from "./screens/GuruDashboardScreen";
-import { MissionFlow } from "./screens/mission/MissionFlow";
+// Lazy loaded screens for code-splitting & performance optimization
+const LoginScreen = lazy(() => import("./screens/LoginScreen").then((m) => ({ default: m.LoginScreen })));
+const SplashScreen = lazy(() => import("./screens/SplashScreen"));
+const PetunjukScreen = lazy(() => import("./screens/PetunjukScreen").then((m) => ({ default: m.PetunjukScreen })));
+const TujuanScreen = lazy(() => import("./screens/TujuanScreen").then((m) => ({ default: m.TujuanScreen })));
+const ProfilScreen = lazy(() => import("./screens/ProfilScreen").then((m) => ({ default: m.ProfilScreen })));
+const PetaMisiScreen = lazy(() => import("./screens/PetaMisiScreen").then((m) => ({ default: m.PetaMisiScreen })));
+const TantanganScreen = lazy(() => import("./screens/mission/TantanganScreen").then((m) => ({ default: m.TantanganScreen })));
+const PosttestScreen = lazy(() => import("./screens/PosttestScreen").then((m) => ({ default: m.PosttestScreen })));
+const LencanaScreen = lazy(() => import("./screens/LencanaScreen").then((m) => ({ default: m.LencanaScreen })));
+const SertifikatScreen = lazy(() => import("./screens/SertifikatScreen").then((m) => ({ default: m.SertifikatScreen })));
+const GuruDashboardScreen = lazy(() => import("./screens/GuruDashboardScreen").then((m) => ({ default: m.GuruDashboardScreen })));
+const MissionFlow = lazy(() => import("./screens/mission/MissionFlow").then((m) => ({ default: m.MissionFlow })));
+
+const ScreenLoader = () => (
+  <div className="w-full h-full min-h-[300px] flex flex-col items-center justify-center bg-slate-900 text-white p-6 select-none">
+    <div className="w-12 h-12 border-4 border-amber-400 border-t-transparent rounded-full animate-spin mb-3"></div>
+    <span className="font-['Fredoka'] font-bold text-sm tracking-wide text-amber-200 animate-pulse">
+      Memuat DEDIGMA... 🔍
+    </span>
+  </div>
+);
 
 // Helper: Load/Save GameState from localStorage
 function loadGameState(): GameState {
@@ -273,8 +281,10 @@ function AppContent() {
   if (!isLoggedIn || role === "guru" || screen === "login" || screen === "guru-dashboard") {
     return (
       <div className="size-full min-h-screen font-['Nunito']" style={{ fontFamily: "'Nunito', sans-serif" }}>
-        {screen === "login" && <LoginScreen />}
-        {screen === "guru-dashboard" && <GuruDashboardScreen />}
+        <Suspense fallback={<ScreenLoader />}>
+          {screen === "login" && <LoginScreen />}
+          {screen === "guru-dashboard" && <GuruDashboardScreen />}
+        </Suspense>
         <DemoPanel
           screen={screen}
           setScreen={setScreen}
@@ -290,134 +300,136 @@ function AppContent() {
   return (
     <div className="min-h-[100dvh] w-full bg-slate-900 flex items-center justify-center p-0 md:p-4 font-['Nunito'] select-none overflow-hidden">
       <div className="w-full max-w-5xl h-[100dvh] md:h-[720px] md:max-h-[92vh] bg-white relative overflow-hidden shadow-2xl md:rounded-3xl border border-white/10 flex flex-col">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={screen}
-            initial={{ opacity: 0, scale: 0.98, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 1.02, y: -10 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full h-full flex flex-col relative overflow-hidden"
-          >
-            {screen === "splash" && (
-              <SplashScreen
-                onMulai={() => navigateTo("petunjuk")}
-                onPetunjuk={() => navigateTo("petunjuk")}
-                onProfil={() => navigateTo("profil")}
-              />
-            )}
+        <Suspense fallback={<ScreenLoader />}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={screen}
+              initial={{ opacity: 0, scale: 0.98, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 1.02, y: -10 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full h-full flex flex-col relative overflow-hidden"
+            >
+              {screen === "splash" && (
+                <SplashScreen
+                  onMulai={() => navigateTo("petunjuk")}
+                  onPetunjuk={() => navigateTo("petunjuk")}
+                  onProfil={() => navigateTo("profil")}
+                />
+              )}
 
-            {screen === "petunjuk" && (
-              <PetunjukScreen
-                onBack={() => navigateTo("splash")}
-                onNext={() => navigateTo("tujuan")}
-              />
-            )}
-            {screen === "tujuan" && (
-              <TujuanScreen
-                onNext={() => navigateTo("peta-misi")}
-                onBack={() => navigateTo("petunjuk")}
-              />
-            )}
-            {screen === "profil" && <ProfilScreen onBack={() => navigateTo("splash")} />}
+              {screen === "petunjuk" && (
+                <PetunjukScreen
+                  onBack={() => navigateTo("splash")}
+                  onNext={() => navigateTo("tujuan")}
+                />
+              )}
+              {screen === "tujuan" && (
+                <TujuanScreen
+                  onNext={() => navigateTo("peta-misi")}
+                  onBack={() => navigateTo("petunjuk")}
+                />
+              )}
+              {screen === "profil" && <ProfilScreen onBack={() => navigateTo("splash")} />}
 
-            {screen === "peta-misi" && (
-              <div className="flex flex-col h-full relative">
-                <PetaMisiScreen
-                  completedMissions={completedMissions}
-                  onMission={(id) => {
-                    setCurrentMissionId(id);
-                    navigateTo("mission-flow");
+              {screen === "peta-misi" && (
+                <div className="flex flex-col h-full relative">
+                  <PetaMisiScreen
+                    completedMissions={completedMissions}
+                    onMission={(id) => {
+                      setCurrentMissionId(id);
+                      navigateTo("mission-flow");
+                    }}
+                    onBack={() => navigateTo("splash")}
+                  />
+                  {allMissionsDone && (
+                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-xs px-4">
+                      <Btn
+                        onClick={() =>
+                          navigateTo(
+                            gameState.tantanganScore === null
+                              ? "tantangan"
+                              : posttestScore === null
+                              ? "posttest"
+                              : "lencana"
+                          )
+                        }
+                        variant="amber"
+                        className="w-full text-lg px-8 py-4 shadow-2xl justify-center font-bold"
+                      >
+                        {gameState.tantanganScore === null
+                          ? "🏆 Tantangan DEDIGMA!"
+                          : posttestScore === null
+                          ? "📝 Posttest Interaktif!"
+                          : "🏅 Lencana & Sertifikat!"}
+                      </Btn>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {screen === "mission-flow" && (
+                <MissionFlow
+                  missionId={currentMissionId}
+                  onComplete={completeMission}
+                  onHome={() => navigateTo("peta-misi")}
+                />
+              )}
+
+              {screen === "tantangan" && (
+                <TantanganScreen
+                  onFinish={(score) => {
+                    setGameState((prev) => {
+                      const updated = {
+                        ...prev,
+                        tantanganScore: score
+                      };
+                      saveGameState(updated);
+                      return updated;
+                    });
+                    navigateTo("posttest");
                   }}
+                  onBack={() => navigateTo("peta-misi")}
+                />
+              )}
+
+              {screen === "posttest" && (
+                <PosttestScreen
+                  onComplete={(score) => {
+                    setPosttestScore(score);
+                    setGameState((prev) => {
+                      const updated = {
+                        ...prev,
+                        posttest: { ...prev.posttest, score }
+                      };
+                      saveGameState(updated);
+                      return updated;
+                    });
+                    navigateTo("lencana");
+                  }}
+                  onBack={() => navigateTo("peta-misi")}
+                />
+              )}
+
+              {screen === "lencana" && (
+                <LencanaScreen
+                  completedMissions={completedMissions}
+                  missionScores={missionScores}
+                  onNext={() => navigateTo("sertifikat")}
+                  onBack={() => navigateTo("peta-misi")}
+                />
+              )}
+
+              {screen === "sertifikat" && (
+                <SertifikatScreen
+                  studentName={userName}
+                  missionScores={missionScores}
                   onBack={() => navigateTo("splash")}
                 />
-                {allMissionsDone && (
-                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-xs px-4">
-                    <Btn
-                      onClick={() =>
-                        navigateTo(
-                          gameState.tantanganScore === null
-                            ? "tantangan"
-                            : posttestScore === null
-                            ? "posttest"
-                            : "lencana"
-                        )
-                      }
-                      variant="amber"
-                      className="w-full text-lg px-8 py-4 shadow-2xl justify-center font-bold"
-                    >
-                      {gameState.tantanganScore === null
-                        ? "🏆 Tantangan DEDIGMA!"
-                        : posttestScore === null
-                        ? "📝 Posttest Interaktif!"
-                        : "🏅 Lencana & Sertifikat!"}
-                    </Btn>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {screen === "mission-flow" && (
-              <MissionFlow
-                missionId={currentMissionId}
-                onComplete={completeMission}
-                onHome={() => navigateTo("peta-misi")}
-              />
-            )}
-
-            {screen === "tantangan" && (
-              <TantanganScreen
-                onFinish={(score) => {
-                  setGameState((prev) => {
-                    const updated = {
-                      ...prev,
-                      tantanganScore: score
-                    };
-                    saveGameState(updated);
-                    return updated;
-                  });
-                  navigateTo("posttest");
-                }}
-                onBack={() => navigateTo("peta-misi")}
-              />
-            )}
-
-            {screen === "posttest" && (
-              <PosttestScreen
-                onComplete={(score) => {
-                  setPosttestScore(score);
-                  setGameState((prev) => {
-                    const updated = {
-                      ...prev,
-                      posttest: { ...prev.posttest, score }
-                    };
-                    saveGameState(updated);
-                    return updated;
-                  });
-                  navigateTo("lencana");
-                }}
-                onBack={() => navigateTo("peta-misi")}
-              />
-            )}
-
-            {screen === "lencana" && (
-              <LencanaScreen
-                completedMissions={completedMissions}
-                missionScores={missionScores}
-                onNext={() => navigateTo("sertifikat")}
-                onBack={() => navigateTo("peta-misi")}
-              />
-            )}
-
-            {screen === "sertifikat" && (
-              <SertifikatScreen
-                studentName={userName}
-                missionScores={missionScores}
-                onBack={() => navigateTo("splash")}
-              />
-            )}
-          </motion.div>
-        </AnimatePresence>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </Suspense>
       </div>
 
       <DemoPanel
