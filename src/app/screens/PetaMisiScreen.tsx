@@ -24,16 +24,16 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 
   // Specific absolute positions mapping to the custom map graphic coordinates
   const pins = [
-    { id: 1, name: "Larung Sesaji", emoji: "⛵", location: "Telaga Sarangan", top: "40%", left: "68%", color: "from-blue-600 to-cyan-500" },
-    { id: 2, name: "Nyadaran", emoji: "🌺", location: "Ngebel/Magetan Kidul", top: "60%", left: "35%", color: "from-emerald-600 to-green-500" },
-    { id: 3, name: "Ledhug Suro", emoji: "🥁", location: "Alun-Alun Magetan", top: "32%", left: "42%", color: "from-orange-600 to-amber-500" }
+    { id: 1, name: "Larung Sesaji", emoji: "⛵", location: "Telaga Sarangan", top: "70%", left: "45%", color: "from-blue-600 to-cyan-500" },
+    { id: 2, name: "Nyadaran", emoji: "🌺", location: "Ngebel/Magetan Kidul", top: "45%", left: "55%", color: "from-emerald-600 to-green-500" },
+    { id: 3, name: "Ledhug Suro", emoji: "🥁", location: "Alun-Alun Magetan", top: "25%", left: "30%", color: "from-orange-600 to-amber-500" }
   ];
 
   return (
     <div
       className="h-full flex flex-col overflow-hidden relative select-none font-['Nunito']"
       style={{
-        backgroundImage: "url('/assets/map-base.png')",
+        backgroundImage: "url('/assets/peta.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat"
@@ -46,6 +46,21 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 
       {/* Map Content Viewport */}
       <div className="flex-1 relative w-full h-full pt-12 sm:pt-14">
+        
+        {/* Jejak Jalur (Dotted Path) */}
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full pointer-events-none z-10">
+          {/* Jalur dari Gerbang ke Misi 1, Misi 2, Misi 3 */}
+          <path
+            d="M 75 88 Q 45 88 45 70 T 55 45 T 30 25"
+            fill="transparent"
+            stroke="rgba(255, 255, 255, 0.8)"
+            strokeWidth="0.8"
+            strokeDasharray="1.5 1.5"
+            vectorEffect="non-scaling-stroke"
+            className="filter drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]"
+          />
+        </svg>
+
         {pins.map((pin) => {
           const isCompleted = completedMissions.has(pin.id);
           const isLocked = pin.id > 1 && !completedMissions.has(pin.id - 1);
