@@ -11,6 +11,23 @@ interface TujuanScreenProps {
   onBack: () => void;
 }
 
+const TypedText: React.FC<{ text: string; delay?: number }> = ({ text, delay = 0 }) => {
+  return (
+    <span>
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.05, delay: delay + index * 0.03 }}
+        >
+          {char}
+        </motion.span>
+      ))}
+    </span>
+  );
+};
+
 const tujuanItems = [
   {
     icon: <BookOpen size={20} className="text-blue-500" />,
@@ -78,24 +95,29 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
       <div className="flex-1 overflow-y-auto p-4 space-y-4 max-w-2xl mx-auto w-full">
         {/* Mascot intro */}
         <motion.div
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
           className="flex gap-3 items-start"
         >
           <MascotGita size="sm" animate={true} />
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-3 flex-1 shadow-md border border-purple-100">
+          <motion.div 
+            className="bg-white/95 backdrop-blur-sm rounded-2xl p-3 flex-1 shadow-md border border-purple-100 origin-top-left"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", bounce: 0.5, delay: 0.3 }}
+          >
             <p className="text-purple-800 text-xs leading-relaxed font-semibold">
-              Hai! Aku Gita. Sebelum memulai petualangan, yuk pahami dulu tujuan pembelajaran kita! 🌟
+              <TypedText text="Hai! Aku Gita. Sebelum memulai petualangan, yuk pahami dulu tujuan pembelajaran kita! 🌟" delay={0.8} />
             </p>
-          </div>
+          </motion.div>
         </motion.div>
 
         {/* Capaian Pembelajaran */}
         <motion.div
-          initial={{ y: 15, opacity: 0 }}
+          initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          transition={{ duration: 0.5, delay: 3.2 }}
           className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-lg p-4 border border-blue-100/40"
         >
           <h3 className="font-['Fredoka'] font-bold text-blue-700 text-base mb-3 flex items-center gap-1.5">
@@ -107,7 +129,7 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
                 key={i}
                 initial={{ x: -15, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.25 + i * 0.08 }}
+                transition={{ duration: 0.3, delay: 3.5 + i * 0.1 }}
                 className={`rounded-2xl p-3 flex items-start gap-3 border shadow-sm ${item.color}`}
               >
                 <div className="mt-0.5 flex-shrink-0">{item.icon}</div>
@@ -122,9 +144,9 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
 
         {/* Indikator Pembelajaran */}
         <motion.div
-          initial={{ y: 15, opacity: 0 }}
+          initial={{ y: 30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5 }}
+          transition={{ duration: 0.5, delay: 4.5 }}
           className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-lg p-4 border border-amber-100/40"
         >
           <h3 className="font-['Fredoka'] font-bold text-amber-700 text-base mb-3 flex items-center gap-1.5">
@@ -134,9 +156,9 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
             {indikator.map((ind, i) => (
               <motion.div
                 key={i}
-                initial={{ x: 15, opacity: 0 }}
+                initial={{ x: -15, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.55 + i * 0.06 }}
+                transition={{ duration: 0.3, delay: 4.8 + i * 0.1 }}
                 className="flex items-start gap-2.5 bg-amber-50/60 rounded-xl p-2.5 border border-amber-100/30"
               >
                 <span className="bg-amber-400 text-white font-['Fredoka'] font-bold w-6 h-6 rounded-full flex items-center justify-center text-[10px] flex-shrink-0 select-none shadow-sm">
@@ -150,24 +172,59 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
 
         {/* Mascot encouragement */}
         <motion.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.8 }}
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 5.5 }}
           className="flex gap-3 items-start"
         >
           <MascotDimas size="sm" animate={true} />
-          <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-3 flex-1 shadow-md border border-blue-100">
+          <motion.div 
+            className="bg-white/95 backdrop-blur-sm rounded-2xl p-3 flex-1 shadow-md border border-blue-100 origin-top-left"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", bounce: 0.5, delay: 5.8 }}
+          >
             <p className="text-blue-800 text-xs leading-relaxed font-semibold">
-              Yuk mulai petualangan! Selesaikan 3 misi budaya Magetan dan buktikan bahwa kamu adalah Detektif Digital sejati! 🔍🏆
+              <TypedText text="Yuk mulai petualangan! Selesaikan 3 misi budaya Magetan dan buktikan bahwa kamu adalah Detektif Digital sejati! 🔍🏆" delay={6.3} />
             </p>
-          </div>
+          </motion.div>
         </motion.div>
       </div>
 
       {/* Sticky footer */}
-      <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
-        <Btn onClick={handleNext} variant="lanjut" />
-      </div>
+      <motion.div 
+        className="px-6 py-2 bg-transparent flex-shrink-0 flex justify-between w-full"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 10.0 }}
+      >
+        {onBack ? (
+          <button
+            onClick={onBack}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+            aria-label="Kembali"
+          >
+            <img
+              src="/assets/button/back.svg"
+              alt="Tombol Kembali"
+              className="w-10 sm:w-16 h-auto object-contain drop-shadow-md"
+            />
+          </button>
+        ) : <div className="w-10 sm:w-16" />}
+        {onNext && (
+          <button
+            onClick={handleNext}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+            aria-label="Lanjut"
+          >
+            <img
+              src="/assets/button/next.svg"
+              alt="Tombol Lanjut"
+              className="w-10 sm:w-16 h-auto object-contain drop-shadow-md"
+            />
+          </button>
+        )}
+      </motion.div>
     </div>
   );
 };

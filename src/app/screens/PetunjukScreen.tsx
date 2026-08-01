@@ -1,14 +1,31 @@
 import React, { useEffect } from "react";
 import { HelpCircle } from "lucide-react";
+import { motion } from "motion/react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
-import { MascotDimas, MascotGita } from "../components/Mascot";
-import { Btn } from "../components/Btn";
+import { MascotDimas } from "../components/Mascot";
 
 interface PetunjukScreenProps {
   onBack: () => void;
   onNext?: () => void;
 }
+
+const TypedText: React.FC<{ text: string; delay?: number }> = ({ text, delay = 0 }) => {
+  return (
+    <span>
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.05, delay: delay + index * 0.03 }}
+        >
+          {char}
+        </motion.span>
+      ))}
+    </span>
+  );
+};
 
 export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
@@ -53,48 +70,89 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
     >
       <ScreenHeader title="Petunjuk Penggunaan 📋" onBack={onBack} onHome={onBack} />
       <div className="flex-1 px-4 py-2 space-y-2 max-w-2xl mx-auto overflow-y-auto w-full">
-        <div className="flex gap-3 items-start">
+        
+        {/* Dimas & Popup Chat */}
+        <motion.div 
+          className="flex gap-3 items-start"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <MascotDimas size="sm" />
-          <div className="bg-white rounded-2xl p-2.5 shadow-md flex-1 border border-blue-100">
+          <motion.div 
+            className="bg-white rounded-2xl p-2.5 shadow-md flex-1 border border-blue-100 origin-top-left"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", bounce: 0.5, delay: 0.3 }}
+          >
             <p className="font-['Nunito'] text-blue-800 text-sm leading-relaxed">
-              Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan DEDIGMA dengan mudah! 😊
+              <TypedText text="Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan DEDIGMA dengan mudah! 😊" delay={0.8} />
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="bg-white rounded-3xl shadow-lg p-3 border border-blue-100/40">
+        {/* Fungsi Tombol */}
+        <motion.div 
+          className="bg-white rounded-3xl shadow-lg p-3 border border-blue-100/40"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 3.2 }} // Muncul setelah teks selesai diketik (sekitar ~2.8s)
+        >
           <h3 className="font-['Fredoka'] font-semibold text-blue-700 text-base mb-2 flex items-center gap-1.5">
             <HelpCircle className="text-blue-500" size={18} /> Fungsi Tombol
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {buttons.map((b, i) => (
-              <div key={i} className="bg-blue-50/70 rounded-2xl p-2 flex items-start gap-2 border border-blue-100/20">
+              <motion.div 
+                key={i} 
+                className="bg-blue-50/70 rounded-2xl p-2 flex items-start gap-2 border border-blue-100/20"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 3.5 + (i * 0.1) }}
+              >
                 <span className="text-xl select-none">{b.icon}</span>
                 <div>
                   <p className="font-['Fredoka'] font-semibold text-blue-700 text-[13px]">{b.label}</p>
                   <p className="font-['Nunito'] text-gray-500 text-[11px] leading-tight">{b.desc}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="bg-white rounded-3xl shadow-lg p-3 border border-blue-100/40">
+        {/* Cara Mengerjakan */}
+        <motion.div 
+          className="bg-white rounded-3xl shadow-lg p-3 border border-blue-100/40"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 4.5 }}
+        >
           <h3 className="font-['Fredoka'] font-semibold text-blue-700 text-base mb-2">Cara Mengerjakan Aktivitas</h3>
           <div className="space-y-1.5">
             {cara.map((c, i) => (
-              <div key={i} className="flex items-start gap-2 bg-amber-50/60 rounded-2xl p-2 border border-amber-100/30">
+              <motion.div 
+                key={i} 
+                className="flex items-start gap-2 bg-amber-50/60 rounded-2xl p-2 border border-amber-100/30"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 4.8 + (i * 0.2) }}
+              >
                 <span className="bg-amber-400 text-white font-['Fredoka'] font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs flex-shrink-0 select-none shadow-sm">
                   {i + 1}
                 </span>
                 <p className="font-['Nunito'] text-gray-700 text-[13px] leading-tight">{c}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="px-6 py-2 bg-transparent flex-shrink-0 flex justify-between w-full">
+      <motion.div 
+        className="px-6 py-2 bg-transparent flex-shrink-0 flex justify-between w-full"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 5.5 }}
+      >
         {onBack ? (
           <button
             onClick={onBack}
@@ -121,7 +179,7 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
             />
           </button>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };
