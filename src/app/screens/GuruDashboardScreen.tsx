@@ -25,6 +25,8 @@ export const GuruDashboardScreen: React.FC = () => {
         const m2 = Boolean(parsed.missions?.[2]?.completed);
         const m3 = Boolean(parsed.missions?.[3]?.completed);
         const totalScore = parsed.totalScore || 0;
+        const tantanganScore = parsed.tantanganScore !== null && parsed.tantanganScore !== undefined ? parsed.tantanganScore : "-";
+        const posttestScore = parsed.posttest?.score !== null && parsed.posttest?.score !== undefined ? parsed.posttest.score : "-";
         
         const realStudent = {
           id: 999,
@@ -34,6 +36,8 @@ export const GuruDashboardScreen: React.FC = () => {
           misi2: m2,
           misi3: m3,
           skor: totalScore,
+          tantangan: tantanganScore,
+          posttest: posttestScore,
           waktu: "15 Menit",
           tanggal: new Date().toISOString().split("T")[0]
         };
@@ -85,26 +89,47 @@ export const GuruDashboardScreen: React.FC = () => {
 
   const exportCSV = () => {
     playSFX("click");
-    const headers = ["No", "Nama Siswa", "Kelas", "Misi 1", "Misi 2", "Misi 3", "Skor", "Durasi", "Tanggal"];
-    const rows = filtered.map((s, i) => [
-      i + 1,
-      s.nama,
-      s.kelas,
-      s.misi1 ? "Selesai" : "Belum",
-      s.misi2 ? "Selesai" : "Belum",
-      s.misi3 ? "Selesai" : "Belum",
-      s.skor,
-      s.waktu,
-      s.tanggal
-    ]);
+    const headers = [
+      "No",
+      "Nama Detektif",
+      "Kelas",
+      "Misi 1 (Larung Sesaji)",
+      "Misi 2 (Nyadaran)",
+      "Misi 3 (Ledhug Suro)",
+      "Skor Rata-Rata Misi (%)",
+      "Skor Tantangan",
+      "Skor Posttest",
+      "Status Kelulusan",
+      "Durasi Belajar",
+      "Tanggal Akses"
+    ];
+
+    const rows = filtered.map((s, i) => {
+      const allDone = s.misi1 && s.misi2 && s.misi3;
+      const status = allDone ? "LULUS (3 Misi Selesai)" : "Dalam Proses";
+      return [
+        i + 1,
+        s.nama,
+        s.kelas,
+        s.misi1 ? "Selesai" : "Belum",
+        s.misi2 ? "Selesai" : "Belum",
+        s.misi3 ? "Selesai" : "Belum",
+        s.skor > 0 ? `${s.skor}%` : "0%",
+        (s as any).tantangan ?? "-",
+        (s as any).posttest ?? "-",
+        status,
+        s.waktu || "-",
+        s.tanggal || new Date().toISOString().split("T")[0]
+      ];
+    });
 
     const BOM = "\ufeff";
-    const csvContent = [headers, ...rows].map((r) => r.map((c) => `"${c}"`).join(",")).join("\n");
+    const csvContent = [headers, ...rows].map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
     const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Laporan_Aktivitas_DEDIGMA_${filter.replace(/\s+/g, "_")}.csv`;
+    a.download = `Laporan_Rekap_DEDIGMA_${filter.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
