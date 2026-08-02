@@ -162,7 +162,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
         </div>
       </div>
 
-      <AudioSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+      <AudioSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        onOpenProfil={() => onProfil()}
+      />
 
 
       {/* Content wrapper: Central UI with floating mascots */}

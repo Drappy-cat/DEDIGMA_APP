@@ -6,9 +6,10 @@ import { useAudio } from "../contexts/AudioContext";
 interface AudioSettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onOpenProfil?: () => void;
 }
 
-export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, onClose }) => {
+export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, onClose, onOpenProfil }) => {
   const {
     audioEnabled,
     bgmEnabled,
@@ -256,56 +257,38 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
             </div>
           )}
 
-          {/* TAB 2: ABOUT & CREDITS FOUNDATION */}
+          {/* TAB 2: ABOUT GAME ONLY */}
           {activeTab === "about" && (
-            <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+            <div className="space-y-3.5 max-h-[360px] overflow-y-auto pr-1">
               {/* About App Card */}
-              <div className="bg-slate-800/80 rounded-2xl p-3.5 border border-slate-700 space-y-2">
+              <div className="bg-slate-800/80 rounded-2xl p-4 border border-slate-700 space-y-3">
                 <div className="flex items-center gap-3">
-                  <img src="/assets/logo.png" alt="DEDIGMA" className="w-10 h-10 object-contain drop-shadow" />
+                  <img src="/assets/logo.png" alt="DEDIGMA" className="w-12 h-12 object-contain drop-shadow" />
                   <div>
                     <h4 className="font-['Fredoka'] font-bold text-base text-amber-300 leading-tight">DEDIGMA</h4>
                     <p className="text-[10px] text-slate-400 font-semibold">Detektif Digital Budaya Magetan v1.0.0</p>
                   </div>
                 </div>
-                <p className="text-xs text-slate-300 leading-relaxed font-['Nunito'] pt-1 border-t border-slate-700/60">
-                  Game media pembelajaran interaktif berbasis <em>edutainment</em> untuk mengenalkan kebudayaan lokal Kabupaten Magetan sekaligus melatih literasi digital dan verifikasi fakta bagi siswa.
+                <p className="text-xs text-slate-300 leading-relaxed font-['Nunito'] pt-2 border-t border-slate-700/60">
+                  Game media pembelajaran interaktif berbasis <em>edutainment</em> untuk mengenalkan kebudayaan lokal Kabupaten Magetan (Larung Sesaji, Nyadaran, Ledhug Suro) sekaligus melatih literasi digital dan verifikasi berita bagi siswa.
                 </p>
-              </div>
-
-              {/* Developer & Credits Foundation */}
-              <div className="bg-slate-800/80 rounded-2xl p-3.5 border border-slate-700 space-y-3">
-                <h5 className="font-['Fredoka'] font-bold text-xs text-amber-400 flex items-center gap-1.5 border-b border-slate-700 pb-2">
-                  <User size={14} /> Tim Pengembang & Kredit
-                </h5>
-
-                <div className="space-y-2.5 text-xs">
-                  <div>
-                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">🎓 Peneliti / Pengembang Utama</p>
-                    <p className="font-bold text-white">[ Masukkan Nama Pengembang Utama ]</p>
-                  </div>
-
-                  <div>
-                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">🏫 Instansi / Universitas</p>
-                    <p className="font-bold text-white">[ Masukkan Nama Universitas / Sekolah ]</p>
-                  </div>
-
-                  <div>
-                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">👩‍🏫 Dosen Pembimbing / Advisor</p>
-                    <p className="font-bold text-white">[ Masukkan Nama Dosen Pembimbing ]</p>
-                  </div>
-
-                  <div>
-                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">🎨 Asset Visual & Budaya</p>
-                    <p className="font-semibold text-slate-300">Aset Warisan Budaya Pemkab Magetan & Ilustrasi DEDIGMA</p>
-                  </div>
-
-                  <div>
-                    <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">📜 Lisensi & Hak Cipta</p>
-                    <p className="text-slate-400 text-[10px]">© 2026 Tim DEDIGMA. Hak Cipta Dilindungi Undang-Undang.</p>
-                  </div>
+                <div className="bg-slate-900/60 p-2.5 rounded-xl text-[11px] text-amber-200/90 font-semibold space-y-1 border border-amber-400/20">
+                  <p>✨ <strong>Fitur Utama:</strong> 3 Misi Kebudayaan, Cek Fakta Interaktif, Tantangan Budaya, & Posttest Evaluasi.</p>
                 </div>
               </div>
+
+              {/* Dedicated Page Launch Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  playSFX("click");
+                  onClose();
+                  if (onOpenProfil) onOpenProfil();
+                }}
+                className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 hover:from-blue-700 hover:to-indigo-800 text-white font-['Fredoka'] font-bold text-xs py-3 rounded-2xl shadow-xl flex items-center justify-center gap-2 cursor-pointer transition-all active:scale-95 border border-blue-400/40"
+              >
+                <span>👥 Lihat Profil Dosen & Tim Pengembang</span>
+              </button>
             </div>
           )}
 

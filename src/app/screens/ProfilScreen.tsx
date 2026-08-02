@@ -81,8 +81,8 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
                 <p className="text-[11px] text-amber-700 font-semibold">Penanggung Jawab & Pengarah Riset</p>
               </div>
             </div>
-            <span className="bg-amber-500 text-white font-['Fredoka'] font-bold text-xs px-3 py-1 rounded-full shadow">
-              👑 Lecturer Leader
+            <span className="bg-amber-500 text-white font-['Fredoka'] font-bold text-xs px-3 py-1 rounded-full shadow flex items-center gap-1">
+              <Award size={13} /> Pembimbing Utama
             </span>
           </div>
 
@@ -90,12 +90,11 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
             {/* Avatar Frame Dosen */}
             <div className="relative group flex-shrink-0">
               <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 p-1 shadow-lg">
-                <div className="w-full h-full rounded-[14px] bg-slate-100 overflow-hidden flex items-center justify-center relative">
-                  {/* Avatar Image Placeholder */}
-                  <span className="text-5xl select-none">👩‍🏫</span>
+                <div className="w-full h-full rounded-[14px] bg-amber-50 overflow-hidden flex items-center justify-center relative text-amber-700">
+                  <GraduationCap size={48} />
                 </div>
               </div>
-              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-900 text-amber-300 text-[9px] font-bold px-2 py-0.5 rounded-full border border-amber-400/50 shadow">
+              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-900 text-amber-300 text-[9px] font-bold px-2.5 py-0.5 rounded-full border border-amber-400/50 shadow whitespace-nowrap">
                 Dosen Pembimbing
               </span>
             </div>
@@ -119,10 +118,10 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
 
               <div className="flex flex-wrap gap-2 pt-1 justify-center md:justify-start text-[11px] font-semibold text-slate-600">
                 <span className="bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
-                  🏛️ [ Nama Fakultas / Universitas ]
+                  [ Nama Fakultas / Universitas ]
                 </span>
                 <span className="bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
-                  📚 Pakar Teknologi Pembelajaran
+                  Pakar Teknologi Pembelajaran
                 </span>
               </div>
             </div>
@@ -146,8 +145,8 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
               className="bg-white rounded-3xl p-4 shadow-lg border border-blue-100 flex flex-col items-center text-center space-y-3 hover:shadow-xl transition-shadow"
             >
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 p-1 shadow-md">
-                <div className="w-full h-full rounded-[12px] bg-slate-50 flex items-center justify-center text-4xl">
-                  👨‍💻
+                <div className="w-full h-full rounded-[12px] bg-blue-50 flex items-center justify-center text-blue-600">
+                  <Code size={36} />
                 </div>
               </div>
               <div>
@@ -172,8 +171,8 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
               className="bg-white rounded-3xl p-4 shadow-lg border border-emerald-100 flex flex-col items-center text-center space-y-3 hover:shadow-xl transition-shadow"
             >
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-400 p-1 shadow-md">
-                <div className="w-full h-full rounded-[12px] bg-slate-50 flex items-center justify-center text-4xl">
-                  👩‍🏫
+                <div className="w-full h-full rounded-[12px] bg-emerald-50 flex items-center justify-center text-emerald-600">
+                  <BookOpen size={36} />
                 </div>
               </div>
               <div>
@@ -198,8 +197,8 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
               className="bg-white rounded-3xl p-4 shadow-lg border border-purple-100 flex flex-col items-center text-center space-y-3 hover:shadow-xl transition-shadow"
             >
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-400 p-1 shadow-md">
-                <div className="w-full h-full rounded-[12px] bg-slate-50 flex items-center justify-center text-4xl">
-                  🎨
+                <div className="w-full h-full rounded-[12px] bg-purple-50 flex items-center justify-center text-purple-600">
+                  <UserCheck size={36} />
                 </div>
               </div>
               <div>

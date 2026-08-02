@@ -23,7 +23,7 @@ export const MISSIONS: Mission[] = [
         "Tradisi Larung Sesaji telah berlangsung selama ratusan tahun dan diwariskan secara turun-temurun oleh masyarakat Magetan. Kegiatan ini menjadi simbol harmoni antara manusia, alam, dan Sang Pencipta. Setiap tahun, ribuan masyarakat dan wisatawan menyaksikan ritual sakral ini.",
       tujuan:
         "Larung Sesaji dilaksanakan sebagai ungkapan rasa syukur atas berkah Tuhan Yang Maha Esa, memohon keselamatan bagi masyarakat, serta menjaga kelestarian alam dan kearifan lokal Magetan agar tetap lestari untuk generasi mendatang.",
-      nilaiBudaya: ["🙏 Syukur", "🤝 Gotong Royong", "🌿 Harmoni dengan Alam", "❤️ Kebersamaan"]
+      nilaiBudaya: ["Syukur", "Gotong Royong", "Harmoni Alam", "Kebersamaan"]
     },
     faktaItems: [
       "Larung Sesaji dilaksanakan di Telaga Sarangan, Kabupaten Magetan.",
@@ -119,7 +119,7 @@ export const MISSIONS: Mission[] = [
         "Nyadaran telah diwariskan secara turun-temurun dalam budaya Jawa sejak berabad-abad lalu. Tradisi ini biasanya dilakukan menjelang bulan Ramadan sebagai bagian dari persiapan spiritual masyarakat Magetan.",
       tujuan:
         "Menghormati dan mendoakan arwah leluhur, mempererat tali silaturahmi antar anggota keluarga besar, serta menjaga dan melestarikan nilai-nilai luhur budaya lokal Magetan.",
-      nilaiBudaya: ["🙏 Hormat kepada Leluhur", "🤝 Silaturahmi", "❤️ Kebersamaan", "⭐ Religiusitas"]
+      nilaiBudaya: ["Hormat Leluhur", "Silaturahmi", "Kebersamaan", "Religiusitas"]
     },
     faktaItems: [
       "Nyadaran adalah tradisi ziarah kubur untuk menghormati leluhur.",
@@ -215,7 +215,7 @@ export const MISSIONS: Mission[] = [
         "Perayaan Ledhug Suro telah menjadi festival budaya tahunan di Magetan yang menggabungkan tradisi Islam dan budaya Jawa dengan harmonis. Festival ini menarik ribuan pengunjung dari berbagai daerah dan menjadi kebanggaan masyarakat Magetan.",
       tujuan:
         "Merayakan Tahun Baru Jawa (1 Suro), melestarikan kesenian dan kebudayaan tradisional Jawa, serta mempererat persatuan dan kebersamaan masyarakat Magetan dalam nuansa penuh kegembiraan.",
-      nilaiBudaya: ["🤝 Persatuan", "🎭 Pelestarian Budaya", "🌈 Toleransi", "🎨 Kreativitas"]
+      nilaiBudaya: ["Persatuan", "Pelestarian Budaya", "Toleransi", "Kreativitas"]
     },
     faktaItems: [
       "Ledhug Suro merayakan Tahun Baru Jawa (1 Muharram/Suro).",

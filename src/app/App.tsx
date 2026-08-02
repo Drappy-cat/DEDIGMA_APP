@@ -99,7 +99,7 @@ function DemoPanel({
           onClick={() => setIsOpen(true)}
           className="bg-slate-900/90 text-white rounded-full px-4 py-2.5 text-xs font-bold shadow-2xl border border-slate-700/60 flex items-center gap-1.5 hover:bg-slate-800 transition-all cursor-pointer active:scale-95"
         >
-          🛠️ Demo Mode
+          Demo Mode
         </button>
       ) : (
         <div className="bg-slate-900/95 border border-slate-700/60 rounded-3xl p-4 shadow-2xl w-48 space-y-2 flex flex-col text-left">
@@ -109,7 +109,7 @@ function DemoPanel({
               onClick={() => setIsOpen(false)}
               className="text-slate-400 hover:text-white text-xs cursor-pointer p-0.5"
             >
-              ❌
+              ✕
             </button>
           </div>
 
@@ -121,7 +121,7 @@ function DemoPanel({
                 : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
             }`}
           >
-            <span>🧑‍🎓</span> Tampilan Siswa
+            Tampilan Siswa
           </button>
 
           <button
@@ -132,7 +132,7 @@ function DemoPanel({
                 : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
             }`}
           >
-            <span>👩‍🏫</span> Tampilan Guru
+            Tampilan Guru
           </button>
 
           <button
@@ -143,7 +143,7 @@ function DemoPanel({
                 : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
             }`}
           >
-            <span>🔄</span> Onboarding
+            Onboarding
           </button>
 
           <button
@@ -154,7 +154,7 @@ function DemoPanel({
                 : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
             }`}
           >
-            <span>✨</span> Splashscreen
+            Splashscreen
           </button>
 
           <button
@@ -165,7 +165,7 @@ function DemoPanel({
                 : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
             }`}
           >
-            <span>📝</span> Posttest Kuis
+            Posttest Kuis
           </button>
 
           <button
@@ -176,7 +176,7 @@ function DemoPanel({
                 : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
             }`}
           >
-            <span>🏆</span> Admin / Certs
+            Lencana & Sertifikat
           </button>
         </div>
       )}
@@ -358,10 +358,10 @@ function AppContent() {
                         className="w-full text-lg px-8 py-4 shadow-2xl justify-center font-bold"
                       >
                         {gameState.tantanganScore === null
-                          ? "🏆 Tantangan DEDIGMA!"
+                          ? "Tantangan DEDIGMA"
                           : posttestScore === null
-                          ? "📝 Posttest Interaktif!"
-                          : "🏅 Lencana & Sertifikat!"}
+                          ? "Posttest Interaktif"
+                          : "Lencana & Sertifikat"}
                       </Btn>
                     </div>
                   )}

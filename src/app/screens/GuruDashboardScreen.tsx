@@ -202,8 +202,8 @@ export const GuruDashboardScreen: React.FC = () => {
       {/* Top Header */}
       <div className="px-6 py-4 flex items-center justify-between border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="bg-[#EAB308] rounded-full p-2 border-2 border-[#183655] ring-2 ring-[#EAB308]">
-            <span className="text-xl">🔍</span>
+          <div className="bg-[#EAB308] rounded-full p-2 border-2 border-[#183655] ring-2 ring-[#EAB308] text-[#183655]">
+            <Users size={20} />
           </div>
           <div>
             <h1 className="font-['Fredoka'] font-bold text-xl leading-tight text-[#EAB308]">MARKAS DETEKTIF</h1>
@@ -212,7 +212,6 @@ export const GuruDashboardScreen: React.FC = () => {
         </div>
 
         <div className="hidden md:flex items-center bg-[#1E40AF] px-4 py-2 rounded-full border border-blue-600/50">
-          <span className="mr-2 text-lg">👩‍🏫</span>
           <span className="text-sm font-semibold text-blue-100">"Selamat bertugas! {activeNowStudents.length} detektif cilik sedang aktif."</span>
         </div>
 
@@ -245,7 +244,7 @@ export const GuruDashboardScreen: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#2563EB]">
             <div className="bg-[#2563EB] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
-              <span>🕵️‍♂️</span> Total Detektif
+              <Users size={16} /> Total Detektif
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
               <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.total}</span>
@@ -255,7 +254,7 @@ export const GuruDashboardScreen: React.FC = () => {
 
           <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#16A34A]">
             <div className="bg-[#16A34A] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
-              <span>⚡</span> Sedang Bertugas
+              <BarChart2 size={16} /> Sedang Bertugas
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
               <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{activeNowStudents.length}</span>
@@ -265,7 +264,7 @@ export const GuruDashboardScreen: React.FC = () => {
 
           <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#D97706]">
             <div className="bg-[#D97706] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
-              <span>🏆</span> Misi Tuntas
+              <Award size={16} /> Misi Tuntas
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
               <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.selesai}</span>
@@ -275,7 +274,7 @@ export const GuruDashboardScreen: React.FC = () => {
 
           <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#EAB308]">
             <div className="bg-[#EAB308] text-[#8B4513] px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-bold">
-              <span>⭐</span> Rata-rata Skor
+              <Award size={16} /> Rata-rata Skor
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
               <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.avgScore}</span>
@@ -303,10 +302,7 @@ export const GuruDashboardScreen: React.FC = () => {
                 <div>
                   <h4 className="font-bold text-[#1E293B] text-sm">{s.nama}</h4>
                   <p className="text-xs font-semibold text-gray-500 mt-0.5">
-                    {s.activeMission === "Misi 1" && "⛵"}
-                    {s.activeMission === "Misi 2" && "🌺"}
-                    {s.activeMission === "Misi 3" && "🥁"}
-                    {" "} {s.activeMission} • <span className="text-orange-500">{s.activeStage}</span> • login {s.loginTime}
+                    {s.activeMission} • <span className="text-orange-500">{s.activeStage}</span> • login {s.loginTime}
                   </p>
                 </div>
               </div>
@@ -320,7 +316,7 @@ export const GuruDashboardScreen: React.FC = () => {
         {/* Lock / Unlock Misi per Kelas */}
         <div className="bg-[#FDF7E6] rounded-3xl p-5 shadow-lg border-4 border-[#D97706]/20">
           <h3 className="font-['Fredoka'] font-bold text-xl text-[#8B4513] flex items-center gap-2 mb-4">
-            <span>🔓</span> Lock / Unlock Misi per Kelas
+            Lock / Unlock Akses Misi per Kelas
           </h3>
           
           <div className="overflow-x-auto">
@@ -328,9 +324,9 @@ export const GuruDashboardScreen: React.FC = () => {
               <thead>
                 <tr className="border-b border-[#8B4513]/10">
                   <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2 w-24">Kelas</th>
-                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">⛵ Larung Sesaji</th>
-                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">🌺 Nyadaran</th>
-                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">🥁 Ledhug Suro</th>
+                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">Misi 1: Larung Sesaji</th>
+                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">Misi 2: Nyadaran</th>
+                  <th className="text-left font-['Fredoka'] text-[#8B4513] pb-2 px-2">Misi 3: Ledhug Suro</th>
                 </tr>
               </thead>
               <tbody>
@@ -371,10 +367,10 @@ export const GuruDashboardScreen: React.FC = () => {
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
             <button className="bg-[#EAB308] text-[#183655] font-['Fredoka'] font-bold rounded-full px-4 py-2 text-sm shadow-md border-2 border-transparent flex items-center gap-2">
-              <span>🕵️‍♂️</span> Per Siswa
+              Per Siswa
             </button>
             <button className="bg-transparent text-blue-200 border border-blue-400/30 hover:bg-white/5 font-['Fredoka'] font-semibold rounded-full px-4 py-2 text-sm flex items-center gap-2 transition-colors">
-              <span>🏫</span> Per Kelas
+              Per Kelas
             </button>
             
             <div className="h-6 w-px bg-white/20 mx-1 hidden sm:block"></div>
@@ -416,7 +412,7 @@ export const GuruDashboardScreen: React.FC = () => {
           <div className="bg-[#1E3A8A] rounded-3xl overflow-hidden border border-blue-600/30 shadow-xl">
             <div className="px-5 py-3 border-b border-blue-600/30 flex justify-between items-center bg-[#1E40AF]">
               <h3 className="font-['Fredoka'] font-bold text-white flex items-center gap-2">
-                <span>📋</span> Daftar Detektif Cilik
+                Daftar Detektif Cilik
               </h3>
               <span className="text-blue-200 text-xs font-semibold">{filtered.length} siswa</span>
             </div>
