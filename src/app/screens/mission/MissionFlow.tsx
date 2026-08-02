@@ -129,7 +129,7 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
               transition={{ duration: 0.35, ease: "easeOut" }}
               className="flex-1 min-h-0 overflow-visible h-full flex flex-col"
             >
-              {stage === "orientasi" && <OrientasiScreen mission={mission} onNext={() => advance()} />}
+              {stage === "orientasi" && <OrientasiScreen mission={mission} onNext={() => advance()} onBack={onHome} />}
               {stage === "materi" && <MateriScreen mission={mission} onNext={() => advance()} onBack={() => setStage("orientasi")} />}
               {stage === "aktivitas" && renderActivity()}
               {stage === "refleksi" && <RuangRefleksiScreen mission={mission} onNext={() => advance()} />}

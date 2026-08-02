@@ -9,9 +9,10 @@ import { useAudio } from "../../contexts/AudioContext";
 interface OrientasiScreenProps {
   mission: Mission;
   onNext: () => void;
+  onBack?: () => void;
 }
 
-export const OrientasiScreen: React.FC<OrientasiScreenProps> = ({ mission, onNext }) => {
+export const OrientasiScreen: React.FC<OrientasiScreenProps> = ({ mission, onNext, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [showVideo, setShowVideo] = useState(false);
 
@@ -152,9 +153,34 @@ export const OrientasiScreen: React.FC<OrientasiScreenProps> = ({ mission, onNex
         </motion.div>
       </div>
 
-      {/* Sticky footer */}
-      <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
-        <Btn onClick={handleNext} variant="lanjut" />
+      {/* Bottom Navigation: Back + Next */}
+      <div className="flex justify-between items-center px-3 py-2 flex-shrink-0 z-30 relative bg-transparent">
+        {onBack ? (
+          <button
+            onClick={() => { playSFX("click"); onBack(); }}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+            aria-label="Kembali"
+          >
+            <img
+              src="/assets/button/back.svg"
+              alt="Tombol Kembali"
+              className="w-12 sm:w-16 h-auto object-contain drop-shadow-md"
+            />
+          </button>
+        ) : (
+          <div className="w-12 sm:w-16" />
+        )}
+        <button
+          onClick={handleNext}
+          className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+          aria-label="Lanjut"
+        >
+          <img
+            src="/assets/button/next.svg"
+            alt="Tombol Lanjut"
+            className="w-12 sm:w-16 h-auto object-contain drop-shadow-md"
+          />
+        </button>
       </div>
     </div>
   );
