@@ -242,45 +242,93 @@ export const GuruDashboardScreen: React.FC = () => {
         
         {/* Stats Cards (4 Columns) */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#2563EB]">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#2563EB] will-change-transform transform-gpu"
+          >
             <div className="bg-[#2563EB] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
               <Users size={16} /> Total Detektif
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
-              <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.total}</span>
+              <motion.span
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl"
+              >
+                {stats.total}
+              </motion.span>
               <span className="text-[#8B4513]/70 text-sm font-semibold">terdaftar</span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#16A34A]">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
+            className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#16A34A] will-change-transform transform-gpu"
+          >
             <div className="bg-[#16A34A] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
               <BarChart2 size={16} /> Sedang Bertugas
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
-              <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{activeNowStudents.length}</span>
+              <motion.span
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.1 }}
+                className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl"
+              >
+                {activeNowStudents.length}
+              </motion.span>
               <span className="text-[#8B4513]/70 text-sm font-semibold">aktif sekarang</span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#D97706]">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.2 }}
+            className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#D97706] will-change-transform transform-gpu"
+          >
             <div className="bg-[#D97706] text-white px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-semibold">
               <Award size={16} /> Misi Tuntas
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
-              <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.selesai}</span>
+              <motion.span
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.2 }}
+                className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl"
+              >
+                {stats.selesai}
+              </motion.span>
               <span className="text-[#8B4513]/70 text-sm font-semibold">selesai 3 misi</span>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#EAB308]">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.3 }}
+            className="bg-[#FDF7E6] rounded-3xl overflow-hidden shadow-lg border-2 border-[#EAB308] will-change-transform transform-gpu"
+          >
             <div className="bg-[#EAB308] text-[#8B4513] px-4 py-2 flex items-center gap-2 font-['Fredoka'] font-bold">
               <Award size={16} /> Rata-rata Skor
             </div>
             <div className="p-4 flex flex-col items-center justify-center text-center">
-              <span className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl">{stats.avgScore}</span>
+              <motion.span
+                initial={{ scale: 0.5 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.3 }}
+                className="text-[#8B4513] font-['Fredoka'] font-bold text-4xl"
+              >
+                {stats.avgScore}
+              </motion.span>
               <span className="text-[#8B4513]/70 text-sm font-semibold">keseluruhan</span>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Detektif Sedang Menjalankan Misi */}

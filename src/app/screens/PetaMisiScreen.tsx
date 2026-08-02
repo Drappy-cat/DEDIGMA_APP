@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { ChevronLeft, Lock } from "lucide-react";
+import { Lock, Check } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 
@@ -25,7 +25,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
   // Specific absolute positions mapping to the custom map graphic coordinates
   const pins = [
     { id: 1, name: "Larung Sesaji", emoji: "⛵", location: "Telaga Sarangan", top: "40%", left: "68%", color: "from-blue-600 to-cyan-500" },
-    { id: 2, name: "Nyadaran", emoji: "🌺", location: "Ngebel/Magetan Kidul", top: "60%", left: "35%", color: "from-emerald-600 to-green-500" },
+    { id: 2, name: "Nyadaran", emoji: "🌺", location: "Magetan Kidul", top: "60%", left: "35%", color: "from-emerald-600 to-green-500" },
     { id: 3, name: "Ledhug Suro", emoji: "🥁", location: "Alun-Alun Magetan", top: "32%", left: "42%", color: "from-orange-600 to-amber-500" }
   ];
 
@@ -46,39 +46,52 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 
       {/* Map Content Viewport */}
       <div className="flex-1 relative w-full h-full pt-12 sm:pt-14">
-        {pins.map((pin) => {
+        {pins.map((pin, idx) => {
           const isCompleted = completedMissions.has(pin.id);
           const isLocked = pin.id > 1 && !completedMissions.has(pin.id - 1);
 
           return (
-            <div
+            <motion.div
               key={pin.id}
-              className="absolute -translate-x-1/2 -translate-y-1/2 z-20"
+              className="absolute -translate-x-1/2 -translate-y-1/2 z-20 will-change-transform transform-gpu"
               style={{ top: pin.top, left: pin.left }}
+              animate={
+                !isLocked
+                  ? {
+                      y: [0, -6, 0],
+                      transition: {
+                        duration: 2.8,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: idx * 0.4
+                      }
+                    }
+                  : {}
+              }
             >
               {isLocked ? (
                 // Locked Pin layout
                 <div className="flex flex-col items-center gap-1.5 filter opacity-75">
-                  <div className="bg-gray-500 text-white rounded-full w-12 h-12 flex items-center justify-center border-4 border-gray-400 shadow-lg cursor-not-allowed">
-                    <Lock size={20} />
+                  <div className="bg-gray-700/80 text-gray-300 rounded-full w-12 h-12 flex items-center justify-center border-4 border-gray-500/80 shadow-lg cursor-not-allowed">
+                    <Lock size={18} />
                   </div>
-                  <div className="bg-gray-800/80 backdrop-blur-sm text-gray-200 px-3 py-1 rounded-full text-[10px] font-bold shadow-md">
-                    🔒 Misi {pin.id}
+                  <div className="bg-gray-900/80 backdrop-blur-sm text-gray-300 px-3 py-1 rounded-full text-[10px] font-bold shadow-md border border-gray-700">
+                    Misi {pin.id} Terkunci
                   </div>
                 </div>
               ) : (
                 // Active/Completed Pin layout
                 <motion.button
                   onClick={() => handleSelect(pin.id)}
-                  whileHover={{ scale: 1.12 }}
-                  whileTap={{ scale: 0.93 }}
+                  whileHover={{ scale: 1.14 }}
+                  whileTap={{ scale: 0.92 }}
                   className="flex flex-col items-center gap-1.5 cursor-pointer focus:outline-none"
                 >
                   {/* Glowing outer pin ring */}
                   <div className="relative">
                     {isCompleted && (
-                      <span className="absolute -top-1.5 -right-1.5 z-30 text-xl bg-amber-400 rounded-full border border-white w-6 h-6 flex items-center justify-center shadow-md animate-bounce">
-                        ✅
+                      <span className="absolute -top-1.5 -right-1.5 z-30 text-white bg-emerald-500 rounded-full border-2 border-white w-6 h-6 flex items-center justify-center shadow-md animate-bounce">
+                        <Check size={14} strokeWidth={3} />
                       </span>
                     )}
                     <div
@@ -88,16 +101,16 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                     </div>
                     {/* Ring Pulse effect for active uncompleted mission */}
                     {!isCompleted && (
-                      <span className="absolute inset-0 rounded-full border-4 border-white animate-ping opacity-60 pointer-events-none" />
+                      <span className="absolute inset-0 rounded-full border-4 border-amber-300 animate-ping opacity-75 pointer-events-none" />
                     )}
                   </div>
-                  <div className="bg-white text-gray-800 border-2 border-amber-300 font-['Fredoka'] px-3.5 py-1 rounded-full text-xs font-bold shadow-xl leading-none flex flex-col items-center">
-                    <span className="text-[10px] text-gray-400">Misi {pin.id}</span>
+                  <div className="bg-white text-gray-800 border-2 border-amber-400 font-['Fredoka'] px-3.5 py-1 rounded-full text-xs font-bold shadow-xl leading-none flex flex-col items-center">
+                    <span className="text-[10px] text-amber-700 font-semibold">Misi {pin.id}</span>
                     <span className="mt-0.5">{pin.name}</span>
                   </div>
                 </motion.button>
               )}
-            </div>
+            </motion.div>
           );
         })}
       </div>

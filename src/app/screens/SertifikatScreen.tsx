@@ -137,7 +137,9 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
         {/* Certificate Container Wrapper */}
         <div className="w-full flex justify-center items-center flex-1 max-h-[60vh] md:max-h-[65vh]">
           {/* Certificate View Container (Forces layout sizes for canvas capture) */}
-          <div className="shadow-2xl rounded-2xl overflow-hidden border-2 border-amber-300 bg-white max-w-full max-h-full aspect-auto flex justify-center items-center">
+          <div className="shadow-2xl rounded-2xl overflow-hidden border-2 border-amber-300 bg-white max-w-full max-h-full aspect-auto flex justify-center items-center relative group">
+            {/* Glossy hologram shimmer glare layer */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none z-30" />
             {/* The element we convert to image */}
             <div
               ref={certRef}

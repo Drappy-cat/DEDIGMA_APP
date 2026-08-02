@@ -106,13 +106,17 @@ export const LencanaScreen: React.FC<LencanaScreenProps> = ({
               key={idx}
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 300, damping: 22, delay: idx * 0.1 }}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
               onClick={() => handleBadgeClick(badge)}
-              className={`rounded-3xl p-4 border flex items-center gap-4 shadow cursor-pointer transition-all ${badge.color}`}
+              className={`rounded-3xl p-4 border flex items-center gap-4 shadow cursor-pointer transition-all relative overflow-hidden group will-change-transform transform-gpu ${badge.color}`}
             >
-              <span className="text-4xl filter drop-shadow select-none">{badge.emoji}</span>
-              <div className="text-left flex-1 min-w-0">
+              {/* Glossy hologram shimmer glare layer */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+
+              <span className="text-4xl filter drop-shadow select-none relative z-10">{badge.emoji}</span>
+              <div className="text-left flex-1 min-w-0 relative z-10">
                 <h3 className="font-['Fredoka'] font-bold text-sm truncate">{badge.name}</h3>
                 <p className="text-[11px] leading-relaxed opacity-85 font-semibold mt-0.5 line-clamp-2">{badge.desc}</p>
               </div>
