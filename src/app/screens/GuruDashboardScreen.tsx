@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from "motion/react";
 import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, Plus, FileText } from "lucide-react";
 import jsPDF from "jspdf";
 import { useAuth } from "../contexts/AuthContext";
