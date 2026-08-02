@@ -48,13 +48,15 @@ function DemoPanel({
   setScreen,
   setCompletedMissions,
   setMissionScores,
-  setPosttestScore
+  setPosttestScore,
+  setCurrentMissionId
 }: {
   screen: Screen;
   setScreen: (s: Screen) => void;
   setCompletedMissions: (m: Set<number>) => void;
   setMissionScores: (s: Record<number, number>) => void;
   setPosttestScore: (s: number | null) => void;
+  setCurrentMissionId: (id: number) => void;
 }) {
   const { role, isLoggedIn, loginSiswa, loginGuru, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
@@ -65,32 +67,57 @@ function DemoPanel({
     return isLoggedIn && screen === targetScreen;
   };
 
-  const handleSwitch = (target: "siswa-peta" | "guru-dashboard" | "login" | "splash" | "posttest" | "lencana") => {
+  const handleSwitch = (target: "siswa-peta" | "guru-dashboard" | "login" | "splash" | "posttest" | "lencana" | "petunjuk" | "tujuan" | "tantangan" | "misi-1" | "misi-2" | "misi-3" | "sertifikat") => {
     if (target === "login") {
       logout();
       setScreen("login");
-    } else if (target === "siswa-peta") {
-      loginSiswa("Siswa Demo");
-      setScreen("peta-misi");
     } else if (target === "guru-dashboard") {
       loginGuru("Guru Demo", "guru@demo.com");
       setScreen("guru-dashboard");
-    } else if (target === "splash") {
+    } else {
       loginSiswa("Siswa Demo");
-      setScreen("splash");
-    } else if (target === "posttest") {
-      loginSiswa("Siswa Demo");
-      setCompletedMissions(new Set([1, 2, 3]));
-      setPosttestScore(null);
-      setScreen("posttest");
-    } else if (target === "lencana") {
-      loginSiswa("Siswa Demo");
-      setCompletedMissions(new Set([1, 2, 3]));
-      setMissionScores({ 1: 90, 2: 85, 3: 95 });
-      setPosttestScore(90);
-      setScreen("lencana");
+      
+      if (target === "siswa-peta") {
+        setScreen("peta-misi");
+      } else if (target === "splash") {
+        setScreen("splash");
+      } else if (target === "petunjuk") {
+        setScreen("petunjuk");
+      } else if (target === "tujuan") {
+        setScreen("tujuan");
+      } else if (target === "tantangan") {
+        setCompletedMissions(new Set([1, 2, 3]));
+        setScreen("tantangan");
+      } else if (target === "misi-1") {
+        setCurrentMissionId(1);
+        setScreen("mission-flow");
+      } else if (target === "misi-2") {
+        setCurrentMissionId(2);
+        setScreen("mission-flow");
+      } else if (target === "misi-3") {
+        setCurrentMissionId(3);
+        setScreen("mission-flow");
+      } else if (target === "posttest") {
+        setCompletedMissions(new Set([1, 2, 3]));
+        setPosttestScore(null);
+        setScreen("posttest");
+      } else if (target === "lencana") {
+        setCompletedMissions(new Set([1, 2, 3]));
+        setMissionScores({ 1: 90, 2: 85, 3: 95 });
+        setPosttestScore(90);
+        setScreen("lencana");
+      } else if (target === "sertifikat") {
+        setCompletedMissions(new Set([1, 2, 3]));
+        setMissionScores({ 1: 90, 2: 85, 3: 95 });
+        setPosttestScore(90);
+        setScreen("sertifikat");
+      }
     }
   };
+
+  const btnClass = "w-full text-left rounded-lg px-3 py-1.5 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer";
+  const activeClass = "bg-white text-slate-900 shadow font-bold";
+  const inactiveClass = "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200";
 
   return (
     <div className="fixed left-4 bottom-4 z-[999] font-['Nunito'] select-none">
@@ -102,8 +129,8 @@ function DemoPanel({
           Demo Mode
         </button>
       ) : (
-        <div className="bg-slate-900/95 border border-slate-700/60 rounded-3xl p-4 shadow-2xl w-48 space-y-2 flex flex-col text-left">
-          <div className="flex justify-between items-center mb-1">
+        <div className="bg-slate-900/95 border border-slate-700/60 rounded-3xl p-4 shadow-2xl w-52 space-y-3 flex flex-col text-left max-h-[85vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-1 sticky top-0 bg-slate-900/95 z-10 pt-1 pb-2">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">DEMO MODE</span>
             <button
               onClick={() => setIsOpen(false)}
@@ -113,71 +140,56 @@ function DemoPanel({
             </button>
           </div>
 
-          <button
-            onClick={() => handleSwitch("siswa-peta")}
-            className={`w-full text-left rounded-xl px-3.5 py-2 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
-              isActive("peta-misi", "siswa")
-                ? "bg-white text-slate-900 shadow-md font-bold"
-                : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
-            }`}
-          >
-            Tampilan Siswa
-          </button>
+          <div className="space-y-1">
+            <div className="text-[9px] font-bold text-slate-500 uppercase tracking-wider ml-1 mb-1">Awal & Guru</div>
+            <button onClick={() => handleSwitch("login")} className={`${btnClass} ${isActive("login") ? activeClass : inactiveClass}`}>
+              <span>🔄</span> Onboarding
+            </button>
+            <button onClick={() => handleSwitch("guru-dashboard")} className={`${btnClass} ${isActive("guru-dashboard", "guru") ? activeClass : inactiveClass}`}>
+              <span>👩‍🏫</span> Panel Guru
+            </button>
+            <button onClick={() => handleSwitch("splash")} className={`${btnClass} ${isActive("splash", "siswa") ? activeClass : inactiveClass}`}>
+              <span>✨</span> Splashscreen
+            </button>
+            <button onClick={() => handleSwitch("petunjuk")} className={`${btnClass} ${isActive("petunjuk", "siswa") ? activeClass : inactiveClass}`}>
+              <span>📋</span> Petunjuk
+            </button>
+            <button onClick={() => handleSwitch("tujuan")} className={`${btnClass} ${isActive("tujuan", "siswa") ? activeClass : inactiveClass}`}>
+              <span>🎯</span> Tujuan Misi
+            </button>
+          </div>
 
-          <button
-            onClick={() => handleSwitch("guru-dashboard")}
-            className={`w-full text-left rounded-xl px-3.5 py-2 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
-              isActive("guru-dashboard", "guru")
-                ? "bg-white text-slate-900 shadow-md font-bold"
-                : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
-            }`}
-          >
-            Tampilan Guru
-          </button>
+          <div className="space-y-1">
+            <div className="text-[9px] font-bold text-slate-500 uppercase tracking-wider ml-1 mb-1">Peta & Misi</div>
+            <button onClick={() => handleSwitch("siswa-peta")} className={`${btnClass} ${isActive("peta-misi", "siswa") ? activeClass : inactiveClass}`}>
+              <span>🗺️</span> Peta Misi
+            </button>
+            <button onClick={() => handleSwitch("misi-1")} className={`${btnClass} ${inactiveClass}`}>
+              <span>⛵</span> Misi 1 (Mulai)
+            </button>
+            <button onClick={() => handleSwitch("misi-2")} className={`${btnClass} ${inactiveClass}`}>
+              <span>🌺</span> Misi 2 (Mulai)
+            </button>
+            <button onClick={() => handleSwitch("misi-3")} className={`${btnClass} ${inactiveClass}`}>
+              <span>🥁</span> Misi 3 (Mulai)
+            </button>
+          </div>
 
-          <button
-            onClick={() => handleSwitch("login")}
-            className={`w-full text-left rounded-xl px-3.5 py-2 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
-              isActive("login")
-                ? "bg-white text-slate-900 shadow-md font-bold"
-                : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
-            }`}
-          >
-            Onboarding
-          </button>
-
-          <button
-            onClick={() => handleSwitch("splash")}
-            className={`w-full text-left rounded-xl px-3.5 py-2 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
-              isActive("splash", "siswa")
-                ? "bg-white text-slate-900 shadow-md font-bold"
-                : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
-            }`}
-          >
-            Splashscreen
-          </button>
-
-          <button
-            onClick={() => handleSwitch("posttest")}
-            className={`w-full text-left rounded-xl px-3.5 py-2 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
-              isActive("posttest", "siswa")
-                ? "bg-white text-slate-900 shadow-md font-bold"
-                : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
-            }`}
-          >
-            Posttest Kuis
-          </button>
-
-          <button
-            onClick={() => handleSwitch("lencana")}
-            className={`w-full text-left rounded-xl px-3.5 py-2 text-xs font-semibold flex items-center gap-2 transition-all cursor-pointer ${
-              isActive("lencana", "siswa") || isActive("sertifikat", "siswa")
-                ? "bg-white text-slate-900 shadow-md font-bold"
-                : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-200"
-            }`}
-          >
-            Lencana & Sertifikat
-          </button>
+          <div className="space-y-1">
+            <div className="text-[9px] font-bold text-slate-500 uppercase tracking-wider ml-1 mb-1">Akhir (Syarat Selesai Misi)</div>
+            <button onClick={() => handleSwitch("tantangan")} className={`${btnClass} ${isActive("tantangan", "siswa") ? activeClass : inactiveClass}`}>
+              <span>🧩</span> Tantangan
+            </button>
+            <button onClick={() => handleSwitch("posttest")} className={`${btnClass} ${isActive("posttest", "siswa") ? activeClass : inactiveClass}`}>
+              <span>📝</span> Posttest Kuis
+            </button>
+            <button onClick={() => handleSwitch("lencana")} className={`${btnClass} ${isActive("lencana", "siswa") ? activeClass : inactiveClass}`}>
+              <span>🏆</span> Lencana
+            </button>
+            <button onClick={() => handleSwitch("sertifikat")} className={`${btnClass} ${isActive("sertifikat", "siswa") ? activeClass : inactiveClass}`}>
+              <span>🎓</span> Sertifikat
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -267,36 +279,13 @@ function AppContent() {
       updated.totalScore = Object.values(allScores).length > 0
         ? Math.round(Object.values(allScores).reduce((a, b) => a + b, 0) / Object.values(allScores).length)
         : 0;
-
       saveGameState(updated);
       return updated;
     });
-
-    setScreen("peta-misi");
   };
 
-  const allMissionsDone = completedMissions.size === 3;
+  const allMissionsDone = completedMissions.has(1) && completedMissions.has(2) && completedMissions.has(3);
 
-  // Render Login and Teacher Dashboard without container constraint
-  if (!isLoggedIn || role === "guru" || screen === "login" || screen === "guru-dashboard") {
-    return (
-      <div className="size-full min-h-screen font-['Nunito']" style={{ fontFamily: "'Nunito', sans-serif" }}>
-        <Suspense fallback={<ScreenLoader />}>
-          {screen === "login" && <LoginScreen />}
-          {screen === "guru-dashboard" && <GuruDashboardScreen />}
-        </Suspense>
-        <DemoPanel
-          screen={screen}
-          setScreen={setScreen}
-          setCompletedMissions={setCompletedMissions}
-          setMissionScores={setMissionScores}
-          setPosttestScore={setPosttestScore}
-        />
-      </div>
-    );
-  }
-
-  // Student Gameplay: Wrapped inside a centered rounded tablet frame container on larger monitors
   return (
     <div className="min-h-[100dvh] w-full bg-slate-900 flex items-center justify-center p-0 md:p-4 font-['Nunito'] select-none overflow-hidden">
       <div className="w-full max-w-5xl h-[100dvh] md:h-[720px] md:max-h-[92vh] bg-white relative overflow-hidden shadow-2xl md:rounded-3xl border border-white/10 flex flex-col">
@@ -304,15 +293,24 @@ function AppContent() {
           <AnimatePresence mode="wait">
             <motion.div
               key={screen}
-              initial={{ opacity: 0, scale: 0.98, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 1.02, y: -10 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full h-full flex flex-col relative overflow-hidden"
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.02 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="w-full h-full flex flex-col overflow-hidden relative"
             >
+              {!isLoggedIn && (
+                <LoginScreen
+                  onLoginSiswa={() => navigateTo("splash")}
+                  onLoginGuru={() => navigateTo("guru-dashboard")}
+                />
+              )}
+
+              {isLoggedIn && role === "guru" && screen === "guru-dashboard" && <GuruDashboardScreen />}
+
               {screen === "splash" && (
                 <SplashScreen
-                  onMulai={() => navigateTo("petunjuk")}
+                  onMulai={() => navigateTo("peta-misi")}
                   onPetunjuk={() => navigateTo("petunjuk")}
                   onProfil={() => navigateTo("profil")}
                 />
@@ -438,12 +436,13 @@ function AppContent() {
         setCompletedMissions={setCompletedMissions}
         setMissionScores={setMissionScores}
         setPosttestScore={setPosttestScore}
+        setCurrentMissionId={setCurrentMissionId}
       />
     </div>
   );
 }
 
-export default function App() {
+export function App() {
   return (
     <AuthProvider>
       <AudioProvider>
@@ -452,3 +451,4 @@ export default function App() {
     </AuthProvider>
   );
 }
+export default App;

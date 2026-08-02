@@ -198,7 +198,7 @@ export const MascotGita: React.FC<MascotProps> = ({
         }
       >
         <img
-          src="/assets/gita-char.png"
+          src="/assets/mascot/gita-char.svg"
           alt="Gita Mascot"
           className={`${sizeClasses[size]} object-contain filter drop-shadow-md origin-bottom`}
         />

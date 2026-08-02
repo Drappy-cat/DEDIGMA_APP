@@ -190,9 +190,24 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const playBGM = (path: string = "/audio/backsound.mp3") => {
     if (!audioEnabled || !bgmEnabled) return;
+    
     if (bgmRef.current) {
+      // Ambil path dari sumber yang sedang diputar (menghindari absolute URL)
+      const currentSrc = new URL(bgmRef.current.src, window.location.href).pathname;
+      
+      // Jika lagu yang sama sudah ada, pastikan saja dia dimainkan (tidak dari awal)
+      if (currentSrc === path) {
+        if (bgmRef.current.paused) {
+          bgmRef.current.play().catch(() => {});
+        }
+        return;
+      }
+      
+      // Jika lagunya berbeda, berhentikan lagu sebelumnya
       bgmRef.current.pause();
     }
+    
+    // Mulai lagu baru dari awal
     const bgm = new Audio(path);
     bgm.loop = true;
     bgm.volume = bgmVolume;

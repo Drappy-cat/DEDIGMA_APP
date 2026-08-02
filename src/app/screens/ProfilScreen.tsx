@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { motion } from "motion/react";
-import { Award, BookOpen, UserCheck, Code, Sparkles, GraduationCap, Heart, ChevronLeft } from "lucide-react";
+import { Award, BookOpen, UserCheck, Code, Sparkles, GraduationCap, Heart } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { MascotDimas, MascotGita } from "../components/Mascot";
@@ -17,7 +17,7 @@ const springTransition = {
 };
 
 export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
-  const { playNarrator, stopNarrator, playSFX } = useAudio();
+  const { playNarrator, stopNarrator } = useAudio();
 
   useEffect(() => {
     playNarrator("Selamat datang di halaman Tentang Aplikasi dan Profil Tim Pengembang DEDIGMA.");
@@ -235,7 +235,6 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
                 Mengembangkan tata letak antarmuka (UI), aset visual budaya, serta pengalaman pengguna (UX) ramah anak.
               </p>
             </motion.div>
-
           </div>
         </div>
 
@@ -251,7 +250,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="bg-blue-50/70 rounded-2xl p-3.5 flex items-center gap-3 border border-blue-100">
-              <MascotDimas size="sm" animate={true} />
+              <MascotDimas size="sm" animate={true} interactive={false} />
               <div>
                 <h5 className="font-['Fredoka'] font-bold text-sm text-blue-800">Dimas — Detektif Digital</h5>
                 <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
@@ -261,7 +260,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
             </div>
 
             <div className="bg-amber-50/70 rounded-2xl p-3.5 flex items-center gap-3 border border-amber-100">
-              <MascotGita size="sm" animate={true} />
+              <MascotGita size="sm" animate={true} interactive={false} />
               <div>
                 <h5 className="font-['Fredoka'] font-bold text-sm text-amber-800">Gita — Detektif Budaya</h5>
                 <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">

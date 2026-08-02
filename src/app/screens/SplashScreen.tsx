@@ -79,14 +79,14 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
             style={{
               left: g.left,
               top: g.top,
-              width: g.size * 3, // Perbesar sedikit untuk bentuk bintang
+              width: g.size * 3,
               height: g.size * 3,
             }}
             animate={{
               opacity: [0, 1, 0],
               scale: [0, 1.2, 0],
               y: [0, Math.random() * 30 + 20],
-              rotate: [0, 180], // Tambahkan efek memutar
+              rotate: [0, 180],
             }}
             transition={{
               duration: g.duration,
@@ -109,7 +109,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
         </div>
 
         <div className="flex items-center gap-2.5 landscape:gap-3">
-          {/* Direct BGM Touch Shortcut (Persis Kapsul di Screenshot) */}
+          {/* Direct BGM Touch Shortcut */}
           <button
             onClick={handleBgmToggle}
             className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1.5 border text-xs font-bold shadow-lg backdrop-blur-md active:scale-95 ${
@@ -135,28 +135,29 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
             <Settings size={18} />
           </button>
 
-          {/* Custom Speaker volume toggle */}
+          {/* Master Speaker volume toggle */}
           <button
             onClick={handleVolumeToggle}
             className="transition-transform cursor-pointer focus:outline-none hover:scale-110 active:scale-95 flex items-center justify-center"
-            aria-label={audioEnabled ? "Matikan Suara" : "Nyalakan Suara"}
+            title={audioEnabled ? "Matikan Seluruh Suara" : "Nyalakan Seluruh Suara"}
           >
             <img
               src={audioEnabled ? "/assets/button/sound-on.svg" : "/assets/button/sound-off.svg"}
               alt={audioEnabled ? "Suara Nyala" : "Suara Mati"}
-              className="w-10 h-10 landscape:w-14 landscape:h-14 object-contain"
+              className="w-10 h-10 landscape:w-12 landscape:h-12 object-contain drop-shadow-sm"
             />
           </button>
 
+          {/* Home / Keluar toggle */}
           <button
             onClick={handleLogout}
             className="transition-transform cursor-pointer focus:outline-none hover:scale-110 active:scale-95 flex items-center justify-center"
-            aria-label="Keluar"
+            title="Keluar"
           >
             <img
               src="/assets/button/home.svg"
               alt="Home / Keluar"
-              className="w-10 h-10 landscape:w-14 landscape:h-14 object-contain"
+              className="w-10 h-10 landscape:w-12 landscape:h-12 object-contain drop-shadow-sm"
             />
           </button>
         </div>
@@ -167,7 +168,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
         onClose={() => setIsSettingsOpen(false)}
         onOpenProfil={() => onProfil()}
       />
-
 
       {/* Content wrapper: Central UI with floating mascots */}
       <div className="flex-1 w-full relative z-10 flex flex-col items-center justify-center px-4 overflow-hidden">
