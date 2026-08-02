@@ -50,6 +50,17 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 }) => {
   const { playSFX } = useAudio();
   const [selectedIdx, setSelectedIdx] = useState(0);
+  const [shakingId, setShakingId] = useState<number | null>(null);
+
+  const triggerShake = (id: number) => {
+    try {
+      playSFX("wrong");
+    } catch {
+      playSFX("click");
+    }
+    setShakingId(id);
+    setTimeout(() => setShakingId(null), 450);
+  };
 
   const handleSelect = (id: number) => {
     playSFX("click");
@@ -188,6 +199,8 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                   animate={{
                     opacity: 1,
                     y: 0,
+                    x: shakingId === mission.id ? [0, -12, 12, -8, 8, -4, 4, 0] : 0,
+                    rotate: shakingId === mission.id ? [0, -4, 4, -3, 3, -1, 1, 0] : 0,
                     scale: isActive ? 1 : 0.82,
                     filter: isActive ? "none" : "brightness(0.7)",
                   }}
@@ -195,6 +208,9 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                   onClick={() => {
                     playSFX("click");
                     setSelectedIdx(idx);
+                    if (isLocked) {
+                      triggerShake(mission.id);
+                    }
                   }}
                   className={`relative cursor-pointer transition-all ${
                     isActive ? "z-20" : "z-10"
@@ -337,10 +353,17 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 
               {/* Action Button */}
               {isSelectedLocked ? (
-                <div className="flex-shrink-0 bg-gray-400/50 text-gray-300 rounded-xl px-3 py-1.5 font-['Fredoka'] font-bold text-[11px] border border-gray-500/50 flex items-center gap-1">
-                  <Lock size={12} />
-                  Terkunci
-                </div>
+                <motion.button
+                  onClick={() => triggerShake(selected.id)}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.93 }}
+                  animate={shakingId === selected.id ? { x: [0, -10, 10, -8, 8, -4, 4, 0], rotate: [0, -3, 3, -2, 2, 0] } : {}}
+                  transition={{ duration: 0.4 }}
+                  className="flex-shrink-0 bg-red-950/70 hover:bg-red-900/80 text-red-200 rounded-xl px-3 sm:px-4 py-2 sm:py-2.5 font-['Fredoka'] font-bold text-xs sm:text-sm border-2 border-red-500/60 flex items-center gap-1.5 cursor-pointer shadow-md transition-colors"
+                >
+                  <Lock size={14} className="text-red-300 animate-pulse" />
+                  Terkunci 🔒
+                </motion.button>
               ) : (
                 <motion.button
                   onClick={() => handleSelect(selected.id)}
