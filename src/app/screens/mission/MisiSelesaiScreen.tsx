@@ -37,9 +37,9 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
       <motion.div 
         animate={{ rotate: 360 }}
         transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] sm:w-[800px] sm:h-[800px] pointer-events-none opacity-20"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] sm:w-[800px] sm:h-[800px] pointer-events-none opacity-40"
         style={{
-          background: "repeating-conic-gradient(from 0deg, transparent 0deg 15deg, #f59e0b 15deg 30deg)",
+          background: "repeating-conic-gradient(from 0deg, transparent 0deg 15deg, rgba(255, 255, 255, 0.15) 15deg 30deg)",
           maskImage: "radial-gradient(circle, black 20%, transparent 60%)",
           WebkitMaskImage: "radial-gradient(circle, black 20%, transparent 60%)",
         }}
@@ -52,7 +52,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
         initial={{ x: -100, opacity: 0 }}
         animate={{ x: 0, opacity: 1, y: [0, -10, 0] }}
         transition={{ x: { duration: 0.8 }, opacity: { duration: 0.8 }, y: { duration: 2, repeat: Infinity } }}
-        className="absolute bottom-4 -left-6 sm:left-4 w-24 sm:w-36 h-auto drop-shadow-xl z-20 pointer-events-none"
+        className="absolute bottom-0 -left-6 sm:left-4 w-40 sm:w-56 md:w-72 lg:w-80 max-h-[28vh] sm:max-h-[35vh] md:max-h-[45vh] h-auto object-contain drop-shadow-xl z-20 pointer-events-none origin-bottom"
       />
       <motion.img 
         src="/assets/mascot/gita-peta.svg" 
@@ -60,7 +60,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1, y: [0, -12, 0] }}
         transition={{ x: { duration: 0.8 }, opacity: { duration: 0.8 }, y: { duration: 2.2, repeat: Infinity, delay: 0.3 } }}
-        className="absolute bottom-4 -right-6 sm:right-4 w-24 sm:w-36 h-auto drop-shadow-xl z-20 pointer-events-none"
+        className="absolute bottom-0 -right-6 sm:right-4 w-36 sm:w-52 md:w-64 lg:w-72 max-h-[25vh] sm:max-h-[32vh] md:max-h-[40vh] h-auto object-contain drop-shadow-xl z-20 pointer-events-none origin-bottom"
       />
 
       <div className="relative z-30 flex flex-col items-center gap-4 sm:gap-5 w-full max-w-md">
@@ -76,10 +76,10 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
         </motion.div>
 
         <div>
-          <h2 className="font-['Fredoka'] font-extrabold text-3xl sm:text-4xl text-amber-800 leading-tight drop-shadow-sm uppercase tracking-wide">
+          <h2 className="font-['Fredoka'] font-extrabold text-3xl sm:text-4xl text-amber-300 leading-tight drop-shadow-lg uppercase tracking-wide">
             Misi Selesai! 🎉
           </h2>
-          <p className="font-['Fredoka'] text-[#366635] text-lg sm:text-xl font-bold mt-1 bg-white/50 px-4 py-1 rounded-full inline-block border-2 border-[#366635]/20 shadow-sm">
+          <p className="font-['Fredoka'] text-[#366635] text-lg sm:text-xl font-bold mt-2 bg-white/90 px-5 py-1.5 rounded-full inline-block border-2 border-[#366635]/20 shadow-sm">
             {mission.name}
           </p>
         </div>
@@ -123,12 +123,12 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="bg-[#c2aa84]/20 border-2 border-[#c2aa84]/50 rounded-2xl p-3 sm:p-4 w-full flex items-center gap-3 sm:gap-4 shadow-inner backdrop-blur-sm"
+          className="bg-black/30 backdrop-blur-md border border-white/20 rounded-2xl p-3 sm:p-4 w-full flex items-center gap-3 sm:gap-4 shadow-lg"
         >
           <span className="text-3xl sm:text-4xl filter drop-shadow">🏅</span>
           <div className="text-left">
-            <p className="font-['Fredoka'] font-bold text-[#5c4a3a] text-sm sm:text-base">Penjelajah Budaya</p>
-            <p className="text-[#7e371b] text-[10px] sm:text-xs font-bold uppercase tracking-wide">Telah Menyelesaikan Misi {mission.id}</p>
+            <p className="font-['Fredoka'] font-bold text-white text-sm sm:text-base drop-shadow-sm">Penjelajah Budaya</p>
+            <p className="text-white/80 text-[10px] sm:text-xs font-bold uppercase tracking-wide">Telah Menyelesaikan Misi {mission.id}</p>
           </div>
         </motion.div>
 
