@@ -36,7 +36,7 @@ const MISSIONS = [
     name: "Ledhug Suro",
     emoji: "🥁",
     location: "Alun-Alun Magetan",
-    image: "/assets/map-base.png",
+    image: "/assets/peta/ledhugsuro.svg",
     desc: "Festival bedug raksasa menyambut tahun baru Suro dengan penuh semangat gotong-royong.",
     color: "#f59e0b",
     accent: "from-orange-500 to-amber-400",
