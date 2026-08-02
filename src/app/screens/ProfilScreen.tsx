@@ -29,7 +29,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
       }}
     >
       <ScreenHeader title="Profil Pengembang 👩‍💻" onBack={onBack} />
-      <div className="p-4 max-w-md mx-auto space-y-4 overflow-y-auto">
+      <div className="flex-1 w-full p-4 max-w-md mx-auto space-y-4 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         <div className="bg-white rounded-3xl shadow-lg p-6 text-center border border-blue-100/30">
           <div className="text-6xl mb-3 select-none">🎓</div>
           <h2 className="font-['Fredoka'] font-bold text-2xl text-blue-700">DEDIGMA</h2>
