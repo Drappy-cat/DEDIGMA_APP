@@ -73,7 +73,10 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
         <MisiSelesaiScreen
           mission={mission}
           totalScore={activityScore}
-          onContinue={() => onComplete(missionId, activityScore)}
+          onContinue={() => {
+            onComplete(missionId, activityScore);
+            onHome();
+          }}
         />
       </div>
     );

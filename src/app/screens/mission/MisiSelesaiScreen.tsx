@@ -138,10 +138,10 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
           animate={{ scale: 1 }}
           transition={{ type: "spring", delay: 0.7 }}
           onClick={() => { playSFX("click"); onContinue(); }}
-          className="mt-2 transition-transform cursor-pointer hover:scale-110 active:scale-95 focus:outline-none"
-          aria-label="Kembali ke Peta"
+          className="mt-4 flex items-center justify-center gap-3 bg-gradient-to-b from-amber-300 to-amber-500 hover:from-amber-400 hover:to-amber-600 active:scale-95 px-8 py-3.5 rounded-full shadow-xl border-4 border-white transition-all focus:outline-none"
         >
-          <img src="/assets/button/home.svg" alt="Kembali ke Peta" className="w-16 sm:w-20 h-auto object-contain drop-shadow-xl" />
+          <img src="/assets/button/home.svg" alt="Home" className="w-8 sm:w-10 h-auto object-contain drop-shadow-md" />
+          <span className="font-['Fredoka'] font-bold text-white text-lg sm:text-xl drop-shadow-md">Kembali ke Peta</span>
         </motion.button>
       </div>
     </div>
