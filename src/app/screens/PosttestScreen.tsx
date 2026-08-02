@@ -168,7 +168,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -30, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="w-full max-w-lg shadow-2xl relative flex flex-col justify-between mx-auto"
+          className="w-full max-w-lg h-[90%] sm:h-full max-h-[650px] shadow-2xl relative flex flex-col justify-between mx-auto"
           style={{
             backgroundImage: "url('/assets/content-bg.png')",
             backgroundSize: "100% 100%",
@@ -177,16 +177,17 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
             minHeight: "480px"
           }}
         >
-          {/* Added pt-16 to avoid overlapping the top ribbon, px-8 to avoid side borders */}
-          <div className="px-8 sm:px-12 pt-16 sm:pt-20 select-none">
-            <h2 className="font-['Fredoka'] font-bold text-lg sm:text-xl text-blue-900 flex items-center justify-center gap-2 mb-4 bg-white/80 backdrop-blur-sm py-1.5 px-5 rounded-full w-fit mx-auto shadow-sm border border-blue-100">
-              <BookOpen size={20} /> Soal Evaluasi
-            </h2>
+          {/* Absolute positioning for the heading so it sits inside the top ribbon shape */}
+          <h2 className="font-['Fredoka'] font-bold text-lg sm:text-xl text-yellow-300 drop-shadow-md absolute top-4 sm:top-5 left-0 right-0 flex items-center justify-center gap-2 z-10 pointer-events-none">
+            <BookOpen size={20} /> Soal Evaluasi
+          </h2>
+
+          <div className="px-8 sm:px-12 pt-20 sm:pt-24 select-none flex-1 flex flex-col justify-center">
             <p className="font-bold text-gray-900 text-sm sm:text-base leading-relaxed mb-6 text-center drop-shadow-sm">{q.soal}</p>
           </div>
 
           {/* Added pb-14 to avoid overlapping the bottom border */}
-          <div className="px-8 sm:px-12 pb-14 sm:pb-16 space-y-3 mt-auto">
+          <div className="px-8 sm:px-12 pb-14 sm:pb-16 space-y-3">
             {q.opsi.map((o, idx) => {
               const userAns = answers[current];
               let btnStyle =
