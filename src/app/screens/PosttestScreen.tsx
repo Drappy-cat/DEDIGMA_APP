@@ -105,14 +105,18 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
   if (done) {
     return (
-      <div
-        className="h-full flex flex-col items-center justify-center p-6 text-center select-none font-['Nunito']"
-        style={{
-          backgroundImage: "url('/assets/bg-lobby.svg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center"
-        }}
-      >
+      <div className="h-full flex flex-col items-center justify-center p-6 text-center select-none font-['Nunito'] relative overflow-hidden">
+        {/* Blurred Background Layer */}
+        <div 
+          className="absolute inset-0 z-0 bg-black/10 backdrop-blur-sm"
+          style={{
+            backgroundImage: "url('/assets/bg-login.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }}
+        />
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center w-full">
         <motion.div
           initial={{ scale: 0, rotate: -15 }}
           animate={{ scale: 1, rotate: 0 }}
@@ -130,21 +134,28 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
           <p className="text-xs text-gray-500 font-semibold">{correctCount} dari {totalQ} benar</p>
         </div>
 
-        <Btn onClick={() => onComplete(score)} variant="lanjut" className="w-full max-w-xs" />
+        <Btn onClick={() => onComplete(score)} variant="lanjut" className="w-full max-w-xs mt-6" />
+        </div>
       </div>
     );
   }
 
   return (
-    <div
-      className="h-full flex flex-col overflow-hidden font-['Nunito']"
-      style={{
-        backgroundImage: "url('/assets/bg-lobby.svg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
-    >
-      <ScreenHeader title="Posttest DEDIGMA 📝" onBack={onBack} onHome={onBack} />
+    <div className="h-full flex flex-col overflow-hidden font-['Nunito'] relative">
+      {/* Blurred Background Layer */}
+      <div 
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url('/assets/bg-login.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }}
+      />
+      <div className="absolute inset-0 z-0 bg-white/10 backdrop-blur-[4px]"></div>
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col h-full w-full">
+        <ScreenHeader title="Posttest DEDIGMA 📝" onBack={onBack} onHome={onBack} />
 
       {/* Progress bar */}
       <div className="bg-white/90 backdrop-blur-sm px-4 py-2.5 border-b border-gray-200 select-none">
@@ -218,6 +229,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
             })}
           </div>
         </motion.div>
+      </div>
       </div>
     </div>
   );
