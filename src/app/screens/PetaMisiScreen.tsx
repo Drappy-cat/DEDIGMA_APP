@@ -1,6 +1,6 @@
-import React from "react";
-import { motion } from "motion/react";
-import { Lock, Check } from "lucide-react";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { Lock, Check, ChevronLeft, ChevronRight } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 
@@ -10,79 +10,123 @@ interface PetaMisiScreenProps {
   onBack: () => void;
 }
 
+const MISSIONS = [
+  {
+    id: 1,
+    name: "Larung Sesaji",
+    emoji: "⛵",
+    location: "Telaga Sarangan",
+    image: "/assets/larung sesaji.svg",
+    desc: "Ritual persembahan sesaji di permukaan Telaga Sarangan sebagai wujud rasa syukur dan penghormatan kepada alam.",
+    color: "#3b82f6",
+    accent: "from-blue-500 to-cyan-400",
+  },
+  {
+    id: 2,
+    name: "Nyadaran",
+    emoji: "🌺",
+    location: "Ngebel / Magetan Kidul",
+    image: "/assets/nyadaran-cover.png",
+    desc: "Upacara tradisional bersih desa yang penuh dengan doa dan harapan masyarakat Magetan.",
+    color: "#10b981",
+    accent: "from-emerald-500 to-green-400",
+  },
+  {
+    id: 3,
+    name: "Ledhug Suro",
+    emoji: "🥁",
+    location: "Alun-Alun Magetan",
+    image: "/assets/map-base.png",
+    desc: "Festival bedug raksasa menyambut tahun baru Suro dengan penuh semangat gotong-royong.",
+    color: "#f59e0b",
+    accent: "from-orange-500 to-amber-400",
+  },
+];
+
 export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
   completedMissions,
   onMission,
-  onBack
+  onBack,
 }) => {
   const { playSFX } = useAudio();
+  const [selectedIdx, setSelectedIdx] = useState(0);
 
   const handleSelect = (id: number) => {
     playSFX("click");
     onMission(id);
   };
 
-  // Specific absolute positions mapping to the custom map graphic coordinates
-  const pins = [
-    { 
-      id: 1, 
-      name: "Larung Sesaji", 
-      emoji: "⛵", 
-      icon: "",
-      image: "/assets/larung sesaji.svg",
-      type: "card",
-      location: "Telaga Sarangan", 
-      top: "70%", 
-      left: "45%", 
-      color: "from-blue-600 to-cyan-500" 
-    },
-    { id: 2, name: "Nyadaran", emoji: "🌺", type: "circle", location: "Ngebel/Magetan Kidul", top: "45%", left: "55%", color: "from-emerald-600 to-green-500" },
-    { id: 3, name: "Ledhug Suro", emoji: "🥁", type: "circle", location: "Alun-Alun Magetan", top: "25%", left: "30%", color: "from-orange-600 to-amber-500" }
-  ];
+  const handlePrev = () => {
+    playSFX("click");
+    setSelectedIdx((prev) => (prev > 0 ? prev - 1 : MISSIONS.length - 1));
+  };
+
+  const handleNext = () => {
+    playSFX("click");
+    setSelectedIdx((prev) => (prev < MISSIONS.length - 1 ? prev + 1 : 0));
+  };
+
+  const selected = MISSIONS[selectedIdx];
+  const isSelectedCompleted = completedMissions.has(selected.id);
+  const isSelectedLocked = selected.id > 1 && !completedMissions.has(selected.id - 1);
+
+  // Calculate progress percentage per mission
+  const getProgress = (id: number): number => {
+    if (completedMissions.has(id)) return 100;
+    // If it's the current active (not locked, not completed), show partial
+    if (id === 1 || completedMissions.has(id - 1)) return 15;
+    return 0;
+  };
 
   return (
     <motion.div
       className="h-full flex flex-col overflow-hidden relative select-none font-['Nunito']"
-      style={{
-        backgroundImage: "url('/assets/peta.svg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat"
-      }}
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 1, ease: "easeOut" }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
     >
-      {/* Animasi Atmosfer Peta (Awan & Kunang-kunang) */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        {/* Awan Drifting (Kabut tipis) */}
+      {/* Parchment Map Background */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url('/assets/peta.svg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          filter: "brightness(0.45) sepia(0.3)",
+        }}
+      />
+      {/* Overlay gradient for readability */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#2a1a0a]/60 via-[#3b2410]/30 to-[#1a0e05]/70" />
+
+      {/* Subtle atmosphere effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
+        {/* Drifting clouds */}
         <motion.div
-          className="absolute top-[5%] left-[-20%] w-[30rem] h-32 bg-white/30 blur-[40px] rounded-full"
+          className="absolute top-[8%] left-[-20%] w-[30rem] h-28 bg-white/8 blur-[50px] rounded-full"
           animate={{ x: ["0vw", "120vw"] }}
-          transition={{ duration: 45, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
         />
         <motion.div
-          className="absolute top-[25%] left-[-30%] w-[40rem] h-40 bg-white/20 blur-[50px] rounded-full"
+          className="absolute top-[30%] left-[-30%] w-[35rem] h-32 bg-white/5 blur-[60px] rounded-full"
           animate={{ x: ["0vw", "130vw"] }}
-          transition={{ duration: 65, repeat: Infinity, ease: "linear", delay: 15 }}
+          transition={{ duration: 70, repeat: Infinity, ease: "linear", delay: 20 }}
         />
-        
-        {/* Kunang-kunang Ajaib (Fireflies) */}
-        {[...Array(15)].map((_, i) => (
+        {/* Fireflies */}
+        {[...Array(10)].map((_, i) => (
           <motion.div
-            key={`firefly-${i}`}
-            className="absolute bg-amber-200 rounded-full shadow-[0_0_8px_2px_rgba(253,230,138,0.8)]"
+            key={`ff-${i}`}
+            className="absolute bg-amber-200 rounded-full shadow-[0_0_6px_2px_rgba(253,230,138,0.6)]"
             style={{
-              top: `${10 + Math.random() * 80}%`,
+              top: `${15 + Math.random() * 70}%`,
               left: `${10 + Math.random() * 80}%`,
-              width: `${2 + Math.random() * 3}px`,
-              height: `${2 + Math.random() * 3}px`
+              width: `${2 + Math.random() * 2}px`,
+              height: `${2 + Math.random() * 2}px`,
             }}
             animate={{
-              y: [0, -40 + Math.random() * 10, 0],
-              x: [0, (Math.random() - 0.5) * 50, 0],
-              opacity: [0, 0.7, 0],
-              scale: [0.5, 1.2, 0.5],
+              y: [0, -30 + Math.random() * 10, 0],
+              x: [0, (Math.random() - 0.5) * 40, 0],
+              opacity: [0, 0.6, 0],
+              scale: [0.5, 1, 0.5],
             }}
             transition={{
               duration: 4 + Math.random() * 3,
@@ -94,141 +138,262 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
         ))}
       </div>
 
-      {/* Absolute Header overlay */}
-      <div className="absolute top-0 inset-x-0 z-30">
+      {/* Header */}
+      <div className="relative z-30">
         <ScreenHeader title="Peta Misi Budaya" onBack={onBack} onHome={onBack} />
       </div>
 
-      {/* Map Content Viewport */}
-      <div className="flex-1 relative w-full h-full pt-12 sm:pt-14">
-        {/* Teks Peta (map-petatxt.svg) */}
-        <motion.div 
-          className="absolute -top-14 sm:-top-20 left-1/2 -translate-x-1/2 z-40 w-64 sm:w-80 md:w-96 pointer-events-none"
-          initial={{ y: -50, opacity: 0 }}
+      {/* Banner Title Asset */}
+      <div className="relative z-10 flex justify-center pt-1">
+        <motion.div
+          initial={{ y: -30, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ type: "spring", bounce: 0.3, duration: 1, delay: 0.4 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+          className="w-44 sm:w-64 md:w-72 pointer-events-none"
         >
           <img 
             src="/assets/map-petatxt.svg" 
-            alt="Peta Budaya" 
-            className="w-full h-auto drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]"
+            alt="Peta Budaya Magetan" 
+            className="w-full h-auto drop-shadow-md object-contain"
+          />
+        </motion.div>
+      </div>
+
+      {/* Main Content: Stamp Cards Carousel */}
+      <div className="flex-1 relative z-10 flex flex-col items-center justify-start pt-1 sm:pt-2 px-2 sm:px-6 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        {/* Stamp Cards Row */}
+        <div className="flex items-center justify-center gap-1.5 sm:gap-4 w-full max-w-4xl">
+          {/* Left Arrow */}
+          <motion.button
+            onClick={handlePrev}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="flex-shrink-0 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-[#f4ecd5]/90 border-2 border-[#c2aa84] flex items-center justify-center cursor-pointer shadow-md hover:bg-[#ece2c8] transition-colors z-20"
+          >
+            <ChevronLeft size={18} className="text-[#5c4a3a]" />
+          </motion.button>
+
+          {/* Stamp Cards */}
+          <div className="flex items-center justify-center gap-2 sm:gap-5 flex-1 min-w-0">
+            {MISSIONS.map((mission, idx) => {
+              const isActive = idx === selectedIdx;
+              const isCompleted = completedMissions.has(mission.id);
+              const isLocked = mission.id > 1 && !completedMissions.has(mission.id - 1);
+              const progress = getProgress(mission.id);
+
+              return (
+                <motion.div
+                  key={mission.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: isActive ? 1 : 0.82,
+                    filter: isActive ? "none" : "brightness(0.7)",
+                  }}
+                  transition={{ duration: 0.4, delay: idx * 0.1 }}
+                  onClick={() => {
+                    playSFX("click");
+                    setSelectedIdx(idx);
+                  }}
+                  className={`relative cursor-pointer transition-all ${
+                    isActive ? "z-20" : "z-10"
+                  }`}
+                >
+                  {/* Stamp Card */}
+                  <div
+                    className={`relative bg-[#f9f3e3] rounded-lg overflow-hidden shadow-xl transition-all ${
+                      isActive
+                        ? "w-36 sm:w-48 border-[3px] border-[#c2aa84]"
+                        : "w-24 sm:w-32 border-2 border-[#d8c7a5]/60"
+                    }`}
+                  >
+                    {/* Stamp perforated edge effect (top) */}
+                    <div className="absolute top-0 left-0 right-0 h-2 flex justify-between px-1 z-20">
+                      {[...Array(isActive ? 10 : 7)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="w-1.5 h-1.5 rounded-full bg-[#2a1a0a]/80 -mt-0.5"
+                        />
+                      ))}
+                    </div>
+                    {/* Stamp perforated edge effect (bottom) */}
+                    <div className="absolute bottom-0 left-0 right-0 h-2 flex justify-between px-1 z-20">
+                      {[...Array(isActive ? 10 : 7)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="w-1.5 h-1.5 rounded-full bg-[#2a1a0a]/80 mt-0.5"
+                        />
+                      ))}
+                    </div>
+
+                    {/* Mission Name Banner */}
+                    <div className="bg-[#4a3728] px-1.5 py-0.5 sm:py-1 text-center relative z-10">
+                      <span
+                        className={`font-['Fredoka'] font-bold text-[#fff5ce] leading-tight ${
+                          isActive ? "text-[10px] sm:text-xs" : "text-[8px] sm:text-[10px]"
+                        }`}
+                      >
+                        {mission.name}
+                      </span>
+                    </div>
+
+                    {/* Image */}
+                    <div className={`relative ${isActive ? "h-20 sm:h-28" : "h-14 sm:h-18"}`}>
+                      <img
+                        src={mission.image}
+                        alt={mission.name}
+                        className="w-full h-full object-cover"
+                      />
+                      {/* Locked overlay */}
+                      {isLocked && (
+                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                          <Lock size={isActive ? 24 : 16} className="text-gray-300" />
+                        </div>
+                      )}
+                      {/* Completed stamp */}
+                      {isCompleted && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="bg-emerald-500/90 rounded-full p-1.5 sm:p-2 border-2 border-white shadow-lg">
+                            <Check size={isActive ? 20 : 14} className="text-white" strokeWidth={3} />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Location tag for active */}
+                    {isActive && (
+                      <div className="bg-[#f4ecd5] px-1.5 py-0.5 sm:py-1 text-center border-t border-[#d8c7a5]">
+                        <span className="text-[9px] sm:text-[11px] text-[#7e5c3a] font-bold font-['Nunito'] truncate block">
+                          📍 {mission.location}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Progress Bar */}
+                    <div className="px-1.5 py-1 bg-[#f4ecd5]">
+                      <div className="flex items-center gap-1">
+                        <div className="flex-1 h-1.5 sm:h-2 bg-[#d8c7a5]/60 rounded-full overflow-hidden">
+                          <motion.div
+                            className={`h-full rounded-full ${
+                              isCompleted
+                                ? "bg-emerald-500"
+                                : progress > 0
+                                ? "bg-amber-400"
+                                : "bg-gray-400/40"
+                            }`}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progress}%` }}
+                            transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 + idx * 0.1 }}
+                          />
+                        </div>
+                        <span
+                          className={`font-['Fredoka'] font-bold ${
+                            isActive ? "text-[9px] sm:text-[11px]" : "text-[7px] sm:text-[9px]"
+                          } text-[#5c4a3a]`}
+                        >
+                          {progress}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Right Arrow */}
+          <motion.button
+            onClick={handleNext}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="flex-shrink-0 w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-[#f4ecd5]/90 border-2 border-[#c2aa84] flex items-center justify-center cursor-pointer shadow-md hover:bg-[#ece2c8] transition-colors z-20"
+          >
+            <ChevronRight size={18} className="text-[#5c4a3a]" />
+          </motion.button>
+        </div>
+
+        {/* Description Bar & Action */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selected.id}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25 }}
+            className="w-full max-w-lg sm:max-w-xl mt-2 sm:mt-3 mb-14 sm:mb-16 px-1"
+          >
+            <div className="bg-[#f4ecd5]/95 backdrop-blur-sm border-2 border-[#c2aa84] rounded-2xl px-3 sm:px-5 py-2 sm:py-3 shadow-lg flex items-center gap-2 sm:gap-4">
+              {/* Info */}
+              <div className="flex-1 min-w-0">
+                <h3 className="font-['Fredoka'] font-extrabold text-[#4a3728] text-xs sm:text-base leading-tight flex items-center gap-1">
+                  <span className="text-base sm:text-lg">{selected.emoji}</span>
+                  <span className="truncate">Misi {selected.id}: {selected.name}</span>
+                </h3>
+                <p className="text-[#7e5c3a] text-[10px] sm:text-xs mt-0.5 font-semibold leading-snug line-clamp-2">
+                  {selected.desc}
+                </p>
+              </div>
+
+              {/* Action Button */}
+              {isSelectedLocked ? (
+                <div className="flex-shrink-0 bg-gray-400/50 text-gray-300 rounded-xl px-3 py-1.5 font-['Fredoka'] font-bold text-[11px] border border-gray-500/50 flex items-center gap-1">
+                  <Lock size={12} />
+                  Terkunci
+                </div>
+              ) : (
+                <motion.button
+                  onClick={() => handleSelect(selected.id)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`flex-shrink-0 rounded-xl px-4 sm:px-6 py-2 sm:py-2.5 font-['Fredoka'] font-bold text-xs sm:text-sm border-2 cursor-pointer shadow-md transition-colors ${
+                    isSelectedCompleted
+                      ? "bg-emerald-500 hover:bg-emerald-600 border-emerald-600 text-white"
+                      : "bg-[#7e371b] hover:bg-[#5a2512] border-[#572410] text-[#fff5ce]"
+                  }`}
+                >
+                  {isSelectedCompleted ? "Ulangi ✓" : "Mulai →"}
+                </motion.button>
+              )}
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Bottom: Mascots */}
+      <div className="absolute bottom-0 inset-x-0 z-20 flex justify-between items-end px-1 sm:px-3 pointer-events-none">
+        {/* Dimas - left */}
+        <motion.div
+          initial={{ x: -100, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+        >
+          <motion.img
+            src="/assets/mascot/dimas-peta.svg"
+            alt="Dimas"
+            className="w-24 sm:w-36 max-h-[18vh] sm:max-h-[24vh] h-auto object-contain filter drop-shadow-lg"
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
 
-        {/* Jejak Jalur (Dotted Path) */}
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 w-full h-full pointer-events-none z-10">
-          <path
-            d="M 75 88 Q 45 88 45 70 T 55 45 T 30 25"
-            fill="transparent"
-            stroke="rgba(255, 255, 255, 0.8)"
-            strokeWidth="0.8"
-            strokeDasharray="1.5 1.5"
-            vectorEffect="non-scaling-stroke"
-            className="filter drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)]"
-          />
-        </svg>
-
-        {pins.map((pin) => {
-          const isCompleted = completedMissions.has(pin.id);
-          const isLocked = pin.id > 1 && !completedMissions.has(pin.id - 1);
-
-          return (
-            <motion.div
-              key={pin.id}
-              className="absolute -translate-x-1/2 -translate-y-1/2 z-20 will-change-transform transform-gpu"
-              style={{ top: pin.top, left: pin.left }}
-              animate={
-                !isLocked
-                  ? {
-                      y: [0, -6, 0],
-                      transition: {
-                        duration: 2.8,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                        delay: pin.id * 0.4
-                      }
-                    }
-                  : {}
-              }
-            >
-              {isLocked ? (
-                // Locked Pin layout
-                <div className="flex flex-col items-center gap-1.5 filter opacity-75">
-                  <div className="bg-gray-700/80 text-gray-300 rounded-full w-12 h-12 flex items-center justify-center border-4 border-gray-500/80 shadow-lg cursor-not-allowed">
-                    <Lock size={18} />
-                  </div>
-                  <div className="bg-gray-900/80 backdrop-blur-sm text-gray-300 px-3 py-1 rounded-full text-[10px] font-bold shadow-md border border-gray-700">
-                    Misi {pin.id} Terkunci
-                  </div>
-                </div>
-              ) : (
-                // Active/Completed Pin layout
-                <motion.button
-                  onClick={() => handleSelect(pin.id)}
-                  whileHover={{ scale: 1.12 }}
-                  whileTap={{ scale: 0.93 }}
-                  className="flex flex-col items-center gap-1.5 cursor-pointer focus:outline-none"
-                >
-                  {/* Glowing outer pin ring or Card */}
-                  <div className="relative">
-                    {isCompleted && (
-                      <span className="absolute -top-1.5 -right-1.5 z-30 text-white bg-emerald-500 rounded-full border-2 border-white w-6 h-6 flex items-center justify-center shadow-md animate-bounce">
-                        <Check size={14} strokeWidth={3} />
-                      </span>
-                    )}
-                    {pin.type === "card" ? (
-                      <div className="w-24 h-16 sm:w-28 sm:h-20 rounded-xl overflow-hidden border-4 border-white shadow-2xl relative z-10 flex items-center justify-center bg-white">
-                        <img src={pin.image} alt={pin.name} className="absolute inset-0 w-full h-full object-cover" />
-                        {pin.icon && (
-                          <span className="text-3xl relative z-10 filter drop-shadow-md">{pin.icon}</span>
-                        )}
-                      </div>
-                    ) : (
-                      <div
-                        className={`w-14 h-14 rounded-full flex items-center justify-center text-3xl border-4 border-white shadow-2xl relative z-10 bg-gradient-to-br ${pin.color}`}
-                      >
-                        {pin.emoji}
-                      </div>
-                    )}
-                    {/* Ring Pulse effect for active uncompleted mission */}
-                    {!isCompleted && (
-                      <span className="absolute inset-0 rounded-full border-4 border-amber-300 animate-ping opacity-75 pointer-events-none" />
-                    )}
-                  </div>
-                  <div className="bg-white text-gray-800 border-2 border-amber-300 font-['Fredoka'] px-3.5 py-1 rounded-full text-xs font-bold shadow-xl leading-none flex flex-col items-center mt-1">
-                    <span className="text-[10px] text-amber-700 font-semibold">Misi {pin.id}</span>
-                    <span className="mt-0.5">{pin.name}</span>
-                  </div>
-                </motion.button>
-              )}
-            </motion.div>
-          );
-        })}
-
-        {/* Karakter Penunjuk Peta (Dimas & Gita) */}
-        <motion.div 
-          className="absolute bottom-0 left-[-1rem] sm:left-4 z-50 flex items-end drop-shadow-[0_15px_15px_rgba(0,0,0,0.5)] pointer-events-none"
-          initial={{ x: -200, opacity: 0 }}
+        {/* Gita - right */}
+        <motion.div
+          initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          transition={{ type: "spring", bounce: 0.2, duration: 1.2, delay: 0.5 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.5 }}
         >
-          <motion.img 
-            src="/assets/mascot/gita-peta.svg" 
-            alt="Gita" 
-            className="w-44 sm:w-60 h-auto object-contain relative z-10 scale-x-[-1]"
-            animate={{ y: [24, 19, 24] }}
+          <motion.img
+            src="/assets/mascot/gita-peta.svg"
+            alt="Gita"
+            className="w-22 sm:w-32 max-h-[16vh] sm:max-h-[22vh] h-auto object-contain filter drop-shadow-lg"
+            animate={{ y: [0, -3, 0] }}
             transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          />
-          <motion.img 
-            src="/assets/mascot/dimas-peta.svg" 
-            alt="Dimas" 
-            className="w-48 sm:w-64 h-auto object-contain -ml-16 sm:-ml-24 relative z-20"
-            animate={{ y: [0, -5, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />
         </motion.div>
       </div>
     </motion.div>
   );
 };
+
 export default PetaMisiScreen;
