@@ -51,6 +51,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
   const { playSFX } = useAudio();
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [shakingId, setShakingId] = useState<number | null>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const triggerShake = (id: number) => {
     try {
@@ -59,7 +60,9 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
       playSFX("click");
     }
     setShakingId(id);
+    setToastMessage("Misi masih terkunci, selesaikan misi sebelumnya! 🔒");
     setTimeout(() => setShakingId(null), 450);
+    setTimeout(() => setToastMessage(null), 3000);
   };
 
   const handleSelect = (id: number) => {
@@ -154,6 +157,23 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
         <ScreenHeader title="" onBack={onBack} onHome={onBack} />
       </div>
 
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toastMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.9 }}
+            className="absolute top-20 sm:top-24 left-0 right-0 z-50 flex justify-center pointer-events-none px-4"
+          >
+            <div className="bg-red-950/90 backdrop-blur-sm border-2 border-red-500/80 text-red-100 font-['Fredoka'] font-medium text-xs sm:text-sm px-4 sm:px-6 py-2 sm:py-2.5 rounded-full shadow-2xl flex items-center gap-2">
+              <Lock size={16} className="text-red-400" />
+              {toastMessage}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Banner Title Asset - Absolute Overlay */}
       <div className="absolute -top-4 sm:-top-8 inset-x-0 z-40 flex justify-center pointer-events-none">
         <motion.div
@@ -199,12 +219,17 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                   animate={{
                     opacity: 1,
                     y: 0,
-                    x: shakingId === mission.id ? [0, -12, 12, -8, 8, -4, 4, 0] : 0,
-                    rotate: shakingId === mission.id ? [0, -4, 4, -3, 3, -1, 1, 0] : 0,
-                    scale: isActive ? 1 : 0.82,
+                    x: shakingId === mission.id ? [0, -18, 18, -14, 14, -8, 8, -3, 3, 0] : 0,
+                    rotate: shakingId === mission.id ? [0, -6, 6, -5, 5, -2, 2, 0] : 0,
+                    scale: isActive
+                      ? shakingId === mission.id ? [1, 0.94, 1.04, 0.97, 1] : 1
+                      : shakingId === mission.id ? [0.82, 0.76, 0.86, 0.82] : 0.82,
                     filter: isActive ? "none" : "brightness(0.7)",
                   }}
-                  transition={{ duration: 0.4, delay: idx * 0.1 }}
+                  transition={{
+                    duration: 0.45,
+                    delay: shakingId === mission.id ? 0 : idx * 0.1,
+                  }}
                   onClick={() => {
                     playSFX("click");
                     setSelectedIdx(idx);
@@ -219,10 +244,12 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                   {/* Stamp Card */}
                   <div
                     className={`relative bg-[#f9f3e3] rounded-lg overflow-hidden shadow-xl transition-all ${
-                      isActive
+                      shakingId === mission.id
+                        ? "ring-4 ring-red-500 border-[3px] border-red-600 shadow-red-500/50"
+                        : isActive
                         ? "w-44 sm:w-60 border-[3px] border-[#c2aa84]"
                         : "w-28 sm:w-40 border-2 border-[#d8c7a5]/60"
-                    }`}
+                    } ${isActive ? "w-44 sm:w-60" : "w-28 sm:w-40"}`}
                   >
                     {/* Stamp perforated edge effect (top) */}
                     <div className="absolute top-0 left-0 right-0 h-2 flex justify-between px-1 z-20">
@@ -244,7 +271,9 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                     </div>
 
                     {/* Mission Name Banner */}
-                    <div className="bg-[#4a3728] px-1.5 py-0.5 sm:py-1 text-center relative z-10">
+                    <div className={`px-1.5 py-0.5 sm:py-1 text-center relative z-10 transition-colors ${
+                      shakingId === mission.id ? "bg-red-800" : "bg-[#4a3728]"
+                    }`}>
                       <span
                         className={`font-['Fredoka'] font-bold text-[#fff5ce] leading-tight ${
                           isActive ? "text-[10px] sm:text-xs" : "text-[8px] sm:text-[10px]"
@@ -263,8 +292,17 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                       />
                       {/* Locked overlay */}
                       {isLocked && (
-                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                          <Lock size={isActive ? 24 : 16} className="text-gray-300" />
+                        <div className={`absolute inset-0 transition-colors flex items-center justify-center ${
+                          shakingId === mission.id ? "bg-red-950/80" : "bg-black/60"
+                        }`}>
+                          <Lock
+                            size={isActive ? 28 : 20}
+                            className={`transition-all ${
+                              shakingId === mission.id
+                                ? "text-red-400 scale-125 rotate-12"
+                                : "text-gray-300"
+                            }`}
+                          />
                         </div>
                       )}
                       {/* Completed stamp */}
@@ -390,11 +428,12 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
           initial={{ x: -100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.4 }}
+          className="-ml-4 sm:-ml-8 md:-ml-12 lg:-ml-16"
         >
           <motion.img
             src="/assets/mascot/dimas-peta.svg"
             alt="Dimas"
-            className="w-32 sm:w-48 max-h-[22vh] sm:max-h-[30vh] h-auto object-contain filter drop-shadow-lg"
+            className="w-40 sm:w-56 md:w-72 lg:w-80 max-h-[28vh] sm:max-h-[35vh] md:max-h-[45vh] h-auto object-contain filter drop-shadow-lg"
             animate={{ y: [0, -4, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -409,7 +448,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
           <motion.img
             src="/assets/mascot/gita-peta.svg"
             alt="Gita"
-            className="w-28 sm:w-44 max-h-[20vh] sm:max-h-[28vh] h-auto object-contain filter drop-shadow-lg"
+            className="w-36 sm:w-52 md:w-64 lg:w-72 max-h-[25vh] sm:max-h-[32vh] md:max-h-[40vh] h-auto object-contain filter drop-shadow-lg"
             animate={{ y: [0, -3, 0] }}
             transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
           />
