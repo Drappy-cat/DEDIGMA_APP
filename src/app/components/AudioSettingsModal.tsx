@@ -67,20 +67,25 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
           </div>
 
           {/* Navigation Tabs */}
-          <div className="grid grid-cols-2 gap-2 bg-slate-800/80 p-1 rounded-2xl border border-slate-700">
+          <div className="grid grid-cols-2 gap-2 bg-slate-800/80 p-1 rounded-2xl border border-slate-700 relative">
             <button
               type="button"
               onClick={() => {
                 playSFX("click");
                 setActiveTab("audio");
               }}
-              className={`py-1.5 rounded-xl font-['Fredoka'] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                activeTab === "audio"
-                  ? "bg-amber-500 text-slate-950 shadow-md"
-                  : "text-slate-300 hover:text-white"
+              className={`py-2 rounded-xl font-['Fredoka'] text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer relative z-10 ${
+                activeTab === "audio" ? "text-slate-950" : "text-slate-300 hover:text-white"
               }`}
             >
               <Volume2 size={14} /> Suara & Audio
+              {activeTab === "audio" && (
+                <motion.div
+                  layoutId="activeTabIndicator"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  className="absolute inset-0 bg-amber-500 rounded-xl -z-10 shadow-md"
+                />
+              )}
             </button>
 
             <button
@@ -89,13 +94,18 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                 playSFX("click");
                 setActiveTab("about");
               }}
-              className={`py-1.5 rounded-xl font-['Fredoka'] text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
-                activeTab === "about"
-                  ? "bg-amber-500 text-slate-950 shadow-md"
-                  : "text-slate-300 hover:text-white"
+              className={`py-2 rounded-xl font-['Fredoka'] text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer relative z-10 ${
+                activeTab === "about" ? "text-slate-950" : "text-slate-300 hover:text-white"
               }`}
             >
-              <Info size={14} /> Tentang & Kredit
+              <Info size={14} /> Tentang Game
+              {activeTab === "about" && (
+                <motion.div
+                  layoutId="activeTabIndicator"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  className="absolute inset-0 bg-amber-500 rounded-xl -z-10 shadow-md"
+                />
+              )}
             </button>
           </div>
 

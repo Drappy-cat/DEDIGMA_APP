@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { motion } from "motion/react";
-import { Award, BookOpen, UserCheck, Code, Sparkles, GraduationCap, ShieldCheck, Heart } from "lucide-react";
+import { Award, BookOpen, UserCheck, Code, Sparkles, GraduationCap, Heart, ChevronLeft } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { MascotDimas, MascotGita } from "../components/Mascot";
@@ -8,6 +8,13 @@ import { MascotDimas, MascotGita } from "../components/Mascot";
 interface ProfilScreenProps {
   onBack: () => void;
 }
+
+// Smooth spring animation presets
+const springTransition = {
+  type: "spring",
+  stiffness: 260,
+  damping: 20
+};
 
 export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
@@ -21,7 +28,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
 
   return (
     <div
-      className="h-full flex flex-col overflow-hidden font-['Nunito'] select-none"
+      className="h-full flex flex-col overflow-hidden font-['Nunito'] select-none bg-slate-900"
       style={{
         backgroundImage: "url('/assets/bg-lobby.svg')",
         backgroundSize: "cover",
@@ -29,21 +36,25 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
         backgroundRepeat: "no-repeat"
       }}
     >
-      <ScreenHeader title="Tentang & Tim Pengembang 👥" onBack={onBack} />
+      <ScreenHeader title="Tentang & Tim Pengembang" onBack={onBack} />
 
-      <div className="flex-1 w-full p-4 max-w-3xl mx-auto space-y-6 overflow-y-auto">
+      <div className="flex-1 w-full p-4 max-w-3xl mx-auto space-y-5 overflow-y-auto custom-scrollbar">
         
         {/* Banner Tentang DEDIGMA */}
         <motion.div
-          initial={{ y: -15, opacity: 0 }}
+          initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white rounded-3xl p-6 shadow-2xl relative overflow-hidden border border-white/20"
+          transition={springTransition}
+          className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white rounded-3xl p-6 shadow-2xl relative overflow-hidden border border-white/20 will-change-transform transform-gpu"
         >
           <div className="relative z-10 flex flex-col md:flex-row items-center gap-5">
-            <img
+            <motion.img
+              initial={{ scale: 0.8, rotate: -5 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 200, damping: 15 }}
               src="/assets/logo.png"
               alt="DEDIGMA Logo"
-              className="w-20 h-20 object-contain drop-shadow-xl animate-pulse"
+              className="w-20 h-20 object-contain drop-shadow-xl"
             />
             <div className="text-center md:text-left space-y-1.5 flex-1">
               <span className="bg-amber-400/20 text-amber-300 text-[10px] font-extrabold uppercase px-3 py-1 rounded-full border border-amber-400/30 tracking-wider">
@@ -64,10 +75,10 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
 
         {/* UTAMA: Dosen Pembimbing / Advisor Section */}
         <motion.div
-          initial={{ scale: 0.95, opacity: 0 }}
+          initial={{ scale: 0.92, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.15 }}
-          className="bg-white/95 backdrop-blur-md rounded-3xl p-6 shadow-xl border-2 border-amber-400/40 relative overflow-hidden space-y-4"
+          transition={{ ...springTransition, delay: 0.1 }}
+          className="bg-white/95 backdrop-blur-md rounded-3xl p-6 shadow-xl border-2 border-amber-400/40 relative overflow-hidden space-y-4 will-change-transform transform-gpu"
         >
           <div className="flex items-center justify-between border-b border-amber-100 pb-3">
             <div className="flex items-center gap-2">
@@ -88,7 +99,11 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
 
           <div className="flex flex-col md:flex-row items-center gap-5">
             {/* Avatar Frame Dosen */}
-            <div className="relative group flex-shrink-0">
+            <motion.div
+              whileHover={{ scale: 1.05, rotate: 2 }}
+              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+              className="relative group flex-shrink-0 cursor-pointer"
+            >
               <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 p-1 shadow-lg">
                 <div className="w-full h-full rounded-[14px] bg-amber-50 overflow-hidden flex items-center justify-center relative text-amber-700">
                   <GraduationCap size={48} />
@@ -97,7 +112,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
               <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-900 text-amber-300 text-[9px] font-bold px-2.5 py-0.5 rounded-full border border-amber-400/50 shadow whitespace-nowrap">
                 Dosen Pembimbing
               </span>
-            </div>
+            </motion.div>
 
             {/* Detail Dosen */}
             <div className="text-center md:text-left space-y-2 flex-1">
@@ -139,10 +154,12 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
             
             {/* Pengembang 1 */}
             <motion.div
-              initial={{ y: 15, opacity: 0 }}
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.25 }}
-              className="bg-white rounded-3xl p-4 shadow-lg border border-blue-100 flex flex-col items-center text-center space-y-3 hover:shadow-xl transition-shadow"
+              transition={{ ...springTransition, delay: 0.2 }}
+              whileHover={{ y: -4, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-white rounded-3xl p-4 shadow-lg border border-blue-100 flex flex-col items-center text-center space-y-3 hover:shadow-2xl transition-all cursor-pointer will-change-transform transform-gpu"
             >
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 p-1 shadow-md">
                 <div className="w-full h-full rounded-[12px] bg-blue-50 flex items-center justify-center text-blue-600">
@@ -165,10 +182,12 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
 
             {/* Pengembang 2 */}
             <motion.div
-              initial={{ y: 15, opacity: 0 }}
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.35 }}
-              className="bg-white rounded-3xl p-4 shadow-lg border border-emerald-100 flex flex-col items-center text-center space-y-3 hover:shadow-xl transition-shadow"
+              transition={{ ...springTransition, delay: 0.3 }}
+              whileHover={{ y: -4, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-white rounded-3xl p-4 shadow-lg border border-emerald-100 flex flex-col items-center text-center space-y-3 hover:shadow-2xl transition-all cursor-pointer will-change-transform transform-gpu"
             >
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-400 p-1 shadow-md">
                 <div className="w-full h-full rounded-[12px] bg-emerald-50 flex items-center justify-center text-emerald-600">
@@ -191,10 +210,12 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
 
             {/* Pengembang 3 */}
             <motion.div
-              initial={{ y: 15, opacity: 0 }}
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.45 }}
-              className="bg-white rounded-3xl p-4 shadow-lg border border-purple-100 flex flex-col items-center text-center space-y-3 hover:shadow-xl transition-shadow"
+              transition={{ ...springTransition, delay: 0.4 }}
+              whileHover={{ y: -4, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-white rounded-3xl p-4 shadow-lg border border-purple-100 flex flex-col items-center text-center space-y-3 hover:shadow-2xl transition-all cursor-pointer will-change-transform transform-gpu"
             >
               <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-400 p-1 shadow-md">
                 <div className="w-full h-full rounded-[12px] bg-purple-50 flex items-center justify-center text-purple-600">
@@ -219,9 +240,14 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
         </div>
 
         {/* Maskot DEDIGMA & Hak Cipta */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-5 shadow-lg border border-slate-100 space-y-4">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ ...springTransition, delay: 0.45 }}
+          className="bg-white/90 backdrop-blur-sm rounded-3xl p-5 shadow-lg border border-slate-100 space-y-4"
+        >
           <h4 className="font-['Fredoka'] font-bold text-lg text-slate-800 flex items-center gap-2">
-            <Heart className="text-rose-500" size={18} /> Maskot Pembelajaran
+            <Heart className="text-rose-500 fill-rose-500/20" size={18} /> Maskot Pembelajaran
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="bg-blue-50/70 rounded-2xl p-3.5 flex items-center gap-3 border border-blue-100">
@@ -253,7 +279,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
               Diterbitkan untuk Kepentingan Pendidikan & Kebudayaan Kabupaten Magetan.
             </p>
           </div>
-        </div>
+        </motion.div>
 
       </div>
     </div>

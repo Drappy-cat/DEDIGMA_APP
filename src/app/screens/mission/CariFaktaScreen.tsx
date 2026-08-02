@@ -141,15 +141,19 @@ export const CariFaktaScreen: React.FC<CariFaktaScreenProps> = ({ mission, onNex
               </button>
             </div>
 
-            {showHints[i] && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                className="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-2.5 text-xs select-none"
-              >
-                💡 <strong>Petunjuk Detektif:</strong> Kata kunci berkaitan dengan <em>"{q.kunci[0]}"</em>.
-              </motion.div>
-            )}
+            <AnimatePresence>
+              {showHints[i] && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                  className="bg-amber-50 border border-amber-200 text-amber-900 rounded-xl p-2.5 text-xs select-none overflow-hidden will-change-transform transform-gpu"
+                >
+                  <strong>Petunjuk Detektif:</strong> Kata kunci berkaitan dengan <em>"{q.kunci[0]}"</em>.
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <input
               value={answers[i]}
