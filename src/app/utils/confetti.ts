@@ -34,3 +34,38 @@ export function fireConfetti() {
     console.log("Confetti trigger error:", e);
   }
 }
+
+export function fireContinuousConfetti() {
+  try {
+    const duration = 3500;
+    const end = Date.now() + duration;
+
+    const frame = () => {
+      confetti({
+        particleCount: 6,
+        angle: 60,
+        spread: 65,
+        origin: { x: 0, y: 0.7 },
+        colors: ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'],
+        zIndex: 9999, // Ensure it's on top of all modals/screens
+        disableForReducedMotion: true
+      });
+      confetti({
+        particleCount: 6,
+        angle: 120,
+        spread: 65,
+        origin: { x: 1, y: 0.7 },
+        colors: ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'],
+        zIndex: 9999,
+        disableForReducedMotion: true
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    };
+    frame();
+  } catch (e) {
+    console.log("Confetti trigger error:", e);
+  }
+}

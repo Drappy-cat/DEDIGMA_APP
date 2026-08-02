@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { motion } from "motion/react";
 import { Mission } from "../../types";
 import { useAudio } from "../../contexts/AudioContext";
-import { fireConfetti } from "../../utils/confetti";
+import { fireContinuousConfetti } from "../../utils/confetti";
 
 interface MisiSelesaiScreenProps {
   mission: Mission;
@@ -18,7 +18,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
   const { playSFX, playNarrator } = useAudio();
 
   useEffect(() => {
-    fireConfetti();
+    fireContinuousConfetti();
     playSFX("badge");
     playNarrator(`Selamat! Kamu telah menyelesaikan Misi ${mission.id} dengan skor ${totalScore}!`);
   }, []);
