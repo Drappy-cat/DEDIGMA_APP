@@ -37,34 +37,30 @@ export function fireConfetti() {
 
 export function fireContinuousConfetti() {
   try {
-    const duration = 3500;
-    const end = Date.now() + duration;
-
-    const frame = () => {
+    const fire = (particleRatio: number, opts: any) => {
       confetti({
-        particleCount: 6,
-        angle: 60,
-        spread: 65,
-        origin: { x: 0, y: 0.7 },
-        colors: ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'],
-        zIndex: 9999, // Ensure it's on top of all modals/screens
-        disableForReducedMotion: true
-      });
-      confetti({
-        particleCount: 6,
-        angle: 120,
-        spread: 65,
-        origin: { x: 1, y: 0.7 },
-        colors: ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'],
+        ...opts,
+        particleCount: Math.floor(100 * particleRatio),
         zIndex: 9999,
+        colors: ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'],
         disableForReducedMotion: true
       });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
     };
-    frame();
+
+    // Burst 1: Center
+    fire(0.7, { spread: 80, origin: { y: 0.6 } });
+
+    // Burst 2: Left and Right (after 250ms)
+    setTimeout(() => {
+      fire(0.5, { angle: 60, spread: 55, origin: { x: 0, y: 0.7 } });
+      fire(0.5, { angle: 120, spread: 55, origin: { x: 1, y: 0.7 } });
+    }, 250);
+
+    // Burst 3: Massive Center (after 600ms)
+    setTimeout(() => {
+      fire(1, { spread: 120, origin: { y: 0.5 } });
+    }, 600);
+
   } catch (e) {
     console.log("Confetti trigger error:", e);
   }
