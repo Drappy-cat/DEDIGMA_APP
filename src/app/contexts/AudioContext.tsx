@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 
+interface VoiceOptions {
+  pitch?: number;
+  rate?: number;
+}
+
 interface AudioContextType {
   audioEnabled: boolean;
   bgmEnabled: boolean;
@@ -13,7 +18,7 @@ interface AudioContextType {
   toggleNarrator: () => void;
   setBgmVolume: (val: number) => void;
   setSfxVolume: (val: number) => void;
-  playNarrator: (text: string, mp3Path?: string) => void;
+  playNarrator: (text: string, mp3Path?: string, options?: VoiceOptions) => void;
   stopNarrator: () => void;
   playSFX: (type: "success" | "fail" | "click" | "badge") => void;
   playBGM: (path?: string) => void;
@@ -131,7 +136,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const playNarrator = (text: string, mp3Path?: string) => {
+  const playNarrator = (text: string, mp3Path?: string, options?: VoiceOptions) => {
     stopNarrator();
     if (!audioEnabled || !narratorEnabled) return;
 
@@ -148,17 +153,17 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     currentAudioRef.current = audio;
     
     audio.play().catch(() => {
-      playTTS(text);
+      playTTS(text, options);
     });
   };
 
-  const playTTS = (text: string) => {
+  const playTTS = (text: string, options?: VoiceOptions) => {
     if (!synthRef.current || !narratorEnabled || !audioEnabled) return;
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "id-ID";
-    utterance.rate = 1.0;
-    utterance.pitch = 1.1;
+    utterance.rate = options?.rate ?? 1.0;
+    utterance.pitch = options?.pitch ?? 1.1;
 
     const voices = synthRef.current.getVoices();
     const idVoice = voices.find((voice) => voice.lang.includes("id"));

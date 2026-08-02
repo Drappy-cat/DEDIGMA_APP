@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Volume2 } from "lucide-react";
 import { motion } from "motion/react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
@@ -8,7 +9,11 @@ interface PetunjukScreenProps {
   onNext?: () => void;
 }
 
-const TypedText: React.FC<{ text: string; delay?: number }> = ({ text, delay = 0 }) => {
+const TypedText: React.FC<{ text: string; delay?: number; speed?: number }> = ({
+  text,
+  delay = 0.3,
+  speed = 0.045
+}) => {
   return (
     <span>
       {text.split("").map((char, index) => (
@@ -16,7 +21,7 @@ const TypedText: React.FC<{ text: string; delay?: number }> = ({ text, delay = 0
           key={index}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.04, delay: delay + index * 0.025 }}
+          transition={{ duration: 0.04, delay: delay + index * speed }}
         >
           {char}
         </motion.span>
@@ -44,8 +49,12 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
     "Selamat bermain dan selamat belajar! Semoga kamu jadi juara! 🎉"
   ];
 
+  // Play Dimas narration on enter using local mp3 audio file
   useEffect(() => {
-    playNarrator("Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan game ini dengan mudah!");
+    playNarrator(
+      "Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan game ini dengan mudah!",
+      "/assets/voice/revisi-dimas.mp3"
+    );
     return () => {
       stopNarrator();
     };
@@ -120,9 +129,18 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
               <div className="absolute top-5 -left-3 w-0 h-0 border-y-8 border-y-transparent border-r-8 border-r-[#d9c5a3]" />
               <div className="absolute top-5 -left-2.5 w-0 h-0 border-y-7 border-y-transparent border-r-7 border-r-[#f8f3e6]" />
               
-              <p className="font-['Nunito'] font-bold text-xs sm:text-sm text-[#4a3728] leading-relaxed">
+              <p className="font-['Nunito'] font-bold text-xs sm:text-sm text-[#4a3728] leading-relaxed pr-8">
                 <TypedText text="Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan game ini dengan mudah! 😊" delay={0.4} />
               </p>
+              
+              {/* Manual Audio Play Button */}
+              <button 
+                onClick={() => playNarrator("Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan game ini dengan mudah!", "/assets/voice/revisi-dimas.mp3")}
+                className="absolute top-2 right-2 p-1.5 bg-[#f0e6d2] text-[#7e371b] hover:bg-[#e6dbbf] rounded-full transition-colors active:scale-95 border border-[#d9c5a3] shadow-sm"
+                aria-label="Putar Suara"
+              >
+                <Volume2 size={16} />
+              </button>
             </motion.div>
           </motion.div>
 
