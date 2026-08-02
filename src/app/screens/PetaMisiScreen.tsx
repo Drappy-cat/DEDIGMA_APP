@@ -232,9 +232,15 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                   }}
                   onTap={() => {
                     playSFX("click");
-                    setSelectedIdx(idx);
                     if (isLocked) {
+                      setSelectedIdx(idx);
                       triggerShake(mission.id);
+                    } else if (isActive) {
+                      // Enter mission if tapping the already centered unlocked card
+                      handleSelect(mission.id);
+                    } else {
+                      // Just bring it to center if tapping an inactive unlocked card
+                      setSelectedIdx(idx);
                     }
                   }}
                   className={`relative cursor-pointer transition-all ${
