@@ -60,7 +60,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
       playSFX("click");
     }
     setShakingId(id);
-    setToastMessage("Misi masih terkunci, selesaikan misi sebelumnya! 🔒");
+    setToastMessage("Misi masih terkunci, selesaikan misi sebelumnya!");
     setTimeout(() => setShakingId(null), 450);
     setTimeout(() => setToastMessage(null), 3000);
   };
@@ -231,11 +231,12 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                     delay: shakingId === mission.id ? 0 : idx * 0.1,
                   }}
                   onClick={() => {
-                    playSFX("click");
-                    setSelectedIdx(idx);
                     if (isLocked) {
                       triggerShake(mission.id);
+                      return;
                     }
+                    playSFX("click");
+                    setSelectedIdx(idx);
                   }}
                   className={`relative cursor-pointer transition-all ${
                     isActive ? "z-20" : "z-10"
