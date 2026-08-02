@@ -24,7 +24,14 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
   }, []);
 
   return (
-    <div className="flex flex-col h-full items-center justify-center p-4 sm:p-6 text-center bg-transparent font-['Nunito'] select-none relative overflow-hidden">
+    <div 
+      className="flex flex-col h-full items-center justify-center p-4 sm:p-6 text-center font-['Nunito'] select-none relative overflow-hidden rounded-[1.25rem]"
+      style={{
+        backgroundImage: "url('/assets/bg-login.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       
       {/* Light Rays Background Effect */}
       <motion.div 
