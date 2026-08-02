@@ -178,7 +178,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
           }}
         >
           {/* Absolute positioning for the heading so it sits inside the top ribbon shape */}
-          <h2 className="font-['Fredoka'] font-bold text-lg sm:text-xl text-blue-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] absolute top-4 sm:top-5 left-0 right-0 flex items-center justify-center gap-2 z-10 pointer-events-none">
+          <h2 className="font-['Fredoka'] font-bold text-lg sm:text-xl text-blue-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] absolute top-6 sm:top-7 left-0 right-0 flex items-center justify-center gap-2 z-10 pointer-events-none">
             <BookOpen size={20} /> Soal Evaluasi
           </h2>
 
