@@ -219,18 +219,18 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                   animate={{
                     opacity: 1,
                     y: 0,
-                    x: shakingId === mission.id ? [0, -18, 18, -14, 14, -8, 8, -3, 3, 0] : 0,
-                    rotate: shakingId === mission.id ? [0, -6, 6, -5, 5, -2, 2, 0] : 0,
+                    x: shakingId === mission.id ? [-18, 18, -14, 14, -8, 8, -3, 3, 0] : 0,
+                    rotate: shakingId === mission.id ? [-6, 6, -5, 5, -2, 2, 0] : 0,
                     scale: isActive
-                      ? shakingId === mission.id ? [1, 0.94, 1.04, 0.97, 1] : 1
-                      : shakingId === mission.id ? [0.82, 0.76, 0.86, 0.82] : 0.82,
+                      ? shakingId === mission.id ? [0.94, 1.04, 0.97, 1] : 1
+                      : shakingId === mission.id ? [0.76, 0.86, 0.79, 0.82] : 0.82,
                     filter: isActive ? "none" : "brightness(0.7)",
                   }}
                   transition={{
                     duration: 0.45,
                     delay: shakingId === mission.id ? 0 : idx * 0.1,
                   }}
-                  onClick={() => {
+                  onTap={() => {
                     if (isLocked) {
                       triggerShake(mission.id);
                       return;
