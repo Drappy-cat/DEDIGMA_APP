@@ -85,120 +85,127 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
 
       {/* Main Parchment Scrollable Area */}
       <div className="flex-1 w-full max-w-4xl mx-auto p-3 sm:p-5 relative z-10 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-        
-        {/* Main Parchment Paper Board */}
+
+        {/* Outer Wooden Signpost Board Frame */}
         <motion.div
           initial={{ scale: 0.96, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="bg-[#f4ecd5] border-4 border-[#c2aa84] rounded-3xl shadow-[0_12px_35px_rgba(0,0,0,0.5)] p-4 sm:p-6 relative overflow-hidden"
+          className="bg-[#6b3117] border-4 border-[#451e0c] rounded-[2.5rem] p-2.5 sm:p-4 shadow-[0_15px_40px_rgba(0,0,0,0.6)] relative"
         >
+          {/* Main Parchment Paper Board */}
+          <div className="bg-[#f4ecd5] border-2 border-[#c2aa84] rounded-3xl p-4 sm:p-6 relative overflow-hidden">
 
-          {/* Wooden Header Sign */}
-          <div className="flex justify-center mb-4">
-            <div className="bg-[#7e371b] border-2 border-[#572410] rounded-2xl py-1.5 px-6 shadow-md border-b-4 border-r-2 flex items-center justify-center">
-              <h1 className="font-['Fredoka'] font-extrabold text-xl sm:text-2xl text-white tracking-wider drop-shadow-md">
-                PETUNJUK PENGGUNAAN
-              </h1>
-            </div>
-          </div>
+            {/* Decorative Blue Pins */}
+            <div className="absolute top-3 left-3 text-xl opacity-80">📌</div>
+            <div className="absolute top-3 right-3 text-xl opacity-80">📌</div>
 
-          {/* Mascot & Speech Bubble */}
-          <motion.div
-            className="flex items-center gap-3 sm:gap-4 mb-5"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {/* Dimas Mascot Image */}
-            <div className="flex-shrink-0">
-              <img
-                src="/assets/mascot/Dimas-Petunjuk.svg"
-                alt="Dimas Petunjuk"
-                className="w-20 sm:w-28 h-auto object-contain filter drop-shadow-md"
-              />
+            {/* Wooden Header Sign */}
+            <div className="flex justify-center mb-4">
+              <div className="bg-[#7e371b] border-2 border-[#572410] rounded-2xl py-1.5 px-6 shadow-md border-b-4 border-r-2 flex items-center justify-center">
+                <h1 className="font-['Fredoka'] font-extrabold text-xl sm:text-2xl text-white tracking-wider drop-shadow-md">
+                  PETUNJUK PENGGUNAAN
+                </h1>
+              </div>
             </div>
 
-            {/* Speech Bubble */}
+            {/* Mascot & Speech Bubble */}
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-3 sm:p-4 shadow-sm flex-1 relative text-[#4a3728]"
+              className="flex items-center gap-3 sm:gap-4 mb-5"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
             >
-              {/* Pointer Triangle */}
-              <div className="absolute top-5 -left-3 w-0 h-0 border-y-8 border-y-transparent border-r-8 border-r-[#d9c5a3]" />
-              <div className="absolute top-5 -left-2.5 w-0 h-0 border-y-7 border-y-transparent border-r-7 border-r-[#f8f3e6]" />
-              
-              <p className="font-['Nunito'] font-bold text-xs sm:text-sm text-[#4a3728] leading-relaxed pr-8">
-                <TypedText text="Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan game ini dengan mudah! 😊" delay={0.4} />
-              </p>
-              
-              {/* Manual Audio Play Button */}
-              <button 
-                onClick={() => playNarrator("Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan game ini dengan mudah!", "/assets/voice/revisi-dimas.mp3")}
-                className="absolute top-2 right-2 p-1.5 bg-[#f0e6d2] text-[#7e371b] hover:bg-[#e6dbbf] rounded-full transition-colors active:scale-95 border border-[#d9c5a3] shadow-sm"
-                aria-label="Putar Suara"
+              {/* Dimas Mascot Image */}
+              <div className="flex-shrink-0">
+                <img
+                  src="/assets/mascot/Dimas-Petunjuk.svg"
+                  alt="Dimas Petunjuk"
+                  className="w-24 sm:w-32 h-auto object-contain filter drop-shadow-md"
+                />
+              </div>
+
+              {/* Speech Bubble */}
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-3 sm:p-4 shadow-sm flex-1 relative text-[#4a3728]"
               >
-                <Volume2 size={16} />
-              </button>
+                {/* Pointer Triangle */}
+                <div className="absolute top-5 -left-3 w-0 h-0 border-y-8 border-y-transparent border-r-8 border-r-[#d9c5a3]" />
+                <div className="absolute top-5 -left-2.5 w-0 h-0 border-y-7 border-y-transparent border-r-7 border-r-[#f8f3e6]" />
+                
+                <p className="font-['Nunito'] font-bold text-xs sm:text-sm text-[#4a3728] leading-relaxed pr-8">
+                  <TypedText text="Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan game ini dengan mudah! 😊" delay={0.4} />
+                </p>
+                
+                {/* Manual Audio Play Button */}
+                <button 
+                  onClick={() => playNarrator("Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan game ini dengan mudah!", "/assets/voice/revisi-dimas.mp3")}
+                  className="absolute top-2 right-2 p-1.5 bg-[#f0e6d2] text-[#7e371b] hover:bg-[#e6dbbf] rounded-full transition-colors active:scale-95 border border-[#d9c5a3] shadow-sm"
+                  aria-label="Putar Suara"
+                >
+                  <Volume2 size={16} />
+                </button>
+              </motion.div>
             </motion.div>
-          </motion.div>
 
-          {/* SECTION 1: FUNGSI TOMBOL */}
-          <div className="bg-[#e6dbbf]/70 border-2 border-[#d0c09d] rounded-2xl p-3 sm:p-4 relative mt-5 pt-6 shadow-xs">
-            {/* Top Green Ribbon Banner */}
-            <div className="absolute -top-3 left-4 bg-[#366635] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm py-0.5 px-4 rounded-lg shadow-sm border border-[#244723]">
-              FUNGSI TOMBOL
+            {/* SECTION 1: FUNGSI TOMBOL */}
+            <div className="bg-[#e6dbbf]/70 border-2 border-[#d0c09d] rounded-2xl p-3 sm:p-4 relative mt-5 pt-6 shadow-xs">
+              {/* Top Green Ribbon Banner */}
+              <div className="absolute -top-3 left-4 bg-[#366635] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm py-0.5 px-4 rounded-lg shadow-sm border border-[#244723]">
+                FUNGSI TOMBOL
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                {buttons.map((b, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 + i * 0.08 }}
+                    className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-2.5 flex items-center gap-3 shadow-xs"
+                  >
+                    <div className="w-9 h-9 rounded-full bg-[#366635] text-white flex items-center justify-center text-lg flex-shrink-0 border border-[#244723] shadow-xs">
+                      <span>{b.icon}</span>
+                    </div>
+                    <div>
+                      <p className="font-['Fredoka'] font-bold text-[#366635] text-xs sm:text-sm">{b.label}</p>
+                      <p className="font-['Nunito'] font-semibold text-[#5c4a3a] text-[11px] leading-snug">{b.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {buttons.map((b, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 + i * 0.08 }}
-                  className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-2.5 flex items-center gap-3 shadow-xs"
-                >
-                  <div className="w-9 h-9 rounded-full bg-[#366635] text-white flex items-center justify-center text-lg flex-shrink-0 border border-[#244723] shadow-xs">
-                    <span>{b.icon}</span>
-                  </div>
-                  <div>
-                    <p className="font-['Fredoka'] font-bold text-[#366635] text-xs sm:text-sm">{b.label}</p>
-                    <p className="font-['Nunito'] font-semibold text-[#5c4a3a] text-[11px] leading-snug">{b.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
+            {/* SECTION 2: CARA MENGERJAKAN AKTIVITAS */}
+            <div className="bg-[#e6dbbf]/70 border-2 border-[#d0c09d] rounded-2xl p-3 sm:p-4 relative mt-6 pt-6 shadow-xs">
+              {/* Top Green Ribbon Banner */}
+              <div className="absolute -top-3 left-4 bg-[#366635] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm py-0.5 px-4 rounded-lg shadow-sm border border-[#244723]">
+                CARA MENGERJAKAN AKTIVITAS
+              </div>
+
+              <div className="space-y-2">
+                {cara.map((text, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 1.0 + i * 0.1 }}
+                    className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-2.5 flex items-center gap-3 shadow-xs"
+                  >
+                    <div className="w-7 h-7 rounded-full bg-[#df9d3b] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm flex items-center justify-center flex-shrink-0 border border-[#b87c27] shadow-xs">
+                      {i + 1}
+                    </div>
+                    <p className="font-['Nunito'] font-bold text-[#4a3728] text-xs sm:text-sm leading-snug">
+                      {text}
+                    </p>
+                  </motion.div>
+                ))}
+              </div>
             </div>
+
           </div>
-
-          {/* SECTION 2: CARA MENGERJAKAN AKTIVITAS */}
-          <div className="bg-[#e6dbbf]/70 border-2 border-[#d0c09d] rounded-2xl p-3 sm:p-4 relative mt-6 pt-6 shadow-xs">
-            {/* Top Green Ribbon Banner */}
-            <div className="absolute -top-3 left-4 bg-[#366635] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm py-0.5 px-4 rounded-lg shadow-sm border border-[#244723]">
-              CARA MENGERJAKAN AKTIVITAS
-            </div>
-
-            <div className="space-y-2">
-              {cara.map((text, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1.0 + i * 0.1 }}
-                  className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-2.5 flex items-center gap-3 shadow-xs"
-                >
-                  <div className="w-7 h-7 rounded-full bg-[#df9d3b] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm flex items-center justify-center flex-shrink-0 border border-[#b87c27] shadow-xs">
-                    {i + 1}
-                  </div>
-                  <p className="font-['Nunito'] font-bold text-[#4a3728] text-xs sm:text-sm leading-snug">
-                    {text}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
         </motion.div>
       </div>
 

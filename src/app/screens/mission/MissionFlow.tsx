@@ -97,17 +97,17 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
         step={`${getStepLabel()} (${stageIndex + 1}/${totalStages})`}
       />
 
-      {/* Horizontal Stage Progress Bar dots */}
-      <div className="bg-white/90 backdrop-blur-sm px-4 py-2 flex gap-1.5 select-none flex-shrink-0 border-b border-gray-200">
+      {/* Horizontal Stage Progress Bar */}
+      <div className="bg-[#f4ecd5]/95 backdrop-blur-sm px-4 py-2 flex gap-1.5 select-none flex-shrink-0 border-b-2 border-[#c2aa84]/50">
         {STAGE_ORDER.slice(0, -1).map((s, i) => (
           <div key={s} className="flex-1 flex flex-col items-center gap-0.5">
             <div
               className={`h-2 w-full rounded-full transition-all duration-500 ${
-                i < stageIndex ? "bg-green-400" : i === stageIndex ? "bg-blue-500 scale-y-125" : "bg-gray-200"
+                i < stageIndex ? "bg-[#366635]" : i === stageIndex ? "bg-[#7e371b] scale-y-125" : "bg-[#d8c7a5]"
               }`}
             />
-            <span className={`text-[8px] font-bold transition-colors ${
-              i <= stageIndex ? "text-blue-600" : "text-gray-400"
+            <span className={`text-[8px] font-['Fredoka'] font-bold transition-colors ${
+              i <= stageIndex ? "text-[#7e371b]" : "text-[#b5a08a]"
             }`}>
               {i === 2 ? ACTIVITY_LABELS[mission.activityType] || STAGE_LABELS[s] : STAGE_LABELS[s]}
             </span>
@@ -115,31 +115,27 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
         ))}
       </div>
 
-      {/* Active Stage Body Container */}
+      {/* Active Stage Body Container — Parchment Board */}
       <div
-        className="flex-1 overflow-hidden flex flex-col mx-3 my-3 p-6 shadow-2xl relative z-10"
-        style={{
-          backgroundImage: "url('/assets/content-bg.png')",
-          backgroundSize: "100% 100%",
-          backgroundRepeat: "no-repeat",
-          backgroundColor: "transparent"
-        }}
+        className="flex-1 min-h-0 overflow-visible flex flex-col mx-2 sm:mx-3 my-2 sm:my-3 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.35)] relative z-10 bg-[#f4ecd5] border-4 border-[#c2aa84]"
       >
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={stage}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-            className="flex-1 overflow-hidden h-full"
-          >
-            {stage === "orientasi" && <OrientasiScreen mission={mission} onNext={() => advance()} />}
-            {stage === "materi" && <MateriScreen mission={mission} onNext={() => advance()} />}
-            {stage === "aktivitas" && renderActivity()}
-            {stage === "refleksi" && <RuangRefleksiScreen mission={mission} onNext={() => advance()} />}
-          </motion.div>
-        </AnimatePresence>
+        <div className="flex-1 min-h-0 overflow-visible flex flex-col p-3 sm:p-4">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={stage}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="flex-1 min-h-0 overflow-visible h-full flex flex-col"
+            >
+              {stage === "orientasi" && <OrientasiScreen mission={mission} onNext={() => advance()} />}
+              {stage === "materi" && <MateriScreen mission={mission} onNext={() => advance()} onBack={() => setStage("orientasi")} />}
+              {stage === "aktivitas" && renderActivity()}
+              {stage === "refleksi" && <RuangRefleksiScreen mission={mission} onNext={() => advance()} />}
+            </motion.div>
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

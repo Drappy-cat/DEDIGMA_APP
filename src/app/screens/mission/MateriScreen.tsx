@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { ChevronRight, MapPin, X } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { Volume2, X, Info, Clock, Target, Heart, Image, Play } from "lucide-react";
 import { Mission, MateriTab } from "../../types";
-import { Btn } from "../../components/Btn";
-import { MascotDimas, MascotGita } from "../../components/Mascot";
 import { useAudio } from "../../contexts/AudioContext";
 
 // Helper for photo URL
@@ -11,63 +9,49 @@ const unsplashUrl = (photoId: string, w = 400, h = 260) => {
   return `https://images.unsplash.com/photo-${photoId}?w=${w}&h=${h}&fit=crop&auto=format&q=80`;
 };
 
-// Video Card sub-component
-const VideoCard: React.FC<{ item: { title: string; desc: string; thumbId: string; query: string } }> = ({ item }) => {
+// Video Card sub-component with parchment styling
+const VideoCard: React.FC<{ item: { title: string; desc: string; thumbId: string; query: string }; missionName: string }> = ({ item, missionName }) => {
   const [playing, setPlaying] = useState(false);
   const { playSFX } = useAudio();
   const youtubeSearch = `https://www.youtube.com/results?search_query=${item.query}`;
 
-  const handlePlay = () => {
-    playSFX("click");
-    setPlaying(true);
-  };
-
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
+    <div className="bg-[#f6eed9] border-2 border-[#d8c7a5] rounded-2xl overflow-hidden shadow-sm">
       <div className="relative w-full select-none" style={{ aspectRatio: "16/9" }}>
         <img src={unsplashUrl(item.thumbId, 640, 360)} alt={item.title} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/25" />
         <button
-          onClick={handlePlay}
+          onClick={() => { playSFX("click"); setPlaying(true); }}
           className="absolute inset-0 flex items-center justify-center group cursor-pointer"
         >
-          <div className="w-14 h-14 rounded-full bg-red-600 group-hover:bg-red-700 group-hover:scale-105 transition-all shadow-2xl flex items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="white" className="w-7 h-7 ml-1">
+          <div className="w-14 h-14 rounded-full bg-[#7e371b] group-hover:bg-[#5a2512] group-hover:scale-105 transition-all shadow-2xl flex items-center justify-center border-2 border-[#fad86b]">
+            <svg viewBox="0 0 24 24" fill="#fad86b" className="w-7 h-7 ml-1">
               <polygon points="5,3 19,12 5,21" />
             </svg>
           </div>
         </button>
-        <div className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-['Fredoka'] font-bold px-2 py-0.5 rounded-md">
-          ▶ YouTube
-        </div>
       </div>
 
       <div className="p-3 space-y-2">
-        <h4 className="font-['Fredoka'] font-semibold text-gray-800 text-sm leading-snug">{item.title}</h4>
-        <p className="font-['Nunito'] text-gray-500 text-[11px] leading-relaxed">{item.desc}</p>
+        <h4 className="font-['Fredoka'] font-bold text-[#4a3728] text-sm leading-snug">{item.title}</h4>
+        <p className="font-['Nunito'] font-semibold text-[#7a6450] text-[11px] leading-relaxed">{item.desc}</p>
         <a
           href={youtubeSearch}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => playSFX("click")}
-          className="inline-flex items-center gap-1 bg-red-600 hover:bg-red-700 text-white font-['Fredoka'] font-semibold text-xs px-3.5 py-1.5 rounded-xl transition-all shadow-sm"
+          className="inline-flex items-center gap-1.5 bg-[#7e371b] hover:bg-[#5a2512] text-[#fff5ce] font-['Fredoka'] font-bold text-xs px-4 py-1.5 rounded-xl transition-all shadow-sm border border-[#572410]"
         >
-          Tonton di YouTube
+          <Play size={12} /> Tonton di YouTube
         </a>
       </div>
 
       {playing && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-          onClick={() => setPlaying(false)}
-        >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onClick={() => setPlaying(false)}>
           <div className="w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-2">
               <p className="font-['Fredoka'] font-semibold text-white text-sm truncate">{item.title}</p>
-              <button
-                onClick={() => setPlaying(false)}
-                className="text-white bg-white/20 hover:bg-white/30 rounded-full p-1 cursor-pointer"
-              >
+              <button onClick={() => setPlaying(false)} className="text-white bg-white/20 hover:bg-white/30 rounded-full p-1 cursor-pointer">
                 <X size={18} />
               </button>
             </div>
@@ -83,12 +67,7 @@ const VideoCard: React.FC<{ item: { title: string; desc: string; thumbId: string
             </div>
             <p className="text-white/60 text-[10px] text-center mt-2 font-['Nunito']">
               Atau{" "}
-              <a
-                href={youtubeSearch}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-red-400 underline font-semibold"
-              >
+              <a href={youtubeSearch} target="_blank" rel="noopener noreferrer" className="text-[#fad86b] underline font-semibold">
                 buka pencarian langsung di YouTube
               </a>
             </p>
@@ -102,20 +81,46 @@ const VideoCard: React.FC<{ item: { title: string; desc: string; thumbId: string
 interface MateriScreenProps {
   mission: Mission;
   onNext: () => void;
+  onBack?: () => void;
 }
 
-export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext }) => {
+// Tab icon mapping
+const tabIcons: Record<MateriTab, React.ReactNode> = {
+  pengertian: <Info size={16} />,
+  sejarah: <Clock size={16} />,
+  tujuan: <Target size={16} />,
+  "nilai-budaya": <Heart size={16} />,
+  galeri: <Image size={16} />,
+  video: <Play size={16} />
+};
+
+// Nilai Budaya icon mapping
+const nilaiBudayaIcons: Record<string, string> = {
+  "Syukur": "🙏",
+  "Gotong Royong": "👥",
+  "Harmoni Alam": "🌿",
+  "Kebersamaan": "🤝",
+  "Hormat Leluhur": "🙏",
+  "Silaturahmi": "👨‍👩‍👧‍👦",
+  "Religiusitas": "☪️",
+  "Persatuan": "🤝",
+  "Pelestarian Budaya": "🏛️",
+  "Toleransi": "🕊️",
+  "Kreativitas": "🎨"
+};
+
+export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [tab, setTab] = useState<MateriTab>("pengertian");
   const [lightbox, setLightbox] = useState<number | null>(null);
 
-  const tabs: { key: MateriTab; label: string; icon: string }[] = [
-    { key: "pengertian", label: "Pengertian", icon: "📖" },
-    { key: "sejarah", label: "Sejarah", icon: "📜" },
-    { key: "tujuan", label: "Tujuan", icon: "🎯" },
-    { key: "nilai-budaya", label: "Nilai Budaya", icon: "⭐" },
-    { key: "galeri", label: "Galeri", icon: "🖼️" },
-    { key: "video", label: "Video", icon: "🎬" }
+  const tabs: { key: MateriTab; label: string }[] = [
+    { key: "pengertian", label: "Pengertian" },
+    { key: "sejarah", label: "Sejarah" },
+    { key: "tujuan", label: "Tujuan" },
+    { key: "nilai-budaya", label: "Nilai Budaya" },
+    { key: "galeri", label: "Galeri" },
+    { key: "video", label: "Video" }
   ];
 
   const content = mission.content;
@@ -154,148 +159,261 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext }) =
     onNext();
   };
 
+  // Get the first gallery photo for the pengertian/sejarah/tujuan content area
+  const heroPhoto = mission.galeri.length > 0 ? unsplashUrl(mission.galeri[0].photoId, 320, 200) : null;
+
   return (
-    <div className="flex flex-col h-full font-['Nunito']">
-      {/* Tab bar — scrollable */}
-      <div className="bg-white border-b border-blue-100 px-3 py-2 flex gap-2 overflow-x-auto scrollbar-none select-none">
-        {tabs.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => handleTabChange(t.key)}
-            className={`flex items-center gap-1 px-3 py-2 rounded-xl font-['Fredoka'] font-bold text-xs whitespace-nowrap transition-all cursor-pointer flex-shrink-0
-              ${
-                tab === t.key
-                  ? t.key === "galeri"
-                    ? "bg-purple-600 text-white shadow-md shadow-purple-200"
-                    : t.key === "video"
-                    ? "bg-red-600 text-white shadow-md shadow-red-200"
-                    : "bg-blue-600 text-white shadow-md shadow-blue-200"
-                  : "text-gray-500 hover:bg-gray-100 bg-white"
-              }`}
-          >
-            {t.icon} {t.label}
-          </button>
-        ))}
+    <div className="flex flex-col h-full font-['Nunito'] overflow-visible min-h-0">
+      {/* Wooden Header Banner */}
+      <div className="flex justify-center py-2 flex-shrink-0">
+        <div className="bg-[#7e371b] border-2 border-[#572410] rounded-2xl py-1.5 px-6 shadow-md border-b-4 flex items-center justify-center gap-2">
+          <h1 className="font-['Fredoka'] font-extrabold text-base sm:text-lg text-white tracking-wider drop-shadow-md uppercase">
+            Materi Budaya
+          </h1>
+        </div>
       </div>
 
-      {/* Main content body */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Mission header banner */}
-        <div className={`flex items-center gap-3 bg-gradient-to-r ${mission.gradient} text-white rounded-2xl p-3 shadow-md`}>
-          <span className="text-4xl filter drop-shadow select-none">{mission.emoji}</span>
-          <div>
-            <h2 className="font-['Fredoka'] font-bold text-lg leading-tight">{mission.name}</h2>
-            <p className="text-white/80 text-[10px] font-semibold mt-0.5 flex items-center gap-0.5 select-none">
-              <MapPin size={10} /> {mission.location}
-            </p>
+      <div className="flex justify-center -mt-1 mb-2 flex-shrink-0">
+        <div className="bg-[#572410] border border-[#3d1a0c] rounded-xl py-1 px-5 shadow-sm">
+          <h2 className="font-['Fredoka'] font-extrabold text-sm sm:text-base text-[#fad86b] tracking-wide drop-shadow-sm uppercase">
+            {mission.name}
+          </h2>
+        </div>
+      </div>
+
+      {/* Main Layout: Sidebar + Content */}
+      <div className="flex-1 flex gap-3 overflow-visible px-1 min-h-0">
+        {/* Left Sidebar: Tabs + Mascot */}
+        <div className="flex flex-col flex-shrink-0 w-[130px] sm:w-[160px] h-full">
+          <div className="flex flex-col gap-1">
+            {tabs.map((t, i) => (
+              <motion.button
+                key={t.key}
+                onClick={() => handleTabChange(t.key)}
+                initial={{ opacity: 0, x: -15 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 + i * 0.05 }}
+                className={`flex items-center gap-1.5 px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-xl font-['Fredoka'] font-bold text-[10px] sm:text-xs whitespace-nowrap transition-all cursor-pointer text-left border-2 shadow-sm ${
+                  tab === t.key
+                    ? "bg-[#366635] text-white border-[#244723] shadow-md"
+                    : "bg-[#f6eed9] text-[#5c4a3a] border-[#d8c7a5] hover:bg-[#ece2c8] hover:border-[#c2aa84]"
+                }`}
+              >
+                <span className={`flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-lg flex-shrink-0 ${
+                  tab === t.key ? "bg-white/20" : "bg-[#e6dbbf]"
+                }`}>
+                  {tabIcons[t.key]}
+                </span>
+                {t.label}
+              </motion.button>
+            ))}
           </div>
+
+
         </div>
 
-        <motion.div key={tab} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-          {/* Text content tabs */}
-          {(tab === "pengertian" || tab === "sejarah" || tab === "tujuan") && (
-            <div className="bg-white rounded-2xl p-4 shadow-md border border-gray-100/50">
-              <p className="text-gray-700 leading-relaxed text-sm">
-                {tab === "pengertian" && content.pengertian}
-                {tab === "sejarah" && content.sejarah}
-                {tab === "tujuan" && content.tujuan}
-              </p>
-            </div>
-          )}
-
-          {/* Nilai Budaya tab */}
-          {tab === "nilai-budaya" && (
-            <div className="grid grid-cols-2 gap-3">
-              {content.nilaiBudaya.map((n, i) => (
-                <div
-                  key={i}
-                  className={`${mission.bgLight} ${mission.borderColor} border rounded-2xl p-4 text-center shadow-md flex items-center justify-center`}
-                >
-                  <p className={`font-['Fredoka'] font-bold ${mission.textColor} text-sm`}>{n}</p>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Galeri tab */}
-          {tab === "galeri" && (
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 bg-purple-50 rounded-xl px-3 py-2 border border-purple-100/20 select-none">
-                <span className="text-lg">🖼️</span>
-                <p className="text-purple-700 text-xs font-bold">Ketuk foto untuk melihat lebih besar</p>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                {mission.galeri.map((item, i) => (
-                  <motion.button
-                    key={i}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={() => {
-                      playSFX("click");
-                      setLightbox(i);
-                    }}
-                    className="rounded-2xl overflow-hidden shadow-md text-left cursor-pointer border border-gray-100 bg-white flex flex-col"
-                  >
-                    <img
-                      src={unsplashUrl(item.photoId)}
-                      alt={item.caption}
-                      className="w-full h-28 object-cover"
-                    />
-                    <div className="bg-white px-2 py-1.5 flex-1">
-                      <p className="text-gray-600 text-[10px] leading-snug font-semibold">{item.caption}</p>
+        {/* Right: Content Area */}
+        <div className="flex-1 flex flex-col gap-3 overflow-y-auto pr-1 min-h-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={tab}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="space-y-3"
+            >
+              {/* Text content tabs (Pengertian, Sejarah, Tujuan) */}
+              {(tab === "pengertian" || tab === "sejarah" || tab === "tujuan") && (
+                <>
+                  {/* Separated Image */}
+                  {heroPhoto && (
+                    <div className="flex justify-center w-full mb-1">
+                      <div className="w-[92%] sm:w-[88%] rounded-xl overflow-hidden border-2 border-[#c2aa84] shadow-md">
+                        <img
+                          src={heroPhoto}
+                          alt={mission.name}
+                          className="w-full h-40 sm:h-48 object-cover"
+                        />
+                      </div>
                     </div>
-                  </motion.button>
-                ))}
-              </div>
-            </div>
-          )}
+                  )}
 
-          {/* Video tab */}
-          {tab === "video" && (
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 bg-red-50 rounded-xl px-3 py-2 border border-red-100/20 select-none">
-                <span className="text-lg">🎬</span>
-                <p className="text-red-700 text-xs font-bold">Tonton video pembelajaran tentang {mission.name}</p>
-              </div>
-              {mission.video.map((v, i) => (
-                <VideoCard key={i} item={v} />
-              ))}
-            </div>
-          )}
+                  {/* Text Card */}
+                  <div className="bg-[#f6eed9] border-2 border-[#d8c7a5] rounded-2xl p-3 sm:p-4 shadow-sm w-full">
+                    <p className="w-full text-[#4a3728] leading-relaxed text-[16px] font-bold text-justify">
+                      {tab === "pengertian" && (
+                        <>
+                          <strong className="text-[#7e371b] font-extrabold">{mission.name}</strong>{" "}
+                          {content.pengertian.replace(mission.name, "").trimStart()}
+                        </>
+                      )}
+                      {tab === "sejarah" && content.sejarah}
+                      {tab === "tujuan" && content.tujuan}
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {/* Nilai Budaya tab */}
+              {tab === "nilai-budaya" && (
+                <div className="bg-[#f6eed9] border-2 border-[#d8c7a5] rounded-2xl p-3 sm:p-4 shadow-sm">
+                  {/* Section title */}
+                  <h3 className="font-['Fredoka'] font-extrabold text-[#4a3728] text-sm sm:text-base text-center mb-3 pb-2 border-b-2 border-[#d8c7a5]">
+                    Nilai Budaya yang Terkandung
+                  </h3>
+                  
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                    {content.nilaiBudaya.map((n, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ delay: 0.15 + i * 0.08 }}
+                        className="bg-[#ece2c8] border-2 border-[#c2aa84] rounded-2xl p-3 flex flex-col items-center justify-center gap-2 shadow-sm hover:shadow-md transition-shadow"
+                      >
+                        <div className="w-12 h-12 rounded-full bg-[#4a3728] border-2 border-[#3b1e0a] flex items-center justify-center text-2xl shadow-sm">
+                          {nilaiBudayaIcons[n] || "💫"}
+                        </div>
+                        <p className="font-['Fredoka'] font-extrabold text-[#4a3728] text-[11px] sm:text-xs text-center leading-tight">
+                          {n}
+                        </p>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Galeri tab */}
+              {tab === "galeri" && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 bg-[#f6eed9] rounded-xl px-3 py-2 border-2 border-[#d8c7a5] select-none shadow-sm">
+                    <Image size={16} className="text-[#7e371b]" />
+                    <p className="text-[#7e371b] text-xs font-['Fredoka'] font-bold">Ketuk foto untuk melihat lebih besar</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {mission.galeri.map((item, i) => (
+                      <motion.button
+                        key={i}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.1 + i * 0.08 }}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => {
+                          playSFX("click");
+                          setLightbox(i);
+                        }}
+                        className="rounded-2xl overflow-hidden shadow-sm text-left cursor-pointer border-2 border-[#d8c7a5] bg-[#f6eed9] flex flex-col hover:shadow-md transition-shadow"
+                      >
+                        <img
+                          src={unsplashUrl(item.photoId)}
+                          alt={item.caption}
+                          className="w-full h-24 sm:h-28 object-cover"
+                        />
+                        <div className="px-2.5 py-2">
+                          <p className="text-[#5c4a3a] text-[10px] leading-snug font-['Nunito'] font-bold">{item.caption}</p>
+                        </div>
+                      </motion.button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Video tab */}
+              {tab === "video" && (
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2 bg-[#f6eed9] rounded-xl px-3 py-2 border-2 border-[#d8c7a5] select-none shadow-sm">
+                    <Play size={16} className="text-[#7e371b]" />
+                    <p className="text-[#7e371b] text-xs font-['Fredoka'] font-bold">Tonton video pembelajaran tentang {mission.name}</p>
+                  </div>
+                  {mission.video.map((v, i) => (
+                    <VideoCard key={i} item={v} missionName={mission.name} />
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Speaker button to replay narration */}
+          <div className="flex justify-end pb-1">
+            <button
+              onClick={() => {
+                let speakText = "";
+                if (tab === "pengertian") speakText = `Berikut adalah pengertian dari ${mission.name}. ${content.pengertian}`;
+                else if (tab === "sejarah") speakText = `Mari baca sejarah tentang ${mission.name}. ${content.sejarah}`;
+                else if (tab === "tujuan") speakText = `Apa tujuan pelaksanaan ${mission.name}? ${content.tujuan}`;
+                else if (tab === "nilai-budaya") speakText = `Nilai budaya yang terkandung meliputi: ${content.nilaiBudaya.join(", ")}`;
+                else if (tab === "galeri") speakText = "Lihat galeri foto kegiatan budaya di halaman ini.";
+                else if (tab === "video") speakText = `Tonton video edukasi tentang ${mission.name}.`;
+                if (speakText) playNarrator(speakText);
+              }}
+              className="p-2 bg-[#f0e6d2] text-[#7e371b] hover:bg-[#e6dbbf] rounded-full transition-colors active:scale-95 border-2 border-[#d9c5a3] shadow-sm"
+              aria-label="Putar Suara"
+            >
+              <Volume2 size={18} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Navigation: Back + Next */}
+      <div className="flex justify-between items-center px-3 py-2 flex-shrink-0 z-30 relative">
+        {onBack ? (
+          <button
+            onClick={() => { playSFX("click"); onBack(); }}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+            aria-label="Kembali"
+          >
+            <img
+              src="/assets/button/back.svg"
+              alt="Tombol Kembali"
+              className="w-12 sm:w-16 h-auto object-contain drop-shadow-md"
+            />
+          </button>
+        ) : (
+          <div className="w-12 sm:w-16" />
+        )}
+        <button
+          onClick={handleNext}
+          className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+          aria-label="Lanjut"
+        >
+          <img
+            src="/assets/button/next.svg"
+            alt="Tombol Lanjut"
+            className="w-12 sm:w-16 h-auto object-contain drop-shadow-md"
+          />
+        </button>
+      </div>
+
+      {/* Mascot at bottom left */}
+      <motion.div 
+        initial={{ x: -40, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.35, ease: "easeOut" }}
+        className="absolute -bottom-12 sm:-bottom-16 -left-4 sm:-left-6 z-20 pointer-events-none origin-bottom"
+      >
+        <motion.div
+          animate={{ 
+            y: [0, -3, 0],
+            scaleY: [1, 1.015, 1]
+          }}
+          transition={{ 
+            duration: 3, 
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 0.5
+          }}
+          className="origin-bottom"
+        >
+          <img 
+            src="/assets/mascot/Dimas-Petunjuk.svg" 
+            alt="Dimas Petunjuk" 
+            className="w-48 sm:w-64 h-auto object-contain filter drop-shadow-xl" 
+          />
         </motion.div>
-
-        {/* Mascot companion speech tips */}
-        {["pengertian", "sejarah", "tujuan", "nilai-budaya"].includes(tab) && (
-          <div className="flex gap-3 items-start select-none">
-            <MascotDimas size="sm" animate={true} />
-            <div className="bg-blue-50 rounded-2xl p-3 flex-1 text-xs text-blue-700 leading-relaxed border border-blue-100">
-              Baca setiap tab dengan teliti ya! Lanjutkan ke tab <strong>Galeri</strong> dan <strong>Video</strong> untuk
-              materi yang lebih seru! 💪
-            </div>
-          </div>
-        )}
-        {tab === "galeri" && (
-          <div className="flex gap-3 items-start select-none">
-            <MascotGita size="sm" animate={true} />
-            <div className="bg-purple-50 rounded-2xl p-3 flex-1 text-xs text-purple-700 leading-relaxed border border-purple-100">
-              Ini foto-foto dokumentasi budaya {mission.name}. Amati keindahan kegiatan budaya masyarakat Magetan ya! 📸
-            </div>
-          </div>
-        )}
-        {tab === "video" && (
-          <div className="flex gap-3 items-start select-none">
-            <MascotDimas size="sm" animate={true} />
-            <div className="bg-red-50 rounded-2xl p-3 flex-1 text-xs text-red-700 leading-relaxed border border-red-100">
-              Tonton video pembelajaran di atas untuk memahami lebih dalam tradisi kearifan lokal {mission.name}! 🎬
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Sticky footer action button */}
-      <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
-        <Btn onClick={handleNext} variant="lanjut" />
-      </div>
+      </motion.div>
 
       {/* Lightbox for Gallery */}
       {lightbox !== null && (
@@ -320,8 +438,7 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext }) =
               alt={mission.galeri[lightbox].caption}
               className="w-full rounded-2xl object-cover shadow-2xl"
             />
-            <p className="text-white text-sm text-center mt-3 leading-relaxed">{mission.galeri[lightbox].caption}</p>
-            {/* navigation inside lightbox */}
+            <p className="text-white text-sm text-center mt-3 leading-relaxed font-['Nunito']">{mission.galeri[lightbox].caption}</p>
             <div className="flex justify-between mt-4">
               <button
                 onClick={(e) => {
@@ -329,7 +446,7 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext }) =
                   playSFX("click");
                   setLightbox((l) => (l !== null && l > 0 ? l - 1 : mission.galeri.length - 1));
                 }}
-                className="bg-white/20 hover:bg-white/30 text-white rounded-xl px-4 py-2 font-['Fredoka'] font-bold text-xs cursor-pointer"
+                className="bg-[#7e371b] hover:bg-[#5a2512] text-[#fff5ce] rounded-xl px-4 py-2 font-['Fredoka'] font-bold text-xs cursor-pointer border border-[#572410] shadow-sm"
               >
                 ← Sebelumnya
               </button>
@@ -339,7 +456,7 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext }) =
                   playSFX("click");
                   setLightbox((l) => (l !== null && l < mission.galeri.length - 1 ? l + 1 : 0));
                 }}
-                className="bg-white/20 hover:bg-white/30 text-white rounded-xl px-4 py-2 font-['Fredoka'] font-bold text-xs cursor-pointer"
+                className="bg-[#7e371b] hover:bg-[#5a2512] text-[#fff5ce] rounded-xl px-4 py-2 font-['Fredoka'] font-bold text-xs cursor-pointer border border-[#572410] shadow-sm"
               >
                 Berikutnya →
               </button>
