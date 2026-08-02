@@ -16,7 +16,7 @@ const MISSIONS = [
     name: "Larung Sesaji",
     emoji: "⛵",
     location: "Telaga Sarangan",
-    image: "/assets/larung sesaji.svg",
+    image: "/assets/peta/larungsesaji.svg",
     desc: "Ritual persembahan sesaji di permukaan Telaga Sarangan sebagai wujud rasa syukur dan penghormatan kepada alam.",
     color: "#3b82f6",
     accent: "from-blue-500 to-cyan-400",
@@ -140,27 +140,27 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 
       {/* Header */}
       <div className="relative z-30">
-        <ScreenHeader title="Peta Misi Budaya" onBack={onBack} onHome={onBack} />
+        <ScreenHeader title="" onBack={onBack} onHome={onBack} />
       </div>
 
-      {/* Banner Title Asset */}
-      <div className="relative z-10 flex justify-center pt-1">
+      {/* Banner Title Asset - Absolute Overlay */}
+      <div className="absolute -top-4 sm:-top-8 inset-x-0 z-40 flex justify-center pointer-events-none">
         <motion.div
-          initial={{ y: -30, opacity: 0 }}
+          initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-          className="w-44 sm:w-64 md:w-72 pointer-events-none"
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="w-60 sm:w-80 md:w-96"
         >
           <img 
             src="/assets/map-petatxt.svg" 
             alt="Peta Budaya Magetan" 
-            className="w-full h-auto drop-shadow-md object-contain"
+            className="w-full h-auto drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)] object-contain"
           />
         </motion.div>
       </div>
 
       {/* Main Content: Stamp Cards Carousel */}
-      <div className="flex-1 relative z-10 flex flex-col items-center justify-start pt-1 sm:pt-2 px-2 sm:px-6 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex-1 relative z-10 flex flex-col items-center justify-start pt-32 sm:pt-40 pb-8 sm:pb-12 px-2 sm:px-6 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {/* Stamp Cards Row */}
         <div className="flex items-center justify-center gap-1.5 sm:gap-4 w-full max-w-4xl">
           {/* Left Arrow */}
@@ -204,13 +204,13 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                   <div
                     className={`relative bg-[#f9f3e3] rounded-lg overflow-hidden shadow-xl transition-all ${
                       isActive
-                        ? "w-36 sm:w-48 border-[3px] border-[#c2aa84]"
-                        : "w-24 sm:w-32 border-2 border-[#d8c7a5]/60"
+                        ? "w-44 sm:w-60 border-[3px] border-[#c2aa84]"
+                        : "w-28 sm:w-40 border-2 border-[#d8c7a5]/60"
                     }`}
                   >
                     {/* Stamp perforated edge effect (top) */}
                     <div className="absolute top-0 left-0 right-0 h-2 flex justify-between px-1 z-20">
-                      {[...Array(isActive ? 10 : 7)].map((_, i) => (
+                      {[...Array(isActive ? 13 : 9)].map((_, i) => (
                         <div
                           key={i}
                           className="w-1.5 h-1.5 rounded-full bg-[#2a1a0a]/80 -mt-0.5"
@@ -219,7 +219,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                     </div>
                     {/* Stamp perforated edge effect (bottom) */}
                     <div className="absolute bottom-0 left-0 right-0 h-2 flex justify-between px-1 z-20">
-                      {[...Array(isActive ? 10 : 7)].map((_, i) => (
+                      {[...Array(isActive ? 13 : 9)].map((_, i) => (
                         <div
                           key={i}
                           className="w-1.5 h-1.5 rounded-full bg-[#2a1a0a]/80 mt-0.5"
@@ -239,7 +239,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                     </div>
 
                     {/* Image */}
-                    <div className={`relative ${isActive ? "h-20 sm:h-28" : "h-14 sm:h-18"}`}>
+                    <div className={`relative ${isActive ? "h-28 sm:h-40" : "h-16 sm:h-24"}`}>
                       <img
                         src={mission.image}
                         alt={mission.name}
@@ -371,7 +371,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
           <motion.img
             src="/assets/mascot/dimas-peta.svg"
             alt="Dimas"
-            className="w-24 sm:w-36 max-h-[18vh] sm:max-h-[24vh] h-auto object-contain filter drop-shadow-lg"
+            className="w-32 sm:w-48 max-h-[22vh] sm:max-h-[30vh] h-auto object-contain filter drop-shadow-lg"
             animate={{ y: [0, -4, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -386,7 +386,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
           <motion.img
             src="/assets/mascot/gita-peta.svg"
             alt="Gita"
-            className="w-22 sm:w-32 max-h-[16vh] sm:max-h-[22vh] h-auto object-contain filter drop-shadow-lg"
+            className="w-28 sm:w-44 max-h-[20vh] sm:max-h-[28vh] h-auto object-contain filter drop-shadow-lg"
             animate={{ y: [0, -3, 0] }}
             transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
           />
