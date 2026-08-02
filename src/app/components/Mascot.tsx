@@ -49,7 +49,7 @@ export const MascotDimas: React.FC<MascotProps> = ({ size = "md", animate = true
         alt="Keterangan Dimas"
         className={
           isLobby
-            ? "absolute -bottom-4 w-32 h-auto z-10 pointer-events-none drop-shadow-sm"
+            ? "absolute bottom-10 sm:bottom-14 md:bottom-16 w-48 sm:w-56 md:w-64 h-auto z-10 pointer-events-none drop-shadow-lg"
             : "w-20 h-auto mt-1 drop-shadow-sm"
         }
       />
@@ -100,7 +100,7 @@ export const MascotGita: React.FC<MascotProps> = ({ size = "md", animate = true,
         alt="Keterangan Gita"
         className={
           isLobby
-            ? "absolute -bottom-4 w-32 h-auto z-10 pointer-events-none drop-shadow-sm"
+            ? "absolute bottom-10 sm:bottom-14 md:bottom-16 w-48 sm:w-56 md:w-64 h-auto z-10 pointer-events-none drop-shadow-lg"
             : "w-20 h-auto mt-1 drop-shadow-sm"
         }
       />
