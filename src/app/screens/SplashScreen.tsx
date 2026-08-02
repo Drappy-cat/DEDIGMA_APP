@@ -139,28 +139,29 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
             <span className="hidden sm:inline">{narratorEnabled ? "Suara" : "Suara Off"}</span>
           </button>
 
-          {/* Custom Speaker volume toggle */}
+          {/* Master Speaker volume toggle */}
           <button
             onClick={handleVolumeToggle}
             className="transition-transform cursor-pointer focus:outline-none hover:scale-110 active:scale-95 flex items-center justify-center"
-            aria-label={audioEnabled ? "Matikan Suara" : "Nyalakan Suara"}
+            title={audioEnabled ? "Matikan Seluruh Suara" : "Nyalakan Seluruh Suara"}
           >
             <img
               src={audioEnabled ? "/assets/button/sound-on.svg" : "/assets/button/sound-off.svg"}
               alt={audioEnabled ? "Suara Nyala" : "Suara Mati"}
-              className="w-12 h-12 landscape:w-16 landscape:h-16 object-contain"
+              className="w-10 h-10 landscape:w-12 landscape:h-12 object-contain drop-shadow-sm"
             />
           </button>
 
+          {/* Home / Keluar toggle */}
           <button
             onClick={handleLogout}
             className="transition-transform cursor-pointer focus:outline-none hover:scale-110 active:scale-95 flex items-center justify-center"
-            aria-label="Keluar"
+            title="Keluar"
           >
             <img
               src="/assets/button/home.svg"
               alt="Home / Keluar"
-              className="w-12 h-12 landscape:w-16 landscape:h-16 object-contain"
+              className="w-10 h-10 landscape:w-12 landscape:h-12 object-contain drop-shadow-sm"
             />
           </button>
         </div>

@@ -1,14 +1,31 @@
 import React, { useEffect } from "react";
 import { HelpCircle } from "lucide-react";
+import { motion } from "motion/react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
-import { MascotDimas, MascotGita } from "../components/Mascot";
-import { Btn } from "../components/Btn";
+import { MascotDimas } from "../components/Mascot";
 
 interface PetunjukScreenProps {
   onBack: () => void;
   onNext?: () => void;
 }
+
+const TypedText: React.FC<{ text: string; delay?: number }> = ({ text, delay = 0 }) => {
+  return (
+    <span>
+      {text.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.05, delay: delay + index * 0.03 }}
+        >
+          {char}
+        </motion.span>
+      ))}
+    </span>
+  );
+};
 
 export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
@@ -52,60 +69,117 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
       }}
     >
       <ScreenHeader title="Petunjuk Penggunaan 📋" onBack={onBack} onHome={onBack} />
-      <div className="flex-1 p-4 space-y-4 max-w-2xl mx-auto overflow-y-auto w-full">
-        <div className="flex gap-4 items-start">
+      <div className="flex-1 px-4 py-2 space-y-2 max-w-2xl mx-auto overflow-y-auto w-full">
+        
+        {/* Dimas & Popup Chat */}
+        <motion.div 
+          className="flex gap-3 items-start"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <MascotDimas size="sm" />
-          <div className="bg-white rounded-2xl p-3 shadow-md flex-1 border border-blue-100">
+          <motion.div 
+            className="bg-white rounded-2xl p-2.5 shadow-md flex-1 border border-blue-100 origin-top-left"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", bounce: 0.5, delay: 0.3 }}
+          >
             <p className="font-['Nunito'] text-blue-800 text-sm leading-relaxed">
-              Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan DEDIGMA dengan mudah! 😊
+              <TypedText text="Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan DEDIGMA dengan mudah! 😊" delay={0.8} />
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="bg-white rounded-3xl shadow-lg p-4 border border-blue-100/40">
-          <h3 className="font-['Fredoka'] font-semibold text-blue-700 text-lg mb-3 flex items-center gap-1.5">
-            <HelpCircle className="text-blue-500" size={20} /> Fungsi Tombol
+        {/* Fungsi Tombol */}
+        <motion.div 
+          className="bg-white rounded-3xl shadow-lg p-3 border border-blue-100/40"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 3.2 }} // Muncul setelah teks selesai diketik (sekitar ~2.8s)
+        >
+          <h3 className="font-['Fredoka'] font-semibold text-blue-700 text-base mb-2 flex items-center gap-1.5">
+            <HelpCircle className="text-blue-500" size={18} /> Fungsi Tombol
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {buttons.map((b, i) => (
-              <div key={i} className="bg-blue-50/70 rounded-2xl p-3 flex items-start gap-2.5 border border-blue-100/20">
-                <span className="text-2xl select-none">{b.icon}</span>
+              <motion.div 
+                key={i} 
+                className="bg-blue-50/70 rounded-2xl p-2 flex items-start gap-2 border border-blue-100/20"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3, delay: 3.5 + (i * 0.1) }}
+              >
+                <span className="text-xl select-none">{b.icon}</span>
                 <div>
-                  <p className="font-['Fredoka'] font-semibold text-blue-700 text-sm">{b.label}</p>
-                  <p className="font-['Nunito'] text-gray-500 text-xs leading-relaxed">{b.desc}</p>
+                  <p className="font-['Fredoka'] font-semibold text-blue-700 text-[13px]">{b.label}</p>
+                  <p className="font-['Nunito'] text-gray-500 text-[11px] leading-tight">{b.desc}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        <div className="bg-white rounded-3xl shadow-lg p-4 border border-blue-100/40">
-          <h3 className="font-['Fredoka'] font-semibold text-blue-700 text-lg mb-3">Cara Mengerjakan Aktivitas</h3>
-          <div className="space-y-2.5">
+        {/* Cara Mengerjakan */}
+        <motion.div 
+          className="bg-white rounded-3xl shadow-lg p-3 border border-blue-100/40"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 4.5 }}
+        >
+          <h3 className="font-['Fredoka'] font-semibold text-blue-700 text-base mb-2">Cara Mengerjakan Aktivitas</h3>
+          <div className="space-y-1.5">
             {cara.map((c, i) => (
-              <div key={i} className="flex items-start gap-3 bg-amber-50/60 rounded-2xl p-3 border border-amber-100/30">
-                <span className="bg-amber-400 text-white font-['Fredoka'] font-bold w-7 h-7 rounded-full flex items-center justify-center text-sm flex-shrink-0 select-none shadow-sm">
+              <motion.div 
+                key={i} 
+                className="flex items-start gap-2 bg-amber-50/60 rounded-2xl p-2 border border-amber-100/30"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 4.8 + (i * 0.2) }}
+              >
+                <span className="bg-amber-400 text-white font-['Fredoka'] font-bold w-6 h-6 rounded-full flex items-center justify-center text-xs flex-shrink-0 select-none shadow-sm">
                   {i + 1}
                 </span>
-                <p className="font-['Nunito'] text-gray-700 text-sm leading-relaxed">{c}</p>
-              </div>
+                <p className="font-['Nunito'] text-gray-700 text-[13px] leading-tight">{c}</p>
+              </motion.div>
             ))}
           </div>
-        </div>
-
-        <div className="flex justify-center gap-8 py-2">
-          <MascotDimas size="sm" />
-          <MascotGita size="sm" />
-        </div>
+        </motion.div>
       </div>
 
-      {onNext && (
-        <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
-          <Btn onClick={handleNext} variant="lanjut">
-            Pahami Tujuan Misi 🎯
-          </Btn>
-        </div>
-      )}
+      <motion.div 
+        className="px-6 py-2 bg-transparent flex-shrink-0 flex justify-between w-full"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 5.5 }}
+      >
+        {onBack ? (
+          <button
+            onClick={onBack}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+            aria-label="Kembali"
+          >
+            <img
+              src="/assets/button/back.svg"
+              alt="Tombol Kembali"
+              className="w-10 sm:w-16 h-auto object-contain drop-shadow-md"
+            />
+          </button>
+        ) : <div className="w-10 sm:w-16" />}
+        {onNext && (
+          <button
+            onClick={handleNext}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+            aria-label="Lanjut"
+          >
+            <img
+              src="/assets/button/next.svg"
+              alt="Tombol Lanjut"
+              className="w-10 sm:w-16 h-auto object-contain drop-shadow-md"
+            />
+          </button>
+        )}
+      </motion.div>
     </div>
   );
 };

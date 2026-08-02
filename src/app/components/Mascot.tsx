@@ -91,17 +91,19 @@ export const MascotGita: React.FC<MascotProps> = ({ size = "md", animate = true,
       }
     >
       <img
-        src="/assets/gita-char.png"
+        src="/assets/mascot/gita-char.svg"
         alt="Gita Mascot"
         className={`${sizeClasses[size]} object-contain filter drop-shadow-md ${isLobby ? "scale-[1.05] sm:scale-[1.15] landscape:scale-[1.25] origin-bottom" : ""}`}
       />
-      <span className={
-        isLobby
-          ? "absolute -bottom-2 text-[10px] sm:text-[12px] font-['Fredoka'] font-bold text-amber-700 bg-amber-100 px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full shadow-sm z-10 pointer-events-none"
-          : "text-[10px] font-['Fredoka'] font-bold text-amber-700 bg-amber-100 px-2.5 py-0.5 rounded-full shadow-sm mt-1"
-      }>
-        Gita
-      </span>
+      <img 
+        src="/assets/ket-gita.svg" 
+        alt="Keterangan Gita"
+        className={
+          isLobby
+            ? "absolute -bottom-4 w-32 h-auto z-10 pointer-events-none drop-shadow-sm"
+            : "w-20 h-auto mt-1 drop-shadow-sm"
+        }
+      />
     </motion.div>
   );
 };
