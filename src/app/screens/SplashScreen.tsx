@@ -248,19 +248,19 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
 
         {/* Mascots positioned left and right */}
         <motion.div 
-          initial={{ opacity: 0, x: -50 }}
+          initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -left-4 sm:-left-2 landscape:left-10 -bottom-4 sm:-bottom-2 landscape:bottom-0 z-10 pointer-events-none"
+          className="absolute left-1 sm:left-4 md:left-12 bottom-1 sm:bottom-2 z-20 pointer-events-auto"
         >
           <MascotDimas size="3xl" animate={true} isLobby={true} />
         </motion.div>
 
         <motion.div 
-          initial={{ opacity: 0, x: 50 }}
+          initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -right-4 sm:-right-2 landscape:right-10 -bottom-4 sm:-bottom-2 landscape:bottom-0 z-10 pointer-events-none"
+          className="absolute right-1 sm:right-4 md:right-12 bottom-1 sm:bottom-2 z-20 pointer-events-auto"
         >
           <MascotGita size="3xl" animate={true} isLobby={true} />
         </motion.div>

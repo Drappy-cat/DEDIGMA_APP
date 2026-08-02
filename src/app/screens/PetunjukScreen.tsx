@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Home, BookOpen, ArrowLeft, Star, ArrowRight, Award } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { MascotDimas, MascotGita } from "../components/Mascot";
@@ -14,12 +14,12 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
   const { playNarrator, stopNarrator, playSFX } = useAudio();
 
   const buttons = [
-    { icon: "🏠", label: "Tombol Beranda", desc: "Kembali ke halaman utama" },
-    { icon: "📖", label: "Tombol Materi", desc: "Membuka materi budaya" },
-    { icon: "⬅️", label: "Tombol Kembali", desc: "Kembali ke halaman sebelumnya" },
-    { icon: "⭐", label: "Tombol Aktivitas", desc: "Membuka halaman aktivitas" },
-    { icon: "➡️", label: "Tombol Lanjut", desc: "Melanjutkan ke halaman berikutnya" },
-    { icon: "🏅", label: "Tombol Lencana", desc: "Melihat lencana yang kamu dapatkan" }
+    { icon: <Home className="text-blue-600" size={20} />, label: "Tombol Beranda", desc: "Kembali ke halaman utama" },
+    { icon: <BookOpen className="text-emerald-600" size={20} />, label: "Tombol Materi", desc: "Membuka materi budaya" },
+    { icon: <ArrowLeft className="text-amber-600" size={20} />, label: "Tombol Kembali", desc: "Kembali ke halaman sebelumnya" },
+    { icon: <Star className="text-purple-600" size={20} />, label: "Tombol Aktivitas", desc: "Membuka halaman aktivitas" },
+    { icon: <ArrowRight className="text-cyan-600" size={20} />, label: "Tombol Lanjut", desc: "Melanjutkan ke halaman berikutnya" },
+    { icon: <Award className="text-amber-500" size={20} />, label: "Tombol Lencana", desc: "Melihat lencana yang kamu dapatkan" }
   ];
 
   const cara = [
@@ -51,28 +51,30 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
         backgroundRepeat: "no-repeat"
       }}
     >
-      <ScreenHeader title="Petunjuk Penggunaan 📋" onBack={onBack} onHome={onBack} />
-      <div className="flex-1 p-4 space-y-4 max-w-2xl mx-auto overflow-y-auto w-full">
-        <div className="flex gap-4 items-start">
-          <MascotDimas size="sm" />
-          <div className="bg-white rounded-2xl p-3 shadow-md flex-1 border border-blue-100">
-            <p className="font-['Nunito'] text-blue-800 text-sm leading-relaxed">
-              Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan DEDIGMA dengan mudah! 😊
+      <ScreenHeader title="Petunjuk Penggunaan" onBack={onBack} onHome={onBack} />
+      <div className="flex-1 p-4 space-y-4 max-w-2xl mx-auto overflow-y-auto w-full custom-scrollbar">
+        <div className="flex gap-4 items-center">
+          <MascotDimas size="sm" animate={true} interactive={false} />
+          <div className="bg-white rounded-2xl p-3.5 shadow-md flex-1 border border-blue-100">
+            <p className="font-['Nunito'] text-blue-900 font-semibold text-sm leading-relaxed">
+              Halo! Aku Dimas. Baca petunjuk ini supaya kamu bisa menggunakan DEDIGMA dengan mudah!
             </p>
           </div>
         </div>
 
         <div className="bg-white rounded-3xl shadow-lg p-4 border border-blue-100/40">
-          <h3 className="font-['Fredoka'] font-semibold text-blue-700 text-lg mb-3 flex items-center gap-1.5">
-            <HelpCircle className="text-blue-500" size={20} /> Fungsi Tombol
+          <h3 className="font-['Fredoka'] font-bold text-blue-700 text-lg mb-3 flex items-center gap-2">
+            <HelpCircle className="text-blue-500" size={20} /> Fungsi Tombol Navigasi
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {buttons.map((b, i) => (
-              <div key={i} className="bg-blue-50/70 rounded-2xl p-3 flex items-start gap-2.5 border border-blue-100/20">
-                <span className="text-2xl select-none">{b.icon}</span>
+              <div key={i} className="bg-blue-50/70 rounded-2xl p-3 flex items-start gap-3 border border-blue-100/30">
+                <span className="p-2 bg-white rounded-xl shadow-sm flex items-center justify-center flex-shrink-0">
+                  {b.icon}
+                </span>
                 <div>
-                  <p className="font-['Fredoka'] font-semibold text-blue-700 text-sm">{b.label}</p>
-                  <p className="font-['Nunito'] text-gray-500 text-xs leading-relaxed">{b.desc}</p>
+                  <p className="font-['Fredoka'] font-bold text-blue-800 text-sm">{b.label}</p>
+                  <p className="font-['Nunito'] text-gray-500 text-xs leading-relaxed mt-0.5">{b.desc}</p>
                 </div>
               </div>
             ))}
@@ -80,7 +82,7 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
         </div>
 
         <div className="bg-white rounded-3xl shadow-lg p-4 border border-blue-100/40">
-          <h3 className="font-['Fredoka'] font-semibold text-blue-700 text-lg mb-3">Cara Mengerjakan Aktivitas</h3>
+          <h3 className="font-['Fredoka'] font-bold text-blue-700 text-lg mb-3">Cara Mengerjakan Aktivitas</h3>
           <div className="space-y-2.5">
             {cara.map((c, i) => (
               <div key={i} className="flex items-start gap-3 bg-amber-50/60 rounded-2xl p-3 border border-amber-100/30">
@@ -94,15 +96,15 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
         </div>
 
         <div className="flex justify-center gap-8 py-2">
-          <MascotDimas size="sm" />
-          <MascotGita size="sm" />
+          <MascotDimas size="sm" animate={true} interactive={false} />
+          <MascotGita size="sm" animate={true} interactive={false} />
         </div>
       </div>
 
       {onNext && (
         <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
           <Btn onClick={handleNext} variant="lanjut">
-            Pahami Tujuan Misi 🎯
+            Pahami Tujuan Misi
           </Btn>
         </div>
       )}

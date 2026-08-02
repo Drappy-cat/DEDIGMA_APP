@@ -64,7 +64,7 @@ export const TantanganScreen: React.FC<TantanganScreenProps> = ({ onFinish, onBa
     }, 1000);
   };
 
-  const correctCount = answers.filter((a, i) => a === mission.kuis[i].jawaban).length;
+  const correctCount = answers.filter((a, i) => a === questions[i]?.jawaban).length;
   const score = Math.round((correctCount / totalQ) * 100);
 
   if (done) {
@@ -93,7 +93,7 @@ export const TantanganScreen: React.FC<TantanganScreenProps> = ({ onFinish, onBa
 
   return (
     <div className="flex flex-col h-full font-['Nunito']">
-      <ScreenHeader title="Tantangan DEDIGMA 🏆" onBack={onBack} onHome={onBack} />
+      <ScreenHeader title="Tantangan DEDIGMA" onBack={onBack} onHome={onBack} />
       {/* Progress header bar */}
       <div className="bg-white px-4 py-2 border-b border-blue-100 select-none">
         <div className="flex justify-between text-xs text-gray-500 mb-1">

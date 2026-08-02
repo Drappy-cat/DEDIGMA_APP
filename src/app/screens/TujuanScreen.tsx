@@ -73,7 +73,7 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
         backgroundRepeat: "no-repeat"
       }}
     >
-      <ScreenHeader title="Tujuan Pembelajaran 🎯" onBack={onBack} />
+      <ScreenHeader title="Tujuan Pembelajaran" onBack={onBack} />
 
       <div className="flex-1 overflow-y-auto p-4 space-y-4 max-w-2xl mx-auto w-full">
         {/* Mascot intro */}
@@ -83,10 +83,10 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
           transition={{ delay: 0.1 }}
           className="flex gap-3 items-start"
         >
-          <MascotGita size="sm" animate={true} />
+          <MascotGita size="sm" animate={true} interactive={false} />
           <div className="bg-white/95 backdrop-blur-sm rounded-2xl p-3 flex-1 shadow-md border border-purple-100">
             <p className="text-purple-800 text-xs leading-relaxed font-semibold">
-              Hai! Aku Gita. Sebelum memulai petualangan, yuk pahami dulu tujuan pembelajaran kita! 🌟
+              Hai! Aku Gita. Sebelum memulai petualangan, yuk pahami dulu tujuan pembelajaran kita!
             </p>
           </div>
         </motion.div>
