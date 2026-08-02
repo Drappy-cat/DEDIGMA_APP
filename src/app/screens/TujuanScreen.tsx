@@ -92,7 +92,7 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
     >
       <ScreenHeader title="Tujuan Pembelajaran 🎯" onBack={onBack} />
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 max-w-2xl mx-auto w-full">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 max-w-2xl mx-auto w-full [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {/* Mascot intro */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}

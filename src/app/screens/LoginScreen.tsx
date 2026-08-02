@@ -64,7 +64,7 @@ export const LoginScreen: React.FC = () => {
     <div
       className="min-h-screen flex items-center justify-center p-4 relative"
       style={{
-        backgroundImage: "url('/assets/bg-login.jpg')",
+        backgroundImage: "url('/assets/bg-login.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat"
@@ -104,10 +104,9 @@ export const LoginScreen: React.FC = () => {
                   setError("");
                 }}
                 className={`p-4 rounded-2xl border-2 transition-all font-['Fredoka'] font-semibold text-lg flex flex-col items-center gap-1 cursor-pointer
-                  ${
-                    role === r
-                      ? "border-blue-500 bg-blue-50 text-blue-700 scale-105 shadow-md"
-                      : "border-gray-250 text-gray-500 hover:border-blue-300 bg-white"
+                  ${role === r
+                    ? "border-blue-500 bg-blue-50 text-blue-700 scale-105 shadow-md"
+                    : "border-gray-250 text-gray-500 hover:border-blue-300 bg-white"
                   }`}
               >
                 <span className="text-3xl select-none">{r === "siswa" ? "🧒" : "👩‍🏫"}</span>

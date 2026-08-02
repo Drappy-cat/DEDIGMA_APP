@@ -69,7 +69,7 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
       }}
     >
       <ScreenHeader title="Petunjuk Penggunaan 📋" onBack={onBack} onHome={onBack} />
-      <div className="flex-1 px-4 py-2 space-y-2 max-w-2xl mx-auto overflow-y-auto w-full">
+      <div className="flex-1 px-4 py-2 space-y-2 max-w-2xl mx-auto overflow-y-auto w-full [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         
         {/* Dimas & Popup Chat */}
         <motion.div 
