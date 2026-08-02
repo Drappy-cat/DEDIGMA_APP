@@ -168,35 +168,37 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: -30, opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
-          className="w-full max-w-md p-6 shadow-2xl relative flex flex-col justify-between"
+          className="w-full max-w-lg shadow-2xl relative flex flex-col justify-between mx-auto"
           style={{
             backgroundImage: "url('/assets/content-bg.png')",
             backgroundSize: "100% 100%",
             backgroundRepeat: "no-repeat",
             backgroundColor: "transparent",
-            minHeight: "420px"
+            minHeight: "480px"
           }}
         >
-          <div className="px-3 pt-4 select-none">
-            <h2 className="font-['Fredoka'] font-bold text-base text-blue-800 flex items-center gap-1.5 mb-3">
-              <BookOpen size={18} /> Soal Evaluasi
+          {/* Added pt-16 to avoid overlapping the top ribbon, px-8 to avoid side borders */}
+          <div className="px-8 sm:px-12 pt-16 sm:pt-20 select-none">
+            <h2 className="font-['Fredoka'] font-bold text-lg sm:text-xl text-blue-900 flex items-center justify-center gap-2 mb-4 bg-white/80 backdrop-blur-sm py-1.5 px-5 rounded-full w-fit mx-auto shadow-sm border border-blue-100">
+              <BookOpen size={20} /> Soal Evaluasi
             </h2>
-            <p className="font-bold text-gray-800 text-sm leading-relaxed mb-4">{q.soal}</p>
+            <p className="font-bold text-gray-900 text-sm sm:text-base leading-relaxed mb-6 text-center drop-shadow-sm">{q.soal}</p>
           </div>
 
-          <div className="px-3 pb-6 space-y-2.5">
+          {/* Added pb-14 to avoid overlapping the bottom border */}
+          <div className="px-8 sm:px-12 pb-14 sm:pb-16 space-y-3 mt-auto">
             {q.opsi.map((o, idx) => {
               const userAns = answers[current];
               let btnStyle =
-                "border-2 border-blue-150 bg-blue-50/20 text-gray-700 hover:border-blue-400 hover:bg-blue-50/50";
+                "border-2 border-blue-200 bg-white/90 backdrop-blur-sm text-gray-800 hover:border-blue-500 hover:bg-blue-50 shadow-sm";
 
               if (userAns !== null) {
                 if (idx === q.jawaban) {
-                  btnStyle = "border-2 border-green-400 bg-green-100 text-green-800 shadow shadow-green-100";
+                  btnStyle = "border-2 border-green-500 bg-green-100/95 text-green-900 shadow-md shadow-green-200/50";
                 } else if (idx === userAns && userAns !== q.jawaban) {
-                  btnStyle = "border-2 border-red-400 bg-red-100 text-red-700 shadow shadow-red-100";
+                  btnStyle = "border-2 border-red-500 bg-red-100/95 text-red-900 shadow-md shadow-red-200/50";
                 } else {
-                  btnStyle = "border-2 border-gray-100 bg-gray-50/50 text-gray-400 opacity-60";
+                  btnStyle = "border-2 border-gray-200 bg-gray-50/80 text-gray-400 opacity-60";
                 }
               }
 
@@ -206,9 +208,9 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
                   type="button"
                   onClick={() => handleSelect(idx)}
                   disabled={answers[current] !== null}
-                  className={`w-full text-left rounded-2xl px-4 py-2.5 text-xs font-semibold transition-all cursor-pointer select-none leading-relaxed ${btnStyle}`}
+                  className={`w-full text-left rounded-2xl px-5 py-3 text-xs sm:text-sm font-semibold transition-all cursor-pointer select-none leading-relaxed ${btnStyle}`}
                 >
-                  <span className="font-bold mr-1.5">{String.fromCharCode(65 + idx)}.</span>
+                  <span className="font-bold mr-2 text-base">{String.fromCharCode(65 + idx)}.</span>
                   {o}
                 </button>
               );
