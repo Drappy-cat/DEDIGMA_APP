@@ -26,7 +26,7 @@ const MISSIONS = [
     name: "Nyadaran",
     emoji: "🌺",
     location: "Ngebel / Magetan Kidul",
-    image: "/assets/nyadaran-cover.png",
+    image: "/assets/peta/nyadran.svg",
     desc: "Upacara tradisional bersih desa yang penuh dengan doa dan harapan masyarakat Magetan.",
     color: "#10b981",
     accent: "from-emerald-500 to-green-400",
