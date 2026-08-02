@@ -231,12 +231,11 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                     delay: shakingId === mission.id ? 0 : idx * 0.1,
                   }}
                   onTap={() => {
-                    if (isLocked) {
-                      triggerShake(mission.id);
-                      return;
-                    }
                     playSFX("click");
                     setSelectedIdx(idx);
+                    if (isLocked) {
+                      triggerShake(mission.id);
+                    }
                   }}
                   className={`relative cursor-pointer transition-all ${
                     isActive ? "z-20" : "z-10"
