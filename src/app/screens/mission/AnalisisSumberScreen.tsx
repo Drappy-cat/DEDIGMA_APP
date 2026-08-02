@@ -8,9 +8,10 @@ import { useAudio } from "../../contexts/AudioContext";
 interface AnalisisSumberScreenProps {
   mission: Mission;
   onNext: (score: number) => void;
+  onBack?: () => void;
 }
 
-export const AnalisisSumberScreen: React.FC<AnalisisSumberScreenProps> = ({ mission, onNext }) => {
+export const AnalisisSumberScreen: React.FC<AnalisisSumberScreenProps> = ({ mission, onNext, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [answers, setAnswers] = useState<Record<number, boolean | null>>(
     Object.fromEntries(mission.sumberAnalisis.map((_, i) => [i, null]))
@@ -164,16 +165,30 @@ export const AnalisisSumberScreen: React.FC<AnalisisSumberScreenProps> = ({ miss
         )}
       </div>
 
-      {/* Sticky footer action button */}
-      <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
-        {!checked ? (
-          <Btn
-            onClick={handleCheck}
-            variant="periksa"
-            disabled={!allAnswered}
-          />
+      {/* Bottom Navigation */}
+      <div className="flex justify-between items-center px-3 py-2 flex-shrink-0 z-30 relative bg-transparent">
+        {onBack ? (
+          <button
+            onClick={() => { playSFX("click"); onBack(); }}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+            aria-label="Kembali"
+          >
+            <img src="/assets/button/back.svg" alt="Kembali" className="w-12 sm:w-16 h-auto object-contain drop-shadow-md" />
+          </button>
         ) : (
-          <Btn onClick={handleNext} variant="lanjut" />
+          <div className="w-12 sm:w-16" />
+        )}
+
+        {!checked ? (
+          <Btn onClick={handleCheck} variant="periksa" disabled={!allAnswered} />
+        ) : (
+          <button
+            onClick={() => { playSFX("click"); handleNext(); }}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+            aria-label="Lanjut"
+          >
+            <img src="/assets/button/next.svg" alt="Lanjut" className="w-12 sm:w-16 h-auto object-contain drop-shadow-md" />
+          </button>
         )}
       </div>
     </div>

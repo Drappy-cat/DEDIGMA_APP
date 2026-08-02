@@ -49,13 +49,13 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
   const renderActivity = () => {
     switch (mission.activityType) {
       case "cek-fakta":
-        return <CekFaktaScreen mission={mission} onNext={(s) => advance(s)} />;
+        return <CekFaktaScreen mission={mission} onNext={(s) => advance(s)} onBack={() => setStage("materi")} />;
       case "analisis-sumber":
-        return <AnalisisSumberScreen mission={mission} onNext={(s) => advance(s)} />;
+        return <AnalisisSumberScreen mission={mission} onNext={(s) => advance(s)} onBack={() => setStage("materi")} />;
       case "detektif-berita":
-        return <DetektifBeritaScreen mission={mission} onNext={(s) => advance(s)} />;
+        return <DetektifBeritaScreen mission={mission} onNext={(s) => advance(s)} onBack={() => setStage("materi")} />;
       default:
-        return <CekFaktaScreen mission={mission} onNext={(s) => advance(s)} />;
+        return <CekFaktaScreen mission={mission} onNext={(s) => advance(s)} onBack={() => setStage("materi")} />;
     }
   };
 
@@ -132,7 +132,7 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
               {stage === "orientasi" && <OrientasiScreen mission={mission} onNext={() => advance()} onBack={onHome} />}
               {stage === "materi" && <MateriScreen mission={mission} onNext={() => advance()} onBack={() => setStage("orientasi")} />}
               {stage === "aktivitas" && renderActivity()}
-              {stage === "refleksi" && <RuangRefleksiScreen mission={mission} onNext={() => advance()} />}
+              {stage === "refleksi" && <RuangRefleksiScreen mission={mission} onNext={() => advance()} onBack={() => setStage("aktivitas")} />}
             </motion.div>
           </AnimatePresence>
         </div>

@@ -68,7 +68,13 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
       </div>
 
       {/* Action button */}
-      <Btn onClick={onContinue} variant="kembali" />
+      <button
+        onClick={() => { playSFX("click"); onContinue(); }}
+        className="mt-2 transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+        aria-label="Kembali ke Peta"
+      >
+        <img src="/assets/button/home.svg" alt="Kembali ke Peta" className="w-16 sm:w-20 h-auto object-contain drop-shadow-md" />
+      </button>
     </div>
   );
 };
