@@ -1,9 +1,6 @@
 import React, { useEffect } from "react";
 import { motion } from "motion/react";
-<<<<<<< HEAD
-import { Target, BookOpen, Shield, Lightbulb, Volume2 } from "lucide-react";
-=======
->>>>>>> f3da787 (feat: update TujuanScreen and PetunjukScreen UI with wooden signpost board, Gita mascot, and enlarged lobby mascots)
+import { Volume2 } from "lucide-react";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useAudio } from "../contexts/AudioContext";
 
@@ -64,7 +61,6 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
   const { playNarrator, stopNarrator, playSFX } = useAudio();
 
   useEffect(() => {
-    // Autoplay attempt
     playNarrator(
       "Berikut adalah tujuan pembelajaran DEDIGMA. Kamu akan menjelajahi tiga misi budaya Magetan sambil mengasah kemampuan literasi digital. Siap menjadi Detektif Digital?",
       "/assets/voice/tujuan-dedigma.mp3"
@@ -92,40 +88,10 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/35 z-0" />
 
-<<<<<<< HEAD
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 max-w-2xl mx-auto w-full custom-scrollbar">
-        {/* Mascot intro */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex gap-3 items-start"
-        >
-          <MascotGita size="sm" animate={true} interactive={false} />
-          <motion.div 
-            className="bg-white/95 backdrop-blur-sm rounded-2xl p-3 flex-1 shadow-md border border-purple-100 origin-top-left relative"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ type: "spring", bounce: 0.4, delay: 0.2 }}
-          >
-            <p className="text-purple-800 text-xs leading-relaxed font-semibold pr-8">
-              <TypedText text="Hai! Aku Gita. Sebelum memulai petualangan, yuk pahami dulu tujuan pembelajaran kita!" delay={0.4} />
-            </p>
-            <button 
-              onClick={() => playNarrator("Berikut adalah tujuan pembelajaran DEDIGMA. Kamu akan menjelajahi tiga misi budaya Magetan sambil mengasah kemampuan literasi digital. Siap menjadi Detektif Digital?", "/assets/voice/tujuan-dedigma.mp3")}
-              className="absolute top-2 right-2 p-1.5 bg-purple-50 text-purple-500 hover:bg-purple-100 hover:text-purple-600 rounded-full transition-colors active:scale-95"
-              aria-label="Putar Suara"
-            >
-              <Volume2 size={16} />
-            </button>
-          </motion.div>
-        </motion.div>
-=======
       {/* Screen Header */}
       <div className="relative z-20">
         <ScreenHeader title="Tujuan Pembelajaran" onBack={onBack} />
       </div>
->>>>>>> f3da787 (feat: update TujuanScreen and PetunjukScreen UI with wooden signpost board, Gita mascot, and enlarged lobby mascots)
 
       {/* Main Scrollable Content Area */}
       <div className="flex-1 w-full max-w-4xl mx-auto p-3 sm:p-5 relative z-10 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
@@ -179,9 +145,18 @@ export const TujuanScreen: React.FC<TujuanScreenProps> = ({ onNext, onBack }) =>
                 <div className="absolute top-5 -left-3 w-0 h-0 border-y-8 border-y-transparent border-r-8 border-r-[#d9c5a3]" />
                 <div className="absolute top-5 -left-2.5 w-0 h-0 border-y-7 border-y-transparent border-r-7 border-r-[#f8f3e6]" />
 
-                <p className="font-['Nunito'] font-bold text-xs sm:text-sm text-[#4a3728] leading-relaxed">
+                <p className="font-['Nunito'] font-bold text-xs sm:text-sm text-[#4a3728] leading-relaxed pr-8">
                   <TypedText text="Hai! Aku Gita. Sebelum memulai petualangan, yuk pahami dulu tujuan pembelajaran kita! 🌟" delay={0.4} />
                 </p>
+
+                {/* Manual Audio Play Button */}
+                <button 
+                  onClick={() => playNarrator("Berikut adalah tujuan pembelajaran DEDIGMA. Kamu akan menjelajahi tiga misi budaya Magetan sambil mengasah kemampuan literasi digital. Siap menjadi Detektif Digital?", "/assets/voice/tujuan-dedigma.mp3")}
+                  className="absolute top-2 right-2 p-1.5 bg-[#f0e6d2] text-[#7e371b] hover:bg-[#e6dbbf] rounded-full transition-colors active:scale-95 border border-[#d9c5a3] shadow-sm"
+                  aria-label="Putar Suara"
+                >
+                  <Volume2 size={16} />
+                </button>
               </motion.div>
             </motion.div>
 
