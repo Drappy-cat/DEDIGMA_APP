@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { LogOut, X, Settings } from "lucide-react";
+import { X, Settings } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { MascotDimas, MascotGita } from "../components/Mascot";
@@ -30,13 +30,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
 
   const handleAction = (callback: () => void) => {
     playSFX("click");
-    playBGM(); // Pastikan musik bermain jika autoplay browser diblokir sebelumnya
+    playBGM();
     callback();
-  };
-
-  const handlePustakaOpen = () => {
-    playSFX("click");
-    setShowPustaka(true);
   };
 
   const handleVolumeToggle = () => {
@@ -54,7 +49,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
     return Array.from({ length: 30 }).map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 50}%`, // Mostly in the sky area
+      top: `${Math.random() * 50}%`,
       size: Math.random() * 3 + 1.5,
       duration: Math.random() * 2 + 2,
       delay: Math.random() * 3,
@@ -171,28 +166,18 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
 
       {/* Content wrapper: Central UI with floating mascots */}
       <div className="flex-1 w-full relative z-10 flex flex-col items-center justify-center px-4 overflow-hidden">
-        
         {/* Logo Title (Center Top) */}
         <motion.div
           initial={{ y: -15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="mb-6 flex flex-col items-center z-20 pointer-events-auto"
+          className="mb-3 flex flex-col items-center z-20 pointer-events-auto select-none"
         >
           <img
-            src="/assets/logo.png"
-            alt="DEDIGMA Logo"
-            className="w-16 h-16 object-contain filter drop-shadow-md mb-2 animate-pulse"
+            src="/assets/title-dedigma.png"
+            alt="DEDIGMA Title Logo"
+            className="w-[280px] sm:w-[400px] md:w-[460px] h-auto object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
           />
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-1 mb-1 border border-white/10 text-center">
-            <h1 className="font-['Fredoka'] font-bold text-2xl md:text-4xl text-white drop-shadow-md leading-none">DEDIGMA</h1>
-            <p className="font-['Fredoka'] font-semibold text-yellow-100 text-[8px] md:text-[10px] tracking-wider mt-0.5">
-              DETEKTIF DIGITAL BUDAYA MAGETAN
-            </p>
-          </div>
-          <p className="font-['Nunito'] text-white text-[11px] md:text-xs font-bold drop-shadow text-center max-w-xs leading-relaxed">
-            🔍 Jelajahi Budaya, Temukan Fakta, Lestarikan Warisan!
-          </p>
         </motion.div>
 
         {/* Center Game Buttons */}
