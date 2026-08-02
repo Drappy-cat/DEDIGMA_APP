@@ -1,287 +1,445 @@
-import React, { useEffect } from "react";
-import { motion } from "motion/react";
-import { Award, BookOpen, UserCheck, Code, Sparkles, GraduationCap, Heart } from "lucide-react";
-import { useAudio } from "../contexts/AudioContext";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { ScreenHeader } from "../components/ScreenHeader";
-import { MascotDimas, MascotGita } from "../components/Mascot";
+import { useAudio } from "../contexts/AudioContext";
 
 interface ProfilScreenProps {
   onBack: () => void;
 }
 
-// Smooth spring animation presets
-const springTransition = {
-  type: "spring",
-  stiffness: 260,
-  damping: 20
-};
-
 export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
-  const { playNarrator, stopNarrator } = useAudio();
+  const { playNarrator, stopNarrator, playSFX } = useAudio();
+  const [activeTab, setActiveTab] = useState<
+    "tentang" | "tim" | "tujuan" | "fitur" | "petunjuk" | "privasi"
+  >("tentang");
 
   useEffect(() => {
-    playNarrator("Selamat datang di halaman Tentang Aplikasi dan Profil Tim Pengembang DEDIGMA.");
+    playNarrator("Selamat datang di halaman Tentang DEDIGMA dan Profil Tim Pengembang.");
     return () => {
       stopNarrator();
     };
   }, []);
 
+  const menuItems = [
+    {
+      id: "tentang" as const,
+      icon: "ℹ️",
+      title: "Tentang",
+      desc: "Tentang DEDIGMA"
+    },
+    {
+      id: "tim" as const,
+      icon: "👥",
+      title: "Tim Pengembang",
+      desc: "Kenali tim di balik DEDIGMA"
+    },
+    {
+      id: "tujuan" as const,
+      icon: "🎯",
+      title: "Tujuan Pembelajaran",
+      desc: "Capaian & manfaat"
+    },
+    {
+      id: "fitur" as const,
+      icon: "🧩",
+      title: "Fitur Game",
+      desc: "Fitur menarik di DEDIGMA"
+    },
+    {
+      id: "petunjuk" as const,
+      icon: "📖",
+      title: "Petunjuk Penggunaan",
+      desc: "Cara bermain DEDIGMA"
+    },
+    {
+      id: "privasi" as const,
+      icon: "🛡️",
+      title: "Kebijakan & Privasi",
+      desc: "Kebijakan & privasi data"
+    }
+  ];
+
+  const handleTabClick = (id: typeof activeTab) => {
+    playSFX("click");
+    setActiveTab(id);
+  };
+
   return (
     <div
-      className="h-full flex flex-col overflow-hidden font-['Nunito'] select-none bg-slate-900"
+      className="h-full flex flex-col overflow-hidden select-none font-['Nunito'] relative"
       style={{
-        backgroundImage: "url('/assets/bg-lobby.svg')",
+        backgroundImage: "url('/assets/bg-login.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat"
       }}
     >
-      <ScreenHeader title="Tentang & Tim Pengembang" onBack={onBack} />
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/35 z-0" />
 
-      <div className="flex-1 w-full p-4 max-w-3xl mx-auto space-y-5 overflow-y-auto custom-scrollbar">
-        
-        {/* Banner Tentang DEDIGMA */}
+      {/* Screen Header */}
+      <div className="relative z-20">
+        <ScreenHeader title="Tentang & Tim Pengembang" onBack={onBack} onHome={onBack} />
+      </div>
+
+      {/* Main Content Layout (Sidebar Menu + Main Signpost Board) */}
+      <div className="flex-1 w-full max-w-6xl mx-auto p-3 sm:p-5 relative z-10 overflow-hidden flex flex-col md:flex-row gap-4">
+
+        {/* LEFT SIDEBAR MENU (Wooden Board Panel) */}
         <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={springTransition}
-          className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white rounded-3xl p-6 shadow-2xl relative overflow-hidden border border-white/20 will-change-transform transform-gpu"
+          initial={{ x: -30, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.4 }}
+          className="bg-[#6b3117] border-4 border-[#451e0c] rounded-[2rem] p-2.5 sm:p-3 shadow-[0_12px_35px_rgba(0,0,0,0.6)] w-full md:w-64 flex flex-col gap-2 flex-shrink-0"
         >
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-5">
-            <motion.img
-              initial={{ scale: 0.8, rotate: -5 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              src="/assets/logo.png"
-              alt="DEDIGMA Logo"
-              className="w-20 h-20 object-contain drop-shadow-xl"
-            />
-            <div className="text-center md:text-left space-y-1.5 flex-1">
-              <span className="bg-amber-400/20 text-amber-300 text-[10px] font-extrabold uppercase px-3 py-1 rounded-full border border-amber-400/30 tracking-wider">
-                Media Pembelajaran Interaktif Edutainment
-              </span>
-              <h1 className="font-['Fredoka'] font-bold text-3xl text-amber-300 drop-shadow">DEDIGMA</h1>
-              <p className="font-['Fredoka'] text-blue-200 text-sm font-semibold">
-                Detektif Digital Budaya Magetan — Versi 1.0.0
-              </p>
-              <p className="text-xs text-blue-100/90 leading-relaxed pt-1">
-                DEDIGMA dirancang untuk mengenalkan nilai-nilai kearifan lokal kebudayaan Kabupaten Magetan (Larung Sesaji, Nyadaran, dan Ledhug Suro) sekaligus melatih literasi digital dan kemampuan verifikasi berita (cek fakta) bagi siswa sekolah dasar.
-              </p>
-            </div>
-          </div>
-          {/* Subtle background glow decorative circle */}
-          <div className="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-amber-400/10 blur-xl pointer-events-none" />
+          {menuItems.map((item) => {
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => handleTabClick(item.id)}
+                className={`w-full p-2.5 sm:p-3 rounded-2xl flex items-center gap-3 transition-all cursor-pointer text-left border ${
+                  isActive
+                    ? "bg-[#f4ecd5] border-2 border-[#df9d3b] shadow-md text-[#3b1e0a]"
+                    : "bg-[#e6dbbf]/70 border-[#cbb293] text-[#5c4a3a] hover:bg-[#f4ecd5]/80"
+                }`}
+              >
+                <div className="w-9 h-9 rounded-full bg-[#366635] text-white flex items-center justify-center text-base flex-shrink-0 border border-[#244723] shadow-xs">
+                  <span>{item.icon}</span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-['Fredoka'] font-extrabold text-xs sm:text-sm leading-tight truncate">
+                    {item.title}
+                  </h4>
+                  <p className="text-[10px] sm:text-[11px] font-semibold text-[#6e5847] leading-tight truncate mt-0.5">
+                    {item.desc}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
         </motion.div>
 
-        {/* UTAMA: Dosen Pembimbing / Advisor Section */}
+        {/* RIGHT MAIN CONTENT BOARD (Wooden Signpost Frame & Parchment) */}
         <motion.div
-          initial={{ scale: 0.92, opacity: 0 }}
+          initial={{ scale: 0.97, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ ...springTransition, delay: 0.1 }}
-          className="bg-white/95 backdrop-blur-md rounded-3xl p-6 shadow-xl border-2 border-amber-400/40 relative overflow-hidden space-y-4 will-change-transform transform-gpu"
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="bg-[#6b3117] border-4 border-[#451e0c] rounded-[2rem] p-2.5 sm:p-4 shadow-[0_15px_40px_rgba(0,0,0,0.6)] flex-1 relative overflow-hidden flex flex-col min-h-0"
         >
-          <div className="flex items-center justify-between border-b border-amber-100 pb-3">
-            <div className="flex items-center gap-2">
-              <span className="bg-amber-100 text-amber-800 p-2 rounded-2xl">
-                <GraduationCap size={22} />
-              </span>
-              <div>
-                <h3 className="font-['Fredoka'] font-bold text-lg text-amber-900 leading-tight">
-                  Dosen Pembimbing / Advisor Utama
-                </h3>
-                <p className="text-[11px] text-amber-700 font-semibold">Penanggung Jawab & Pengarah Riset</p>
+          {/* Main Parchment Paper Container */}
+          <div className="bg-[#f4ecd5] border-2 border-[#c2aa84] rounded-3xl p-4 sm:p-6 flex-1 overflow-y-auto space-y-5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden relative">
+
+            {/* Decorative Pins */}
+            <div className="absolute top-3 left-3 text-xl opacity-80">📌</div>
+            <div className="absolute top-3 right-3 text-xl opacity-80">📌</div>
+
+            {/* Wooden Header Sign Banner */}
+            <div className="flex justify-center mb-4">
+              <div className="bg-[#7e371b] border-2 border-[#572410] rounded-2xl py-1.5 px-6 shadow-md border-b-4 border-r-2 flex items-center justify-center">
+                <h1 className="font-['Fredoka'] font-extrabold text-xl sm:text-2xl text-white tracking-wider drop-shadow-md uppercase">
+                  {menuItems.find((m) => m.id === activeTab)?.title || "TENTANG DEDIGMA"}
+                </h1>
               </div>
             </div>
-            <span className="bg-amber-500 text-white font-['Fredoka'] font-bold text-xs px-3 py-1 rounded-full shadow flex items-center gap-1">
-              <Award size={13} /> Pembimbing Utama
-            </span>
-          </div>
 
-          <div className="flex flex-col md:flex-row items-center gap-5">
-            {/* Avatar Frame Dosen */}
-            <motion.div
-              whileHover={{ scale: 1.05, rotate: 2 }}
-              transition={{ type: "spring", stiffness: 300, damping: 15 }}
-              className="relative group flex-shrink-0 cursor-pointer"
-            >
-              <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-amber-400 via-amber-500 to-yellow-600 p-1 shadow-lg">
-                <div className="w-full h-full rounded-[14px] bg-amber-50 overflow-hidden flex items-center justify-center relative text-amber-700">
-                  <GraduationCap size={48} />
-                </div>
-              </div>
-              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-slate-900 text-amber-300 text-[9px] font-bold px-2.5 py-0.5 rounded-full border border-amber-400/50 shadow whitespace-nowrap">
-                Dosen Pembimbing
-              </span>
-            </motion.div>
+            {/* TAB CONTENT RENDERER */}
+            <AnimatePresence mode="wait">
+              {activeTab === "tentang" && (
+                <motion.div
+                  key="tentang"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-5"
+                >
+                  {/* APP TITLE & DESCRIPTION CARD */}
+                  <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row items-center gap-4 text-[#4a3728]">
+                    <img
+                      src="/assets/title-dedigma.png"
+                      alt="DEDIGMA Logo"
+                      className="w-28 sm:w-36 h-auto object-contain flex-shrink-0 drop-shadow-md"
+                    />
+                    <div className="space-y-1 text-center sm:text-left flex-1">
+                      <h2 className="font-['Fredoka'] font-extrabold text-2xl sm:text-3xl text-[#1b3d82] tracking-wide">
+                        DEDIGMA
+                      </h2>
+                      <p className="font-['Fredoka'] font-bold text-xs sm:text-sm text-[#7e371b]">
+                        Detektif Digital Budaya Magetan — Versi 1.0.0
+                      </p>
+                      <p className="font-['Nunito'] font-semibold text-xs text-[#4a3728] leading-relaxed pt-1">
+                        DEDIGMA dirancang untuk mengenalkan nilai-nilai kearifan lokal kebudayaan Kabupaten Magetan (Larung Sesaji, Nyadaran, dan Ledhug Suro) sekaligus melatih literasi digital dan kemampuan verifikasi berita (cek fakta) bagi siswa sekolah dasar.
+                      </p>
+                    </div>
+                  </div>
 
-            {/* Detail Dosen */}
-            <div className="text-center md:text-left space-y-2 flex-1">
-              <div>
-                <h4 className="font-['Fredoka'] font-bold text-xl text-slate-800">
-                  [ Nama Dosen Pembimbing, M.Pd. ]
-                </h4>
-                <p className="text-xs font-bold text-amber-700 mt-0.5">
-                  NIP. [ Masukkan Nomor NIP Dosen ]
-                </p>
-              </div>
+                  {/* SECTION: TUJUAN PEMBELAJARAN */}
+                  <div className="bg-[#e6dbbf]/70 border-2 border-[#d0c09d] rounded-2xl p-3 sm:p-4 relative mt-5 pt-6 shadow-xs">
+                    <div className="absolute -top-3 left-4 bg-[#7e371b] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm py-0.5 px-4 rounded-lg shadow-sm border border-[#572410]">
+                      TUJUAN PEMBELAJARAN
+                    </div>
 
-              <div className="bg-amber-50/80 rounded-2xl p-3 border border-amber-200/60 space-y-1">
-                <p className="text-xs text-amber-900 font-semibold italic leading-relaxed">
-                  "Pengembangan media edutainment DEDIGMA ini diharapkan dapat melahirkan generasi muda Magetan yang berwawasan budaya luhur sekaligus bijak dan kritis di era digital."
-                </p>
-              </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
+                      <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3 flex flex-col gap-1.5 shadow-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">📖</span>
+                          <h4 className="font-['Fredoka'] font-extrabold text-xs text-[#1b3d82] leading-tight">
+                            Mengenal Budaya Lokal
+                          </h4>
+                        </div>
+                        <p className="font-['Nunito'] font-semibold text-[11px] text-[#5c4a3a] leading-snug">
+                          Memahami tradisi dan kearifan lokal Kabupaten Magetan.
+                        </p>
+                      </div>
 
-              <div className="flex flex-wrap gap-2 pt-1 justify-center md:justify-start text-[11px] font-semibold text-slate-600">
-                <span className="bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
-                  [ Nama Fakultas / Universitas ]
-                </span>
-                <span className="bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
-                  Pakar Teknologi Pembelajaran
-                </span>
-              </div>
-            </div>
+                      <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3 flex flex-col gap-1.5 shadow-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">🛡️</span>
+                          <h4 className="font-['Fredoka'] font-extrabold text-xs text-[#366635] leading-tight">
+                            Literasi Digital & Anti-Hoax
+                          </h4>
+                        </div>
+                        <p className="font-['Nunito'] font-semibold text-[11px] text-[#5c4a3a] leading-snug">
+                          Mengembangkan kemampuan berpikir kritis dan verifikasi informasi digital.
+                        </p>
+                      </div>
+
+                      <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3 flex flex-col gap-1.5 shadow-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">🎯</span>
+                          <h4 className="font-['Fredoka'] font-extrabold text-xs text-[#7e371b] leading-tight">
+                            Detektif Digital Budaya
+                          </h4>
+                        </div>
+                        <p className="font-['Nunito'] font-semibold text-[11px] text-[#5c4a3a] leading-snug">
+                          Membedakan berita fakta dan hoaks yang berkaitan dengan budaya lokal.
+                        </p>
+                      </div>
+
+                      <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3 flex flex-col gap-1.5 shadow-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">💡</span>
+                          <h4 className="font-['Fredoka'] font-extrabold text-xs text-[#5a2e8c] leading-tight">
+                            Refleksi & Apresiasi Budaya
+                          </h4>
+                        </div>
+                        <p className="font-['Nunito'] font-semibold text-[11px] text-[#5c4a3a] leading-snug">
+                          Menumbuhkan rasa cinta dan apresiasi nilai-nilai luhur budaya lokal.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SECTION: MASKOT DEDIGMA */}
+                  <div className="bg-[#e6dbbf]/70 border-2 border-[#d0c09d] rounded-2xl p-3 sm:p-4 relative mt-6 pt-6 shadow-xs">
+                    <div className="absolute -top-3 left-4 bg-[#7e371b] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm py-0.5 px-4 rounded-lg shadow-sm border border-[#572410]">
+                      MASKOT DEDIGMA
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                      {/* Mascots Side by Side */}
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <img
+                          src="/assets/mascot/Dimas-Petunjuk.svg"
+                          alt="Dimas"
+                          className="w-16 sm:w-20 h-auto object-contain drop-shadow"
+                        />
+                        <img
+                          src="/assets/mascot/Gita-Tujuan.svg"
+                          alt="Gita"
+                          className="w-16 sm:w-20 h-auto object-contain drop-shadow"
+                        />
+                      </div>
+
+                      {/* Mascot Intro Text */}
+                      <div className="flex-1 text-center sm:text-left space-y-1">
+                        <h4 className="font-['Fredoka'] font-extrabold text-base text-[#4a3728]">
+                          Dimas & Gita
+                        </h4>
+                        <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a] leading-relaxed">
+                          Dimas si Detektif Digital dan Gita Penjaga Budaya siap menemani petualanganmu menjelajahi dunia budaya lokal dan menjadi detektif digital yang hebat!
+                        </p>
+                      </div>
+
+                      {/* Heart Quote Box */}
+                      <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-3 shadow-xs flex items-center gap-2 max-w-[220px] flex-shrink-0">
+                        <span className="text-xl">❤️</span>
+                        <p className="font-['Nunito'] font-bold text-[11px] text-[#7e371b] leading-snug">
+                          Mari belajar, bermain, dan lestarikan budaya lokal bersama DEDIGMA!
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === "tim" && (
+                <motion.div
+                  key="tim"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-4"
+                >
+                  {/* DOSEN PEMBIMBING */}
+                  <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-4 shadow-sm space-y-3">
+                    <div className="flex items-center gap-2 border-b border-[#d8c7a5] pb-2">
+                      <span className="text-2xl">🎓</span>
+                      <div>
+                        <h3 className="font-['Fredoka'] font-extrabold text-base text-[#7e371b]">
+                          Dosen Pembimbing / Advisor Utama
+                        </h3>
+                        <p className="text-[11px] text-[#5c4a3a] font-semibold">Penanggung Jawab & Pengarah Riset</p>
+                      </div>
+                    </div>
+                    <div className="space-y-1 text-[#4a3728]">
+                      <h4 className="font-['Fredoka'] font-extrabold text-lg text-[#1b3d82]">
+                        [ Nama Dosen Pembimbing, M.Pd. ]
+                      </h4>
+                      <p className="font-['Nunito'] font-bold text-xs text-[#7e371b]">NIP. [ Nomor NIP Dosen ]</p>
+                      <p className="font-['Nunito'] font-semibold text-xs leading-relaxed pt-1">
+                        "Pengembangan edutainment DEDIGMA diharapkan mampu mencetak generasi muda Magetan yang kritis, bijak bermedia digital, dan bangga akan warisan budaya lokal."
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* 3 DEVELOPERS */}
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3 text-center space-y-2 shadow-xs">
+                      <span className="text-3xl">💻</span>
+                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#1b3d82]">
+                        [ Nama Pengembang 1 ]
+                      </h4>
+                      <p className="font-['Fredoka'] font-bold text-[10px] text-[#7e371b] uppercase">Lead Developer</p>
+                      <p className="font-['Nunito'] font-semibold text-[11px] text-[#5c4a3a] leading-snug">
+                        Merancang arsitektur aplikasi dan logika game state DEDIGMA.
+                      </p>
+                    </div>
+
+                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3 text-center space-y-2 shadow-xs">
+                      <span className="text-3xl">📖</span>
+                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#366635]">
+                        [ Nama Pengembang 2 ]
+                      </h4>
+                      <p className="font-['Fredoka'] font-bold text-[10px] text-[#7e371b] uppercase">Konten & Materi</p>
+                      <p className="font-['Nunito'] font-semibold text-[11px] text-[#5c4a3a] leading-snug">
+                        Menyusun instrumen kuis, materi kebudayaan, dan narasi game.
+                      </p>
+                    </div>
+
+                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3 text-center space-y-2 shadow-xs">
+                      <span className="text-3xl">🎨</span>
+                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#5a2e8c]">
+                        [ Nama Pengembang 3 ]
+                      </h4>
+                      <p className="font-['Fredoka'] font-bold text-[10px] text-[#7e371b] uppercase">UI/UX & Desain</p>
+                      <p className="font-['Nunito'] font-semibold text-[11px] text-[#5c4a3a] leading-snug">
+                        Mengembangkan tata letak UI, ilustrasi visual, dan aset game.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === "tujuan" && (
+                <motion.div
+                  key="tujuan"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-3"
+                >
+                  <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-4 shadow-sm space-y-2 text-[#4a3728]">
+                    <h3 className="font-['Fredoka'] font-extrabold text-lg text-[#1b3d82]">
+                      Tujuan Pembelajaran Utama
+                    </h3>
+                    <ul className="list-disc list-inside space-y-1.5 font-['Nunito'] font-semibold text-xs leading-relaxed text-[#5c4a3a]">
+                      <li>Mengenalkan 3 tradisi utama Kabupaten Magetan (Larung Sesaji, Nyadaran, Ledhug Suro).</li>
+                      <li>Mengembangkan keterampilan berpikit kritis dan verifikasi berita hoaks.</li>
+                      <li>Menanamkan sikap apresiasi dan rasa bangga terhadap kebudayaan daerah.</li>
+                      <li>Memberikan pengalaman belajar interaktif berbasis edutainment gamifikasi.</li>
+                    </ul>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === "fitur" && (
+                <motion.div
+                  key="fitur"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-3"
+                >
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3.5 space-y-1 shadow-xs">
+                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#7e371b]">🗺️ 3 Misi Budaya Magetan</h4>
+                      <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a]">Petualangan interaktif menjelajahi tradisi lokal.</p>
+                    </div>
+                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3.5 space-y-1 shadow-xs">
+                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#1b3d82]">🔍 Tantangan Cek Fakta</h4>
+                      <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a]">Kuis verifikasi berita fakta dan hoaks.</p>
+                    </div>
+                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3.5 space-y-1 shadow-xs">
+                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#366635]">🏅 Koleksi Lencana</h4>
+                      <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a]">Raih lencana penghargaan di tiap pencapaian.</p>
+                    </div>
+                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3.5 space-y-1 shadow-xs">
+                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#5a2e8c]">🔊 Narasi & Audio Interaktif</h4>
+                      <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a]">Suara narator ramah anak dan musik latar daerah.</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === "petunjuk" && (
+                <motion.div
+                  key="petunjuk"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-3"
+                >
+                  <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-4 shadow-sm space-y-2 text-[#4a3728]">
+                    <h3 className="font-['Fredoka'] font-extrabold text-lg text-[#366635]">
+                      Petunjuk Bermain DEDIGMA
+                    </h3>
+                    <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a] leading-relaxed">
+                      1. Tekan tombol **Mulai Misi** di Lobby Utama.<br />
+                      2. Pelajari materi budaya dengan cermat sebelum menjawab pertanyaan.<br />
+                      3. Selesaikan Misi 1 hingga Misi 3 secara berurutan.<br />
+                      4. Dapatkan poin tertinggi dan kumpulkan seluruh lencana Detektif Digital!
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === "privasi" && (
+                <motion.div
+                  key="privasi"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="space-y-3"
+                >
+                  <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-4 shadow-sm space-y-2 text-[#4a3728]">
+                    <h3 className="font-['Fredoka'] font-extrabold text-lg text-[#7e371b]">
+                      Kebijakan & Privasi Data
+                    </h3>
+                    <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a] leading-relaxed">
+                      DEDIGMA berkomitmen menjaga kerahasiaan data siswa. Seluruh progres belajar disimpan secara lokal dan aman untuk kepentingan edukasi sekolah tanpa menjual data pengguna.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
           </div>
         </motion.div>
-
-        {/* 3 Pengembang / Developers Grid Layout */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 px-1">
-            <Sparkles className="text-amber-500" size={20} />
-            <h3 className="font-['Fredoka'] font-bold text-xl text-slate-800">Tim Pengembang (3 Developers)</h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            
-            {/* Pengembang 1 */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ ...springTransition, delay: 0.2 }}
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="bg-white rounded-3xl p-4 shadow-lg border border-blue-100 flex flex-col items-center text-center space-y-3 hover:shadow-2xl transition-all cursor-pointer will-change-transform transform-gpu"
-            >
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-400 p-1 shadow-md">
-                <div className="w-full h-full rounded-[12px] bg-blue-50 flex items-center justify-center text-blue-600">
-                  <Code size={36} />
-                </div>
-              </div>
-              <div>
-                <span className="bg-blue-100 text-blue-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">
-                  Lead Developer / Peneliti
-                </span>
-                <h4 className="font-['Fredoka'] font-bold text-base text-slate-800 mt-1">
-                  [ Nama Pengembang 1 ]
-                </h4>
-                <p className="text-[11px] text-gray-500 font-semibold">NIM. [ Masukkan NIM ]</p>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed bg-blue-50/50 p-2.5 rounded-2xl w-full">
-                Merancang arsitektur aplikasi, logika game state, dan integrasi fitur kuis interaktif DEDIGMA.
-              </p>
-            </motion.div>
-
-            {/* Pengembang 2 */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ ...springTransition, delay: 0.3 }}
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="bg-white rounded-3xl p-4 shadow-lg border border-emerald-100 flex flex-col items-center text-center space-y-3 hover:shadow-2xl transition-all cursor-pointer will-change-transform transform-gpu"
-            >
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-400 p-1 shadow-md">
-                <div className="w-full h-full rounded-[12px] bg-emerald-50 flex items-center justify-center text-emerald-600">
-                  <BookOpen size={36} />
-                </div>
-              </div>
-              <div>
-                <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">
-                  Spesialis Konten & Materi
-                </span>
-                <h4 className="font-['Fredoka'] font-bold text-base text-slate-800 mt-1">
-                  [ Nama Pengembang 2 ]
-                </h4>
-                <p className="text-[11px] text-gray-500 font-semibold">NIM. [ Masukkan NIM ]</p>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed bg-emerald-50/50 p-2.5 rounded-2xl w-full">
-                Menyusun materi kearifan lokal Magetan, narasi petualangan, serta instrumen kisi-kisi soal evaluasi.
-              </p>
-            </motion.div>
-
-            {/* Pengembang 3 */}
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ ...springTransition, delay: 0.4 }}
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="bg-white rounded-3xl p-4 shadow-lg border border-purple-100 flex flex-col items-center text-center space-y-3 hover:shadow-2xl transition-all cursor-pointer will-change-transform transform-gpu"
-            >
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-500 to-indigo-400 p-1 shadow-md">
-                <div className="w-full h-full rounded-[12px] bg-purple-50 flex items-center justify-center text-purple-600">
-                  <UserCheck size={36} />
-                </div>
-              </div>
-              <div>
-                <span className="bg-purple-100 text-purple-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">
-                  Desainer UI/UX & Media
-                </span>
-                <h4 className="font-['Fredoka'] font-bold text-base text-slate-800 mt-1">
-                  [ Nama Pengembang 3 ]
-                </h4>
-                <p className="text-[11px] text-gray-500 font-semibold">NIM. [ Masukkan NIM ]</p>
-              </div>
-              <p className="text-xs text-slate-600 leading-relaxed bg-purple-50/50 p-2.5 rounded-2xl w-full">
-                Mengembangkan tata letak antarmuka (UI), aset visual budaya, serta pengalaman pengguna (UX) ramah anak.
-              </p>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Maskot DEDIGMA & Hak Cipta */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ ...springTransition, delay: 0.45 }}
-          className="bg-white/90 backdrop-blur-sm rounded-3xl p-5 shadow-lg border border-slate-100 space-y-4"
-        >
-          <h4 className="font-['Fredoka'] font-bold text-lg text-slate-800 flex items-center gap-2">
-            <Heart className="text-rose-500 fill-rose-500/20" size={18} /> Maskot Pembelajaran
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="bg-blue-50/70 rounded-2xl p-3.5 flex items-center gap-3 border border-blue-100">
-              <MascotDimas size="sm" animate={true} interactive={false} />
-              <div>
-                <h5 className="font-['Fredoka'] font-bold text-sm text-blue-800">Dimas — Detektif Digital</h5>
-                <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
-                  Simbol kecerdasan digital, berwawasan kritis, dan bijak memverifikasi informasi.
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-amber-50/70 rounded-2xl p-3.5 flex items-center gap-3 border border-amber-100">
-              <MascotGita size="sm" animate={true} interactive={false} />
-              <div>
-                <h5 className="font-['Fredoka'] font-bold text-sm text-amber-800">Gita — Detektif Budaya</h5>
-                <p className="text-[11px] text-slate-600 leading-relaxed mt-0.5">
-                  Simbol kecintaan budaya lokal, bangga warisan tradisi Magetan dan melestarikannya.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-2 text-center border-t border-slate-100">
-            <p className="text-xs font-semibold text-slate-500">
-              © 2026 DEDIGMA. Hak Cipta Dilindungi Undang-Undang.
-            </p>
-            <p className="text-[10px] text-slate-400">
-              Diterbitkan untuk Kepentingan Pendidikan & Kebudayaan Kabupaten Magetan.
-            </p>
-          </div>
-        </motion.div>
-
       </div>
     </div>
   );
 };
+
 export default ProfilScreen;
