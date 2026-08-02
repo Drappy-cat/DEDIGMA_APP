@@ -152,10 +152,7 @@ export const CekFaktaScreen: React.FC<CekFaktaScreenProps> = ({ mission, onNext 
               score >= 75 ? "bg-green-100 border-green-400 text-green-950" : "bg-amber-100 border-amber-400 text-amber-950"
             }`}
           >
-            <AnimatePresence>
-              {/* Animation logic for hints if present in structure */}
-            </AnimatePresence>
-            <p className="font-['Fredoka'] font-bold text-2xl">{score >= 75 ? "🎉 Luar Biasa!" : "💪 Tetap Semangat!"}</p>
+            <p className="font-['Fredoka'] font-bold text-2xl">{score >= 75 ? "Luar Biasa!" : "Tetap Semangat!"}</p>
             <p className="text-sm mt-0.5">
               Skor verifikasi fakta: <strong>{score} / 100</strong>
             </p>
