@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "motion/react";
 import { Mission } from "../../types";
 import { Btn } from "../../components/Btn";
+import { useAudio } from "../../contexts/AudioContext";
+import { fireConfetti } from "../../utils/confetti";
 
 interface MisiSelesaiScreenProps {
   mission: Mission;
@@ -14,6 +16,14 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
   totalScore,
   onContinue
 }) => {
+  const { playSFX, playNarrator } = useAudio();
+
+  useEffect(() => {
+    fireConfetti();
+    playSFX("badge");
+    playNarrator(`Selamat! Kamu telah menyelesaikan Misi ${mission.id} dengan skor ${totalScore}!`);
+  }, []);
+
   return (
     <div className="flex flex-col h-full items-center justify-center p-6 text-center gap-5 bg-gradient-to-b from-yellow-50 to-amber-50 font-['Nunito'] select-none">
       {/* Animated badge */}
@@ -27,7 +37,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
       </motion.div>
 
       <div>
-        <h2 className="font-['Fredoka'] font-bold text-3xl text-amber-700 leading-tight">Misi Selesai!</h2>
+        <h2 className="font-['Fredoka'] font-bold text-3xl text-amber-700 leading-tight">Misi Selesai! 🎉</h2>
         <p className="font-['Fredoka'] text-blue-600 text-xl font-semibold mt-1">{mission.name}</p>
       </div>
 
@@ -63,3 +73,4 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
   );
 };
 export default MisiSelesaiScreen;
+

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, Plus } from "lucide-react";
+import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, Plus, FileText } from "lucide-react";
+import jsPDF from "jspdf";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { MOCK_STUDENTS, MISSIONS } from "../data/missions";
@@ -136,6 +137,66 @@ export const GuruDashboardScreen: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
+  const exportPDF = () => {
+    playSFX("click");
+    try {
+      const doc = new jsPDF();
+      const dateStr = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+      
+      // Document Header
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(14);
+      doc.text("LAPORAN REKAP HASIL BELAJAR DETEKTIF DIGITAL (DEDIGMA)", 14, 18);
+      
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Filter Kelas: ${filter} | Tanggal Cetak: ${dateStr}`, 14, 25);
+      doc.text(`Total Siswa: ${filtered.length} | Rata-rata Skor Keseluruhan: ${stats.avgScore}`, 14, 31);
+
+      doc.setLineWidth(0.5);
+      doc.line(14, 34, 196, 34);
+
+      // Table Headers
+      let y = 42;
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      doc.text("No", 14, y);
+      doc.text("Nama Siswa", 24, y);
+      doc.text("Kelas", 80, y);
+      doc.text("Misi 1", 95, y);
+      doc.text("Misi 2", 115, y);
+      doc.text("Misi 3", 135, y);
+      doc.text("Skor Rata", 155, y);
+      doc.text("Posttest", 175, y);
+
+      y += 3;
+      doc.line(14, y, 196, y);
+      y += 6;
+
+      // Rows
+      doc.setFont("helvetica", "normal");
+      filtered.forEach((s, i) => {
+        if (y > 275) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(String(i + 1), 14, y);
+        doc.text(s.nama.slice(0, 24), 24, y);
+        doc.text(s.kelas, 80, y);
+        doc.text(s.misi1 ? "Selesai" : "-", 95, y);
+        doc.text(s.misi2 ? "Selesai" : "-", 115, y);
+        doc.text(s.misi3 ? "Selesai" : "-", 135, y);
+        doc.text(s.skor > 0 ? `${s.skor}%` : "-", 155, y);
+        doc.text(String((s as any).posttest ?? "-"), 175, y);
+        y += 6.5;
+      });
+
+      doc.save(`Laporan_Rekap_DEDIGMA_${filter.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`);
+    } catch (err) {
+      console.error("Failed to generate PDF:", err);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#183655] flex flex-col font-['Nunito'] select-none">
       {/* Top Header */}
@@ -155,18 +216,24 @@ export const GuruDashboardScreen: React.FC = () => {
           <span className="text-sm font-semibold text-blue-100">"Selamat bertugas! {activeNowStudents.length} detektif cilik sedang aktif."</span>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             onClick={exportCSV}
-            className="flex items-center gap-2 bg-[#F59E0B] hover:bg-[#D97706] transition-colors rounded-full px-4 py-2 text-sm font-bold cursor-pointer text-[#183655]"
+            className="flex items-center gap-1.5 bg-[#F59E0B] hover:bg-[#D97706] transition-colors rounded-full px-3.5 py-1.5 text-xs font-bold cursor-pointer text-[#183655] shadow"
           >
-            <Download size={16} /> Export CSV
+            <Download size={14} /> Excel (CSV)
+          </button>
+          <button
+            onClick={exportPDF}
+            className="flex items-center gap-1.5 bg-rose-600 hover:bg-rose-700 text-white transition-colors rounded-full px-3.5 py-1.5 text-xs font-bold cursor-pointer shadow"
+          >
+            <FileText size={14} /> Export PDF
           </button>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 bg-transparent hover:bg-white/10 border-2 border-white/20 transition-colors rounded-full px-4 py-2 text-sm font-bold cursor-pointer text-white"
+            className="flex items-center gap-1.5 bg-transparent hover:bg-white/10 border-2 border-white/20 transition-colors rounded-full px-3.5 py-1.5 text-xs font-bold cursor-pointer text-white ml-1"
           >
-            <LogOut size={16} /> Keluar
+            <LogOut size={14} /> Keluar
           </button>
         </div>
       </div>

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { LogOut, X } from "lucide-react";
+import { LogOut, X, Settings } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { MascotDimas, MascotGita } from "../components/Mascot";
+import { AudioSettingsModal } from "../components/AudioSettingsModal";
 
 interface SplashScreenProps {
   onMulai: () => void;
@@ -13,8 +14,9 @@ interface SplashScreenProps {
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk, onProfil }) => {
   const { userName, logout } = useAuth();
-  const { playSFX, playBGM, toggleAudio, toggleBGM, toggleNarrator, audioEnabled, bgmEnabled, narratorEnabled } = useAudio();
+  const { playSFX, playBGM, toggleAudio, toggleBGM, audioEnabled, bgmEnabled } = useAudio();
   const [showPustaka, setShowPustaka] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   React.useEffect(() => {
     // Coba putar musik latar secara otomatis saat SplashScreen dimuat
@@ -45,11 +47,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
   const handleBgmToggle = () => {
     playSFX("click");
     toggleBGM();
-  };
-
-  const handleNarratorToggle = () => {
-    playSFX("click");
-    toggleNarrator();
   };
 
   // Generate random glitters / falling stars
@@ -110,33 +107,32 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
         <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-3 py-1 shadow border border-white/10">
           <span className="font-['Nunito'] font-bold text-white text-xs">👋 Halo, {userName}!</span>
         </div>
-        <div className="flex items-center gap-3 landscape:gap-4">
-          {/* BGM Toggle */}
+
+        <div className="flex items-center gap-2.5 landscape:gap-3">
+          {/* Direct BGM Touch Shortcut (Persis Kapsul di Screenshot) */}
           <button
             onClick={handleBgmToggle}
-            className={`px-2.5 py-1 rounded-2xl transition-all cursor-pointer flex items-center gap-1 border text-xs font-bold shadow backdrop-blur-sm ${
+            className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1.5 border text-xs font-bold shadow-lg backdrop-blur-md active:scale-95 ${
               bgmEnabled && audioEnabled
-                ? "bg-amber-500/30 border-amber-300/50 text-amber-200"
-                : "bg-white/10 border-white/10 text-white/40 grayscale"
+                ? "bg-amber-500/40 border-amber-300/60 text-amber-200 ring-2 ring-amber-400/30"
+                : "bg-slate-900/60 border-slate-600/60 text-slate-300/70 grayscale"
             }`}
             title={bgmEnabled ? "Matikan Musik Latar (BGM)" : "Nyalakan Musik Latar (BGM)"}
           >
             <span>🎵</span>
-            <span className="hidden sm:inline">{bgmEnabled ? "BGM" : "BGM Off"}</span>
+            <span>{bgmEnabled && audioEnabled ? "BGM On" : "BGM Off"}</span>
           </button>
 
-          {/* Narrator Toggle */}
+          {/* Dedicated Settings Button */}
           <button
-            onClick={handleNarratorToggle}
-            className={`px-2.5 py-1 rounded-2xl transition-all cursor-pointer flex items-center gap-1 border text-xs font-bold shadow backdrop-blur-sm ${
-              narratorEnabled && audioEnabled
-                ? "bg-blue-500/30 border-blue-300/50 text-blue-100"
-                : "bg-white/10 border-white/10 text-white/40 grayscale"
-            }`}
-            title={narratorEnabled ? "Matikan Suara Narator / TTS" : "Nyalakan Suara Narator / TTS"}
+            onClick={() => {
+              playSFX("click");
+              setIsSettingsOpen(true);
+            }}
+            className="w-10 h-10 rounded-full bg-slate-900/60 hover:bg-slate-900/80 border-2 border-amber-400/50 flex items-center justify-center text-amber-300 shadow-lg cursor-pointer transition-transform hover:scale-105 active:scale-95"
+            title="Pengaturan Audio & Volume"
           >
-            <span>🗣️</span>
-            <span className="hidden sm:inline">{narratorEnabled ? "Suara" : "Suara Off"}</span>
+            <Settings size={18} />
           </button>
 
           {/* Custom Speaker volume toggle */}
@@ -148,7 +144,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
             <img
               src={audioEnabled ? "/assets/button/sound-on.svg" : "/assets/button/sound-off.svg"}
               alt={audioEnabled ? "Suara Nyala" : "Suara Mati"}
-              className="w-12 h-12 landscape:w-16 landscape:h-16 object-contain"
+              className="w-10 h-10 landscape:w-14 landscape:h-14 object-contain"
             />
           </button>
 
@@ -160,11 +156,14 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
             <img
               src="/assets/button/home.svg"
               alt="Home / Keluar"
-              className="w-12 h-12 landscape:w-16 landscape:h-16 object-contain"
+              className="w-10 h-10 landscape:w-14 landscape:h-14 object-contain"
             />
           </button>
         </div>
       </div>
+
+      <AudioSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+
 
       {/* Content wrapper: Central UI with floating mascots */}
       <div className="flex-1 w-full relative z-10 flex flex-col items-center justify-center px-4 overflow-hidden">

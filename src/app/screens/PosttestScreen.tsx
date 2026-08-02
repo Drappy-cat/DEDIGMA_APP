@@ -4,6 +4,7 @@ import { Award, BookOpen, ChevronRight } from "lucide-react";
 import { Btn } from "../components/Btn";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useAudio } from "../contexts/AudioContext";
+import { fireConfetti } from "../utils/confetti";
 
 interface PosttestScreenProps {
   onComplete: (score: number) => void;
@@ -89,6 +90,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
         const correctCount = newAnswers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
         const finalScore = Math.round((correctCount / POSTTEST_QUESTIONS.length) * 100);
 
+        fireConfetti();
         playSFX("badge");
         playNarrator(`Luar biasa! Kamu menyelesaikan Posttest dengan skor akhir ${finalScore}. Ketuk tombol di bawah untuk melihat sertifikat kelulusanmu.`);
       }
