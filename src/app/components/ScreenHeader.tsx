@@ -31,7 +31,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
 
   return (
     <>
-      <div className="bg-gradient-to-r from-blue-800 to-blue-700 text-white px-3 sm:px-4 py-2 sm:py-2.5 flex items-center gap-2 sm:gap-3 shadow-md select-none border-b border-white/10 relative z-30 flex-shrink-0">
+      <div className="bg-gradient-to-r from-[#3b1e0a] via-[#4a270f] to-[#3b1e0a] text-white px-3 sm:px-4 py-2 sm:py-2.5 flex items-center gap-2 sm:gap-3 shadow-lg select-none border-b-2 border-[#c2aa84]/40 relative z-30 flex-shrink-0">
         {onBack && (
           <button
             onClick={handleBack}
@@ -41,23 +41,23 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
             <img
               src="/assets/btn/exit.png"
               alt="Kembali"
-              className="w-6 h-6 sm:w-7 sm:h-7 object-contain active:scale-90 transition-transform"
+              className="w-6 h-6 sm:w-7 sm:h-7 object-contain active:scale-90 transition-transform filter drop-shadow-xs"
             />
           </button>
         )}
 
         <div className="flex-1 min-w-0">
-          <h2 className="font-['Fredoka'] font-bold text-sm sm:text-base leading-tight drop-shadow-sm truncate">{title}</h2>
-          {step && <p className="text-blue-200 text-[10px] font-['Nunito'] font-semibold leading-none mt-0.5 truncate">{step}</p>}
+          <h2 className="font-['Fredoka'] font-extrabold text-sm sm:text-base leading-tight text-[#fff5ce] drop-shadow-sm truncate">{title}</h2>
+          {step && <p className="text-[#fad86b] text-[10px] font-['Nunito'] font-bold leading-none mt-0.5 truncate">{step}</p>}
         </div>
 
         <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Direct Touch BGM Shortcut Button */}
           <button
             onClick={handleBgmToggle}
-            className={`px-3 py-1 rounded-full transition-all cursor-pointer flex items-center gap-1.5 border text-xs font-bold shadow backdrop-blur-sm active:scale-95 ${
+            className={`px-3 py-1 rounded-full transition-all cursor-pointer flex items-center gap-1.5 border text-xs font-['Fredoka'] font-bold shadow backdrop-blur-sm active:scale-95 ${
               bgmEnabled && audioEnabled
-                ? "bg-amber-500/30 border-amber-300/50 text-amber-200"
+                ? "bg-[#7e371b]/90 border-[#fad86b]/70 text-[#fff5ce]"
                 : "bg-black/30 border-white/20 text-white/50 grayscale"
             }`}
             title={bgmEnabled ? "Matikan Musik Latar (BGM)" : "Nyalakan Musik Latar (BGM)"}
@@ -72,7 +72,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
               playSFX("click");
               setIsSettingsOpen(true);
             }}
-            className="p-1.5 bg-white/10 hover:bg-white/20 border border-white/20 rounded-full transition-all cursor-pointer flex items-center justify-center text-white active:scale-90"
+            className="p-1.5 bg-[#7e371b]/80 hover:bg-[#7e371b] border border-[#fad86b]/50 rounded-full transition-all cursor-pointer flex items-center justify-center text-[#fff5ce] active:scale-90 shadow-sm"
             title="Pengaturan Audio & Informasi Game"
           >
             <Settings size={18} />
@@ -85,9 +85,9 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
               aria-label="Beranda"
             >
               <img
-                src="/assets/btn/home.png"
+                src="/assets/button/home.svg"
                 alt="Beranda"
-                className="w-7 h-7 object-contain active:scale-90 transition-transform"
+                className="w-7 h-7 object-contain active:scale-90 transition-transform drop-shadow-xs"
               />
             </button>
           )}
@@ -98,4 +98,5 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
     </>
   );
 };
+
 export default ScreenHeader;
