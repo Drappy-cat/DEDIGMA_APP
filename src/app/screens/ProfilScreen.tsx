@@ -321,7 +321,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
                     <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-4 flex items-center gap-4 shadow-sm">
                       <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-4xl shadow-inner border-2 border-blue-300 shrink-0 overflow-hidden relative group">
                         <img 
-                          src="/assets/hadi.png" 
+                          src="/assets/foto-hadi.svg" 
                           alt="Muhammad Sofwan Hadi" 
                           className="w-full h-full object-cover object-top"
                           onError={(e) => {
