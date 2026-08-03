@@ -23,6 +23,8 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
 }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [isGenerating, setIsGenerating] = useState(false);
+  const [scale, setScale] = useState(1);
+  const containerRef = useRef<HTMLDivElement>(null);
   const certRef = useRef<HTMLDivElement>(null);
 
   const today = new Date().toLocaleDateString("id-ID", {
@@ -38,6 +40,23 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
     return () => {
       stopNarrator();
     };
+  }, []);
+
+  useEffect(() => {
+    const updateScale = () => {
+      if (containerRef.current) {
+        const { clientWidth, clientHeight } = containerRef.current;
+        const scaleX = clientWidth / 842;
+        const scaleY = clientHeight / 595;
+        // Set scale so it fits inside the container (limit max scale to 1)
+        setScale(Math.min(scaleX, scaleY, 1));
+      }
+    };
+
+    // Small delay to ensure layout is ready
+    setTimeout(updateScale, 100);
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
   }, []);
 
   const handleDownloadPdf = async () => {
@@ -90,16 +109,21 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
 
       <div className="flex-1 overflow-y-auto p-4 flex flex-col items-center gap-4">
         {/* Certificate Container Wrapper */}
-        <div className="w-full flex justify-center items-center flex-1 max-h-[60vh] md:max-h-[65vh]">
+        <div ref={containerRef} className="w-full flex justify-center items-center flex-1 max-h-[60vh] md:max-h-[65vh] overflow-hidden">
           
-          <div className="shadow-2xl rounded-sm overflow-hidden bg-white max-w-full max-h-full aspect-[1.414] flex justify-center items-center relative group">
+          <div 
+            className="shadow-2xl rounded-sm overflow-hidden bg-white flex justify-center items-center relative group origin-center transition-transform duration-300"
+            style={{ 
+              width: "842px", 
+              height: "595px",
+              transform: `scale(${scale})`
+            }}
+          >
             {/* The element we convert to image (A4 Landscape ratio) */}
             <div
               ref={certRef}
-              className="relative flex-shrink-0 flex flex-col justify-center items-center text-center font-['Nunito']"
+              className="relative flex-shrink-0 flex flex-col justify-center items-center text-center font-['Nunito'] w-full h-full"
               style={{
-                width: "842px",
-                height: "595px",
                 backgroundImage: "url('/assets/bg-sertifikat.svg')",
                 backgroundSize: "100% 100%",
                 backgroundPosition: "center",
