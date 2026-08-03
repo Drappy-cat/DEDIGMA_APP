@@ -209,31 +209,38 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border-4 border-amber-200 flex flex-col"
+              className="relative p-6 sm:p-10 w-[95%] max-w-md shadow-2xl flex flex-col"
+              style={{
+                backgroundImage: "url('/assets/board-blank.png')",
+                backgroundSize: "100% 100%",
+                backgroundRepeat: "no-repeat",
+                backgroundColor: "transparent",
+                minHeight: "350px"
+              }}
             >
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-sm ${
-                  answers[current] === q.jawaban ? 'bg-green-100' : 'bg-red-100'
+              <div className="flex items-center gap-3 mb-4 mt-2">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-sm border-2 ${
+                  answers[current] === q.jawaban ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'
                 }`}>
                   {answers[current] === q.jawaban ? '✅' : '❌'}
                 </div>
                 <div>
-                  <h3 className={`font-['Fredoka'] font-bold text-xl ${
-                    answers[current] === q.jawaban ? 'text-green-600' : 'text-red-600'
+                  <h3 className={`font-['Fredoka'] font-bold text-xl drop-shadow-sm ${
+                    answers[current] === q.jawaban ? 'text-green-700' : 'text-red-700'
                   }`}>
                     {answers[current] === q.jawaban ? 'Tepat Sekali!' : 'Kurang Tepat!'}
                   </h3>
-                  <p className="text-gray-500 text-xs font-bold">PEMBAHASAN</p>
+                  <p className="text-amber-900/70 text-xs font-bold tracking-widest">PEMBAHASAN</p>
                 </div>
               </div>
               
-              <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 mb-6 max-h-60 overflow-y-auto custom-scrollbar">
-                <p className="text-gray-700 text-sm leading-relaxed font-semibold">
+              <div className="bg-amber-50/90 backdrop-blur-sm rounded-2xl p-4 border border-amber-200/50 mb-6 max-h-48 overflow-y-auto custom-scrollbar shadow-inner">
+                <p className="text-amber-950 text-sm leading-relaxed font-semibold">
                   {q.pembahasan || 'Jawaban telah direkam.'}
                 </p>
               </div>
               
-              <Btn onClick={handleNextQuestion} variant="blue" className="w-full py-3.5 text-base shadow-md">
+              <Btn onClick={handleNextQuestion} variant="blue" className="w-full py-3.5 text-base shadow-lg border-2 border-blue-300 mb-2">
                 {current < PRETEST_QUESTIONS.length - 1 ? 'Lanjut ke Soal Berikutnya' : 'Selesai Pretest'}
               </Btn>
             </motion.div>
