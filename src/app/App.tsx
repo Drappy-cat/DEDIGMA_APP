@@ -12,7 +12,6 @@ const PetunjukScreen = lazy(() => import("./screens/PetunjukScreen").then((m) =>
 const TujuanScreen = lazy(() => import("./screens/TujuanScreen").then((m) => ({ default: m.TujuanScreen })));
 const ProfilScreen = lazy(() => import("./screens/ProfilScreen").then((m) => ({ default: m.ProfilScreen })));
 const PetaMisiScreen = lazy(() => import("./screens/PetaMisiScreen").then((m) => ({ default: m.PetaMisiScreen })));
-const TantanganScreen = lazy(() => import("./screens/mission/TantanganScreen").then((m) => ({ default: m.TantanganScreen })));
 const PretestScreen = lazy(() => import("./screens/PretestScreen").then((m) => ({ default: m.PretestScreen })));
 const PosttestScreen = lazy(() => import("./screens/PosttestScreen").then((m) => ({ default: m.PosttestScreen })));
 const LencanaScreen = lazy(() => import("./screens/LencanaScreen").then((m) => ({ default: m.LencanaScreen })));
@@ -70,7 +69,7 @@ function DemoPanel({
     return isLoggedIn && screen === targetScreen;
   };
 
-  const handleSwitch = (target: "siswa-peta" | "guru-dashboard" | "login" | "splash" | "pretest" | "posttest" | "lencana" | "petunjuk" | "tujuan" | "tantangan" | "misi-1" | "misi-2" | "misi-3" | "sertifikat") => {
+  const handleSwitch = (target: "siswa-peta" | "guru-dashboard" | "login" | "splash" | "pretest" | "posttest" | "lencana" | "petunjuk" | "tujuan" | "misi-1" | "misi-2" | "misi-3" | "sertifikat") => {
     if (target === "login") {
       logout();
       setScreen("login");
@@ -91,9 +90,6 @@ function DemoPanel({
       } else if (target === "pretest") {
         setPretestScore(null);
         setScreen("pretest");
-      } else if (target === "tantangan") {
-        setCompletedMissions(new Set([1, 2, 3]));
-        setScreen("tantangan");
       } else if (target === "misi-1") {
         setCurrentMissionId(1);
         setScreen("mission-flow");
@@ -187,9 +183,6 @@ function DemoPanel({
 
           <div className="space-y-1">
             <div className="text-[9px] font-bold text-slate-500 uppercase tracking-wider ml-1 mb-1">Akhir (Syarat Selesai Misi)</div>
-            <button onClick={() => handleSwitch("tantangan")} className={`${btnClass} ${isActive("tantangan", "siswa") ? activeClass : inactiveClass}`}>
-              <span>🧩</span> Tantangan
-            </button>
             <button onClick={() => handleSwitch("posttest")} className={`${btnClass} ${isActive("posttest", "siswa") ? activeClass : inactiveClass}`}>
               <span>📝</span> Posttest Kuis
             </button>
@@ -359,9 +352,7 @@ function AppContent() {
                       <Btn
                         onClick={() =>
                           navigateTo(
-                            gameState.tantanganScore === null
-                              ? "tantangan"
-                              : posttestScore === null
+                            posttestScore === null
                               ? "posttest"
                               : "lencana"
                           )
@@ -369,9 +360,7 @@ function AppContent() {
                         variant="amber"
                         className="w-full text-lg px-8 py-4 shadow-2xl justify-center font-bold"
                       >
-                        {gameState.tantanganScore === null
-                          ? "Tantangan DEDIGMA"
-                          : posttestScore === null
+                        {posttestScore === null
                           ? "Posttest Interaktif"
                           : "Lencana & Sertifikat"}
                       </Btn>
@@ -385,23 +374,6 @@ function AppContent() {
                   missionId={currentMissionId}
                   onComplete={completeMission}
                   onHome={() => navigateTo("peta-misi")}
-                />
-              )}
-
-              {screen === "tantangan" && (
-                <TantanganScreen
-                  onFinish={(score) => {
-                    setGameState((prev) => {
-                      const updated = {
-                        ...prev,
-                        tantanganScore: score
-                      };
-                      saveGameState(updated);
-                      return updated;
-                    });
-                    navigateTo("posttest");
-                  }}
-                  onBack={() => navigateTo("peta-misi")}
                 />
               )}
 

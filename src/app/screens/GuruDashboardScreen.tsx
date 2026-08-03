@@ -36,7 +36,6 @@ export const GuruDashboardScreen: React.FC = () => {
         const m2 = Boolean(parsed.missions?.[2]?.completed);
         const m3 = Boolean(parsed.missions?.[3]?.completed);
         const totalScore = parsed.totalScore || 0;
-        const tantanganScore = parsed.tantanganScore !== null && parsed.tantanganScore !== undefined ? parsed.tantanganScore : "-";
         const posttestScore = parsed.posttest?.score !== null && parsed.posttest?.score !== undefined ? parsed.posttest.score : "-";
 
         const realStudent = {
@@ -47,7 +46,6 @@ export const GuruDashboardScreen: React.FC = () => {
           misi2: m2,
           misi3: m3,
           skor: totalScore,
-          tantangan: tantanganScore,
           posttest: posttestScore,
           waktu: "15 Menit",
           tanggal: new Date().toISOString().split("T")[0]
@@ -111,7 +109,6 @@ export const GuruDashboardScreen: React.FC = () => {
       "Misi 2 (Nyadaran)",
       "Misi 3 (Ledhug Suro)",
       "Skor Rata-Rata Misi (%)",
-      "Skor Tantangan",
       "Skor Posttest",
       "Status Kelulusan",
       "Durasi Belajar",
@@ -129,7 +126,6 @@ export const GuruDashboardScreen: React.FC = () => {
         s.misi2 ? "Selesai" : "Belum",
         s.misi3 ? "Selesai" : "Belum",
         s.skor > 0 ? `${s.skor}%` : "0%",
-        s.tantangan ?? "-",
         s.posttest ?? "-",
         status,
         s.waktu || "-",
@@ -408,7 +404,6 @@ export const GuruDashboardScreen: React.FC = () => {
                   <th className="py-3 px-4 text-center">Misi 2</th>
                   <th className="py-3 px-4 text-center">Misi 3</th>
                   <th className="py-3 px-4 text-center">Skor Rata-Rata</th>
-                  <th className="py-3 px-4 text-center">Tantangan</th>
                   <th className="py-3 px-4 text-center">Posttest</th>
                   <th className="py-3 px-4 text-center">Status</th>
                 </tr>
@@ -451,9 +446,6 @@ export const GuruDashboardScreen: React.FC = () => {
                       </td>
                       <td className="py-3 px-4 text-center font-bold text-blue-700">
                         {s.skor > 0 ? `${s.skor}%` : "-"}
-                      </td>
-                      <td className="py-3 px-4 text-center font-bold text-[#D97706] text-amber-600">
-                        {s.tantangan ?? "-"}
                       </td>
                       <td className="py-3 px-4 text-center font-bold text-purple-600">
                         {s.posttest ?? "-"}

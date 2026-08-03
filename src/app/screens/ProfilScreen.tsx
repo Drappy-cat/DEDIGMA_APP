@@ -378,10 +378,6 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
                       <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a]">Petualangan interaktif menjelajahi tradisi lokal.</p>
                     </div>
                     <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3.5 space-y-1 shadow-xs">
-                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#1b3d82]">🔍 Tantangan Cek Fakta</h4>
-                      <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a]">Kuis verifikasi berita fakta dan hoaks.</p>
-                    </div>
-                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3.5 space-y-1 shadow-xs">
                       <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#366635]">🏅 Koleksi Lencana</h4>
                       <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a]">Raih lencana penghargaan di tiap pencapaian.</p>
                     </div>

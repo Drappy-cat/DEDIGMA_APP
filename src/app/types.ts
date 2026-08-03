@@ -8,7 +8,6 @@ export type Screen =
   | "profil"
   | "peta-misi"
   | "mission-flow"
-  | "tantangan"
   | "pretest"
   | "posttest"
   | "lencana"
@@ -106,7 +105,6 @@ export interface Student {
   activeMission?: string;
   activeStage?: string;
   loginTime?: string;
-  tantangan?: number | string;
   posttest?: number | string;
 }
 
@@ -135,7 +133,6 @@ export interface GameState {
   missions: Record<number, MissionProgress>;
   totalScore: number;
   badges: BadgeId[];
-  tantanganScore: number | null;
   pretest: {
     score: number | null;
   };
@@ -197,7 +194,6 @@ export function createDefaultGameState(): GameState {
     },
     totalScore: 0,
     badges: [],
-    tantanganScore: null,
     pretest: { score: null },
     posttest: { answers: {}, score: null }
   };
