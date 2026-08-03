@@ -209,7 +209,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="relative p-4 sm:p-6 w-[95%] max-w-xl flex flex-col drop-shadow-2xl"
+              className="relative px-8 py-14 sm:px-14 sm:py-20 w-[95%] max-w-xl flex flex-col drop-shadow-2xl"
               style={{
                 backgroundImage: "url('/assets/papan-kayu.svg')",
                 backgroundSize: "100% 100%",
