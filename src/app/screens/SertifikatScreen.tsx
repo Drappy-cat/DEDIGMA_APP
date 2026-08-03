@@ -71,8 +71,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
 
       const canvas = await html2canvas(el, {
         scale: 2, 
-        useCORS: true, 
-        allowTaint: true,
+        useCORS: true,
         backgroundColor: null
       });
 
@@ -122,14 +121,16 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
             {/* The element we convert to image (A4 Landscape ratio) */}
             <div
               ref={certRef}
-              className="relative flex-shrink-0 flex flex-col justify-center items-center text-center font-['Nunito'] w-full h-full"
-              style={{
-                backgroundImage: "url('/assets/bg-sertifikat.svg')",
-                backgroundSize: "100% 100%",
-                backgroundPosition: "center",
-                backgroundRepeat: "no-repeat"
-              }}
+              className="relative flex-shrink-0 flex flex-col justify-center items-center text-center font-['Nunito'] w-full h-full overflow-hidden"
             >
+              {/* Background Image Layer */}
+              <img 
+                src="/assets/bg-sertifikat.svg" 
+                alt="Background" 
+                className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+                crossOrigin="anonymous"
+              />
+
               {/* Fallback border if no image is uploaded yet */}
               <div className="absolute inset-0 border-[12px] border-[#1b3d82] pointer-events-none z-0 opacity-10" />
 
