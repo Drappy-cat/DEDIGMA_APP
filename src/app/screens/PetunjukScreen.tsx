@@ -95,10 +95,6 @@ export const PetunjukScreen: React.FC<PetunjukScreenProps> = ({ onBack, onNext }
           {/* Main Parchment Paper Board */}
           <div className="bg-[#f4ecd5] border-2 border-[#c2aa84] rounded-3xl p-4 sm:p-6 relative overflow-hidden">
 
-            {/* Decorative Blue Pins */}
-            <div className="absolute top-3 left-3 text-xl opacity-80">📌</div>
-            <div className="absolute top-3 right-3 text-xl opacity-80">📌</div>
-
             {/* Wooden Header Sign */}
             <div className="flex justify-center mb-4">
               <div className="bg-[#7e371b] border-2 border-[#572410] rounded-2xl py-1.5 px-6 shadow-md border-b-4 border-r-2 flex items-center justify-center">
