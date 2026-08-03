@@ -74,7 +74,7 @@ export const LencanaScreen: React.FC<LencanaScreenProps> = ({
     return () => {
       stopNarrator();
     };
-  }, [completedMissions.size]);
+  }, [allDone, badges.length, playNarrator, stopNarrator]);
 
   const handleBadgeClick = (badge: BadgeItem) => {
     playSFX("click");

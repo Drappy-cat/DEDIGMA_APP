@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useAudio } from "../contexts/AudioContext";
 
 interface MascotProps {
-  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl" | "6xl" | "7xl" | "lobby";
   animate?: boolean;
   isLobby?: boolean;
   interactive?: boolean;
@@ -41,6 +41,7 @@ export const MascotDimas: React.FC<MascotProps> = ({
     "2xl": "w-60 h-60 sm:w-80 sm:h-80",
     "3xl": "w-28 h-28 xs:w-36 xs:h-36 sm:w-56 sm:h-56 md:w-64 md:h-64 landscape:w-72 landscape:h-72",
     "4xl": "w-72 h-72 sm:w-96 sm:h-96",
+    lobby: "w-44 h-44 xs:w-52 xs:h-52 sm:w-80 sm:h-80 md:w-96 md:h-96",
     "5xl": "w-[30rem] h-[30rem]",
     "6xl": "w-[40rem] h-[40rem]",
     "7xl": "w-[50rem] h-[50rem]"
@@ -135,6 +136,7 @@ export const MascotGita: React.FC<MascotProps> = ({
     "2xl": "w-60 h-60 sm:w-80 sm:h-80",
     "3xl": "w-28 h-28 xs:w-36 xs:h-36 sm:w-56 sm:h-56 md:w-64 md:h-64 landscape:w-72 landscape:h-72",
     "4xl": "w-72 h-72 sm:w-96 sm:h-96",
+    lobby: "w-44 h-44 xs:w-52 xs:h-52 sm:w-80 sm:h-80 md:w-96 md:h-96",
     "5xl": "w-[30rem] h-[30rem]",
     "6xl": "w-[40rem] h-[40rem]",
     "7xl": "w-[50rem] h-[50rem]"

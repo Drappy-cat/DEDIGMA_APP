@@ -16,7 +16,7 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
 
   useEffect(() => {
     playNarrator(
-      `Misi keenam: Ruang Refleksi. Tuliskan pendapat atau perasaanmu setelah mempelajari tradisi ${mission.name}. Tulis minimal 5 huruf ya.`
+      `Ruang Refleksi. Tuliskan pendapat atau perasaanmu setelah mempelajari tradisi ${mission.name}. Tulis minimal 5 huruf ya.`
     );
     return () => {
       stopNarrator();

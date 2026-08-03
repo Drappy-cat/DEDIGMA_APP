@@ -11,7 +11,7 @@ interface ScreenHeaderProps {
 }
 
 export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHome, step }) => {
-  const { audioEnabled, bgmEnabled, toggleBGM, playSFX } = useAudio();
+  const { playSFX, bgmEnabled, toggleBgm, audioEnabled } = useAudio();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleBack = () => {
@@ -26,7 +26,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
 
   const handleBgmToggle = () => {
     playSFX("click");
-    toggleBGM();
+    toggleBgm();
   };
 
   return (

@@ -1,8 +1,6 @@
-import React, { useState, useRef, useEffect } from "react";
-import html2canvas from "html2canvas";
+import React, { useRef, useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
 import { Download, RefreshCw } from "lucide-react";
-import { MISSIONS } from "../data/missions";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { Btn } from "../components/Btn";
 import { useAudio } from "../contexts/AudioContext";
@@ -10,23 +8,24 @@ import { useAudio } from "../contexts/AudioContext";
 interface SertifikatScreenProps {
   studentName: string;
   missionScores: Record<number, number>;
+  pretestScore?: number;
+  posttestScore?: number;
   onBack: () => void;
 }
-
-type Orientation = "landscape" | "portrait";
 
 export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
   studentName,
   missionScores,
+  pretestScore = 0,
+  posttestScore = 0,
   onBack
 }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
-  const [orientation, setOrientation] = useState<Orientation>("landscape");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [scale, setScale] = useState(1);
+  const containerRef = useRef<HTMLDivElement>(null);
   const certRef = useRef<HTMLDivElement>(null);
 
-  const scoreValues = Object.values(missionScores);
-  const avg = scoreValues.length > 0 ? Math.round(scoreValues.reduce((a, b) => a + b, 0) / scoreValues.length) : 0;
   const today = new Date().toLocaleDateString("id-ID", {
     day: "numeric",
     month: "long",
@@ -35,48 +34,175 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
 
   useEffect(() => {
     playNarrator(
-      `Ini adalah sertifikat kelulusan digitalmu, ${studentName}! Pilih orientasi sertifikat mendatar atau tegak, lalu ketuk tombol Simpan Sertifikat.`
+      `Ini adalah sertifikat kelulusan digitalmu, ${studentName}! Nilai Pretest dan Posttest-mu juga tercatat di sini. Ketuk tombol Simpan Sertifikat untuk mengunduhnya.`
     );
     return () => {
       stopNarrator();
     };
   }, []);
 
-  const handleDownloadPdf = async () => {
-    const el = certRef.current;
-    if (!el) return;
+  useEffect(() => {
+    const updateScale = () => {
+      if (containerRef.current) {
+        const { clientWidth, clientHeight } = containerRef.current;
+        const scaleX = clientWidth / 842;
+        const scaleY = clientHeight / 595;
+        // Set scale so it fits inside the container (limit max scale to 1)
+        setScale(Math.min(scaleX, scaleY, 1));
+      }
+    };
 
+    // Small delay to ensure layout is ready
+    setTimeout(updateScale, 100);
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
+
+  const handleDownloadPdf = async () => {
     setIsGenerating(true);
 
     try {
-      // Small delay to ensure rendering completes
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      // A4 Landscape at 300dpi for sharp print quality (2x)
+      const W = 2480;
+      const H = 1754;
 
-      // Capture the element as canvas
-      const canvas = await html2canvas(el, {
-        scale: 2, // high quality
-        useCORS: true, // handles external images
-        allowTaint: true,
-        backgroundColor: "#ffffff"
+      // 1. Load the SVG background as an Image
+      const svgImg = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = `/assets/bg-sertifikat.svg?v=${Date.now()}`;
       });
 
-      const imgData = canvas.toDataURL("image/png");
+      // 2. Create an offscreen canvas
+      const canvas = document.createElement("canvas");
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext("2d")!;
 
-      // Set up PDF properties
-      const isLandscape = orientation === "landscape";
-      const pdf = new jsPDF({
-        orientation: isLandscape ? "landscape" : "portrait",
-        unit: "mm",
-        format: "a4"
-      });
+      // 3. Draw SVG background
+      ctx.drawImage(svgImg, 0, 0, W, H);
 
-      const pdfWidth = isLandscape ? 297 : 210;
-      const pdfHeight = isLandscape ? 210 : 297;
+      // Scale factor: canvas is 2480px wide, HTML preview is 842px wide → 2.946x
+      // All sizes are calculated as: HTML_px * 2.946 / H for H-relative values
+      const SCALE = W / 842; // = 2.946
 
-      // Draw the image onto the page fitting the A4 bounds
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      // 4. Draw student name — Glossy 3D style
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
 
-      // Save the PDF
+      const nameY = H * 0.485;
+      const fontSp = Math.round(36 * SCALE);
+      ctx.font = `900 ${fontSp}px 'Fredoka', 'Nunito', sans-serif`;
+
+      // 3D Depth Layer (dark bronze extrusion shadow for high contrast)
+      const depth = Math.round(3 * (SCALE / 2.946));
+      ctx.fillStyle = "#3d2400";
+      for (let i = depth; i > 0; i--) {
+        ctx.fillText(studentName, W / 2, nameY + i, W * 0.65);
+      }
+
+      // Linear Gradient Fill (Rich Golden Yellow)
+      const textGrad = ctx.createLinearGradient(0, nameY - fontSp / 2, 0, nameY + fontSp / 2);
+      textGrad.addColorStop(0, "#fff7ad");
+      textGrad.addColorStop(0.35, "#ffd700");
+      textGrad.addColorStop(0.7, "#d49b00");
+      textGrad.addColorStop(1, "#996d00");
+
+      ctx.fillStyle = textGrad;
+      ctx.shadowColor = "rgba(61, 36, 0, 0.5)";
+      ctx.shadowBlur = Math.round(6 * SCALE);
+      ctx.shadowOffsetY = Math.round(3 * SCALE);
+      ctx.fillText(studentName, W / 2, nameY, W * 0.65);
+
+      // Dark thin outline stroke to make yellow text pop crystal clear
+      ctx.strokeStyle = "#3d2400";
+      ctx.lineWidth = Math.round(1 * SCALE);
+      ctx.strokeText(studentName, W / 2, nameY, W * 0.65);
+
+      ctx.restore();
+
+      // 5. Draw description text — text-xs = 12px in HTML
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#4a3728";
+      ctx.font = `700 ${Math.round(12 * SCALE)}px 'Nunito', sans-serif`;
+      ctx.fillText(
+        "ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.",
+        W / 2,
+        H * 0.61,
+        W * 0.60
+      );
+      ctx.restore();
+
+      // 6. Draw date — text-[11px] in HTML
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#888888";
+      ctx.font = `italic ${Math.round(11 * SCALE)}px 'Nunito', sans-serif`;
+      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.645);
+      ctx.restore();
+
+      // 7. Circular medal badges — w-20 h-20 = 80px in HTML → R = 40 * SCALE
+      const R = Math.round(40 * SCALE); // medal radius in canvas pixels
+      const medalY = H * 0.72;
+      const pretestCX = W / 2 - R - Math.round(16 * SCALE);
+      const posttestCX = W / 2 + R + Math.round(16 * SCALE);
+
+      const drawMedal = (cx: number, label: string, score: number, darkColor: string, lightColor: string) => {
+        ctx.save();
+
+        // Outer gold ring
+        const gradient = ctx.createRadialGradient(cx, medalY, R * 0.5, cx, medalY, R);
+        gradient.addColorStop(0, "#f5e6a3");
+        gradient.addColorStop(0.5, "#d4a82a");
+        gradient.addColorStop(1, "#a07820");
+        ctx.beginPath();
+        ctx.arc(cx, medalY, R, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        // Inner filled circle
+        const innerGrad = ctx.createRadialGradient(cx - R * 0.2, medalY - R * 0.2, R * 0.05, cx, medalY, R * 0.82);
+        innerGrad.addColorStop(0, lightColor);
+        innerGrad.addColorStop(1, darkColor);
+        ctx.beginPath();
+        ctx.arc(cx, medalY, R * 0.82, 0, Math.PI * 2);
+        ctx.fillStyle = innerGrad;
+        ctx.fill();
+
+        // Label text — text-[8px] in HTML
+        ctx.fillStyle = "rgba(255,255,255,0.88)";
+        ctx.font = `900 ${Math.round(8 * SCALE)}px 'Fredoka', sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(label.toUpperCase(), cx, medalY - R * 0.32);
+
+        // Score text — text-2xl = 24px in HTML
+        ctx.fillStyle = "#ffffff";
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.shadowBlur = Math.round(4 * SCALE);
+        ctx.font = `900 ${Math.round(24 * SCALE)}px 'Fredoka', sans-serif`;
+        ctx.fillText(String(score), cx, medalY + R * 0.22);
+
+        // Bottom star ornament — text-[8px]
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = `${Math.round(8 * SCALE)}px serif`;
+        ctx.fillText("★", cx, medalY + R * 0.70);
+
+        ctx.restore();
+      };
+
+      drawMedal(pretestCX, "Pretest", pretestScore, "#1b3d82", "#3a65c0");
+      drawMedal(posttestCX, "Posttest", posttestScore, "#1d5c1d", "#368a36");
+
+      // 8. Convert canvas to PDF
+      const imgData = canvas.toDataURL("image/png", 1.0);
+      const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+      pdf.addImage(imgData, "PNG", 0, 0, 297, 210);
       pdf.save(`Sertifikat_DEDIGMA_${studentName.replace(/\s+/g, "_")}.pdf`);
       playSFX("badge");
     } catch (err) {
@@ -100,128 +226,98 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       <ScreenHeader title="Sertifikat Digital 🎓" onBack={onBack} />
 
       <div className="flex-1 overflow-y-auto p-4 flex flex-col items-center gap-4">
-        {/* Orientation Toggle Options */}
-        <div className="bg-white rounded-2xl shadow-md p-2.5 flex items-center gap-3 w-full max-w-sm border border-blue-100/40 select-none">
-          <span className="font-['Fredoka'] font-semibold text-blue-800 text-sm flex-1 pl-1.5">
-            Orientasi Sertifikat:
-          </span>
-          <div className="flex bg-blue-50 p-1 rounded-xl gap-1">
-            <button
-              onClick={() => {
-                playSFX("click");
-                setOrientation("landscape");
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-['Fredoka'] font-bold transition-all cursor-pointer ${
-                orientation === "landscape" ? "bg-blue-600 text-white shadow-sm" : "text-blue-600 hover:bg-blue-100"
-              }`}
-            >
-              Landscape
-            </button>
-            <button
-              onClick={() => {
-                playSFX("click");
-                setOrientation("portrait");
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-['Fredoka'] font-bold transition-all cursor-pointer ${
-                orientation === "portrait" ? "bg-blue-600 text-white shadow-sm" : "text-blue-600 hover:bg-blue-100"
-              }`}
-            >
-              Portrait
-            </button>
-          </div>
-        </div>
-
         {/* Certificate Container Wrapper */}
-        <div className="w-full flex justify-center items-center flex-1 max-h-[60vh] md:max-h-[65vh]">
-          {/* Certificate View Container (Forces layout sizes for canvas capture) */}
-          <div className="shadow-2xl rounded-2xl overflow-hidden border-2 border-amber-300 bg-white max-w-full max-h-full aspect-auto flex justify-center items-center relative group">
-            {/* Glossy hologram shimmer glare layer */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none z-30" />
-            {/* The element we convert to image */}
+        <div ref={containerRef} className="w-full flex justify-center items-center flex-1 max-h-[60vh] md:max-h-[65vh] overflow-hidden">
+          
+          <div 
+            className="shadow-2xl rounded-sm overflow-hidden bg-white flex justify-center items-center relative group origin-center transition-transform duration-300"
+            style={{ 
+              width: "842px", 
+              height: "595px",
+              transform: `scale(${scale})`
+            }}
+          >
+            {/* The element we convert to image (A4 Landscape ratio) */}
             <div
               ref={certRef}
-              className={`bg-white border-[12px] border-amber-400 p-6 flex flex-col justify-between items-center text-center font-['Nunito'] relative flex-shrink-0`}
-              style={{
-                width: orientation === "landscape" ? "842px" : "595px",
-                height: orientation === "landscape" ? "595px" : "842px"
-              }}
+              className="relative flex-shrink-0 flex flex-col justify-center items-center text-center font-['Nunito'] w-full h-full overflow-hidden"
             >
-              {/* Decorative Corner Ornaments */}
-              <div className="absolute top-2 left-2 text-2xl opacity-40 select-none">🔍</div>
-              <div className="absolute top-2 right-2 text-2xl opacity-40 select-none">🗺️</div>
-              <div className="absolute bottom-2 left-2 text-2xl opacity-40 select-none">⭐</div>
-              <div className="absolute bottom-2 right-2 text-2xl opacity-40 select-none">🏆</div>
+              {/* Background Image Layer */}
+              <img 
+                src="/assets/bg-sertifikat.svg" 
+                alt="Background" 
+                className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+                crossOrigin="anonymous"
+              />
 
-              {/* Certificate Header Banner */}
-              <div className="w-full bg-gradient-to-r from-blue-700 via-blue-800 to-blue-700 text-white py-4 px-6 rounded-xl shadow-md flex flex-col items-center">
-                <p className="font-['Fredoka'] font-bold text-3xl tracking-widest text-yellow-300 drop-shadow-sm">DEDIGMA</p>
-                <p className="text-blue-200 text-xs font-['Fredoka'] font-medium tracking-wide mt-0.5">
-                  DETEKTIF DIGITAL BUDAYA MAGETAN
-                </p>
-              </div>
+              {/* Fallback border if no image is uploaded yet */}
+              <div className="absolute inset-0 border-[12px] border-[#1b3d82] pointer-events-none z-0 opacity-10" />
 
-              {/* Core Text Body */}
-              <div className="my-auto space-y-4 px-4 w-full">
-                <div className="space-y-1">
-                  <p className="text-gray-400 text-xs tracking-widest font-extrabold uppercase">Sertifikat Kelulusan</p>
-                  <p className="text-gray-500 text-xs font-semibold">Diberikan kepada siswa berprestasi:</p>
-                </div>
-
-                <div className="border-b-4 border-double border-amber-400 pb-2 inline-block px-8 max-w-full">
-                  <h2 className="font-['Fredoka'] font-bold text-3xl text-blue-700 drop-shadow-sm truncate">
+              {/* Dynamic Content */}
+              <div className="relative z-10 w-full px-20 flex flex-col items-center justify-center h-full">
+                
+                {/* Student Name (Glossy 3D Style) */}
+                <div className="absolute top-[48.5%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] text-center">
+                  <h2 
+                    className="font-['Fredoka'] font-black text-4xl capitalize truncate tracking-wide py-1"
+                    style={{
+                      background: "linear-gradient(180deg, #fff7ad 0%, #ffd700 35%, #d49b00 70%, #996d00 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      filter: "drop-shadow(0 2px 0px #3d2400) drop-shadow(0 3px 6px rgba(61, 36, 0, 0.5))"
+                    }}
+                  >
                     {studentName}
                   </h2>
                 </div>
 
-                <p className="text-gray-600 text-sm leading-relaxed max-w-xl mx-auto">
-                  Telah berhasil menyelesaikan seluruh misi petualangan budaya dalam media pembelajaran interaktif{" "}
-                  <strong>DEDIGMA (Detektif Digital Budaya Magetan)</strong> dan membuktikan kompetensi berpikir kritis,
-                  literasi digital, serta kecintaan yang mendalam terhadap budaya lokal Magetan.
-                </p>
-              </div>
+                {/* Content Below Name (Centered) */}
+                <div className="absolute bottom-[16%] left-1/2 -translate-x-1/2 flex flex-col items-center w-full">
+                  
+                  {/* Description */}
+                  <p className="text-[#4a3728] font-bold text-xs leading-relaxed max-w-xl px-4 uppercase text-center mb-0.5">
+                    ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.
+                  </p>
+                  <p className="text-gray-500 font-medium text-[11px] mt-0 italic mb-4">
+                    yang dilaksanakan pada tanggal {today}.
+                  </p>
 
-              {/* Badges and Scores Row */}
-              <div
-                className={`grid gap-4 w-full max-w-lg mb-4 ${
-                  orientation === "landscape" ? "grid-cols-4 items-center" : "grid-cols-2"
-                }`}
-              >
-                {MISSIONS.map((m) => (
-                  <div key={m.id} className="bg-blue-50/70 border border-blue-100/40 rounded-xl p-2 flex flex-col items-center">
-                    <span className="text-2xl filter drop-shadow select-none">{m.emoji}</span>
-                    <p className="font-['Fredoka'] text-blue-700 text-[10px] font-bold mt-1 truncate max-w-full">
-                      {m.name}
-                    </p>
-                    <p className="text-[10px] text-gray-500 font-semibold font-['Nunito']">
-                      Skor: {missionScores[m.id] ?? 0}
-                    </p>
+                  {/* Scores — Circular Medal Badges */}
+                  <div className="flex gap-8 mt-2">
+                    {/* Pretest Medal */}
+                    <div className="relative flex flex-col items-center">
+                      <div
+                        className="w-20 h-20 rounded-full flex flex-col items-center justify-center shadow-lg"
+                        style={{
+                          background: "radial-gradient(circle at 35% 35%, #3a65c0, #1b3d82)",
+                          border: "4px solid #d4a82a",
+                          boxShadow: "0 0 0 2px #a07820, 0 6px 18px rgba(27,61,130,0.35)"
+                        }}
+                      >
+                        <span className="font-['Fredoka'] text-white text-[8px] font-black uppercase tracking-widest leading-none mt-1">Pretest</span>
+                        <span className="font-['Fredoka'] text-white text-2xl font-black leading-tight drop-shadow">{pretestScore}</span>
+                        <span className="text-yellow-200 text-[8px] leading-none">★</span>
+                      </div>
+                    </div>
+
+                    {/* Posttest Medal */}
+                    <div className="relative flex flex-col items-center">
+                      <div
+                        className="w-20 h-20 rounded-full flex flex-col items-center justify-center shadow-lg"
+                        style={{
+                          background: "radial-gradient(circle at 35% 35%, #368a36, #1d5c1d)",
+                          border: "4px solid #d4a82a",
+                          boxShadow: "0 0 0 2px #a07820, 0 6px 18px rgba(29,92,29,0.35)"
+                        }}
+                      >
+                        <span className="font-['Fredoka'] text-white text-[8px] font-black uppercase tracking-widest leading-none mt-1">Posttest</span>
+                        <span className="font-['Fredoka'] text-white text-2xl font-black leading-tight drop-shadow">{posttestScore}</span>
+                        <span className="text-yellow-200 text-[8px] leading-none">★</span>
+                      </div>
+                    </div>
                   </div>
-                ))}
-
-                {/* Avg Badge */}
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-2 flex flex-col items-center justify-center">
-                  <span className="text-2xl filter drop-shadow select-none">🏆</span>
-                  <p className="font-['Fredoka'] text-amber-700 text-[10px] font-bold mt-1">Rata-rata</p>
-                  <p className="text-[10px] text-amber-600 font-bold">{avg}</p>
-                </div>
-              </div>
-
-              {/* Signatures Footer Row */}
-              <div className="w-full flex justify-between items-end px-4 mt-auto">
-                <div className="text-left">
-                  <p className="text-gray-400 text-[10px] font-semibold">{today}</p>
-                  <p className="text-gray-500 text-[11px] font-bold border-t border-gray-200 pt-1 mt-1">Tanggal</p>
                 </div>
 
-                <div className="flex items-center gap-2 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-200 shadow-sm">
-                  <span className="text-lg">🏅</span>
-                  <span className="text-xs font-['Fredoka'] font-bold text-amber-800">Detektif Resmi</span>
-                </div>
-
-                <div className="text-right">
-                  <div className="text-2xl filter drop-shadow select-none">👩‍🏫</div>
-                  <p className="text-gray-500 text-[11px] font-bold border-t border-gray-200 pt-1 mt-1">Pengajar Kelas</p>
-                </div>
               </div>
             </div>
           </div>

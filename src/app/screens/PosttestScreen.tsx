@@ -1,59 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { Award, BookOpen } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { BookOpen } from "lucide-react";
 import { Btn } from "../components/Btn";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useAudio } from "../contexts/AudioContext";
 import { fireConfetti } from "../utils/confetti";
-
+import { POSTTEST_QUESTIONS } from "../data/posttestQuestions";
 interface PosttestScreenProps {
   onComplete: (score: number) => void;
   onBack: () => void;
 }
-
-interface Question {
-  soal: string;
-  opsi: string[];
-  jawaban: number;
-}
-
-const POSTTEST_QUESTIONS: Question[] = [
-  {
-    soal: "Di mana tradisi Larung Sesaji khas Magetan biasanya dilaksanakan?",
-    opsi: ["Pantai Prigi", "Telaga Sarangan", "Waduk Gajah Mungkur", "Telaga Ngebel"],
-    jawaban: 1
-  },
-  {
-    soal: "Kapan masyarakat Magetan umumnya menyelenggarakan tradisi ziarah kubur Nyadaran?",
-    opsi: ["Tahun Baru Masehi", "Menjelang Bulan Ramadan/Puasa", "Hari Raya Idul Adha", "Malam Tahun Baru Jawa"],
-    jawaban: 1
-  },
-  {
-    soal: "Dari manakah asal usul istilah kata 'Ledhug' pada perayaan festival Ledhug Suro?",
-    opsi: ["Dari suara bedug/gendang yang ditabuh", "Dari tarian khas reog", "Dari suara petasan tahun baru", "Dari nama makanan khas Magetan"],
-    jawaban: 0
-  },
-  {
-    soal: "Manakah di bawah ini yang merupakan sumber informasi digital paling terpercaya untuk mencari kebenaran budaya lokal Magetan?",
-    opsi: [
-      "Pesan berantai di grup WhatsApp tanpa sumber penulis",
-      "Situs resmi pemerintah daerah Magetan (.go.id) atau jurnal ilmiah",
-      "Komentar anonim di media sosial TikTok",
-      "Halaman blog pribadi yang bebas ditulis siapa saja"
-    ],
-    jawaban: 1
-  },
-  {
-    soal: "Apa tindakan utama seorang 'Detektif Digital' yang bijak jika menemui berita budaya yang mencurigakan atau janggal?",
-    opsi: [
-      "Langsung membagikan berita tersebut agar viral",
-      "Membiarkannya saja tanpa mencari tahu kebenarannya",
-      "Melakukan verifikasi fakta (cek fakta) dan menganalisis kredibilitas sumber beritanya",
-      "Membuat postingan balasan berisi berita palsu lainnya"
-    ],
-    jawaban: 2
-  }
-];
 
 export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
@@ -63,12 +19,14 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
   useEffect(() => {
     playNarrator(
-      "Selamat datang di Posttest Interaktif DEDIGMA. Jawab 5 pertanyaan evaluasi akhir ini dengan teliti untuk mendapatkan sertifikat kelulusanmu."
+      "Selamat datang di Posttest Interaktif DEDIGMA. Jawab pertanyaan evaluasi akhir ini dengan teliti untuk mendapatkan sertifikat kelulusanmu."
     );
     return () => {
       stopNarrator();
     };
   }, []);
+
+  const [isAnswered, setIsAnswered] = useState(false);
 
   const handleSelect = (idx: number) => {
     if (answers[current] !== null) return;
@@ -82,19 +40,23 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
       playSFX("fail");
     }
 
-    setTimeout(() => {
-      if (current < POSTTEST_QUESTIONS.length - 1) {
-        setCurrent((c) => c + 1);
-      } else {
-        setDone(true);
-        const correctCount = newAnswers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
-        const finalScore = Math.round((correctCount / POSTTEST_QUESTIONS.length) * 100);
+    setIsAnswered(true);
+  };
 
-        fireConfetti();
-        playSFX("badge");
-        playNarrator(`Luar biasa! Kamu menyelesaikan Posttest dengan skor akhir ${finalScore}. Ketuk tombol di bawah untuk melihat sertifikat kelulusanmu.`);
-      }
-    }, 1000);
+  const handleNextQuestion = () => {
+    playSFX("click");
+    if (current < POSTTEST_QUESTIONS.length - 1) {
+      setCurrent((c) => c + 1);
+      setIsAnswered(false);
+    } else {
+      setDone(true);
+      const correctCount = answers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
+      const finalScore = Math.round((correctCount / POSTTEST_QUESTIONS.length) * 100);
+
+      fireConfetti();
+      playSFX("badge");
+      playNarrator(`Luar biasa! Kamu menyelesaikan Posttest dengan skor akhir ${finalScore}. Ketuk tombol di bawah untuk melihat sertifikat kelulusanmu.`);
+    }
   };
 
   const correctCount = answers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
@@ -134,7 +96,9 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
             <p className="text-xs text-gray-500 font-semibold">{correctCount} dari {totalQ} benar</p>
           </div>
 
-          <Btn onClick={() => onComplete(score)} variant="lanjut" className="w-full max-w-xs mt-6" />
+          <Btn onClick={() => onComplete(score)} variant="amber" className="w-full max-w-xs mt-6 py-3 text-lg font-bold">
+            Lihat Sertifikat
+          </Btn>
         </div>
       </div>
     );
@@ -173,13 +137,8 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
         {/* Question container */}
         <div className="flex-1 flex flex-col items-center justify-center p-4">
-          <motion.div
-            key={current}
-            initial={{ x: 30, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -30, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            className="w-full max-w-lg h-[90%] sm:h-full max-h-[650px] shadow-2xl relative flex flex-col justify-between mx-auto"
+          <div
+            className="w-[95%] max-w-none h-[90%] sm:h-full max-h-[650px] shadow-2xl relative flex flex-col justify-between mx-auto"
             style={{
               backgroundImage: "url('/assets/content-bg.png')",
               backgroundSize: "100% 100%",
@@ -193,12 +152,20 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
               <BookOpen size={20} /> Soal Evaluasi
             </h2>
 
-            <div className="px-8 sm:px-12 pt-20 sm:pt-24 select-none flex-1 flex flex-col justify-center">
-              <p className="font-bold text-gray-900 text-sm sm:text-base leading-relaxed mb-6 text-center drop-shadow-sm">{q.soal}</p>
-            </div>
+            <motion.div
+              key={current}
+              initial={{ x: 30, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -30, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="flex-1 flex flex-col justify-between overflow-y-auto"
+            >
+              <div className="px-10 sm:px-16 pt-20 sm:pt-24 select-none flex-1 flex flex-col justify-center">
+                <p className="font-bold text-gray-900 text-sm sm:text-base leading-relaxed mb-6 text-center drop-shadow-sm">{q.soal}</p>
+              </div>
 
             {/* Added pb-14 to avoid overlapping the bottom border */}
-            <div className="px-8 sm:px-12 pb-14 sm:pb-16 space-y-3">
+            <div className="px-10 sm:px-16 pb-14 sm:pb-16 space-y-3">
               {q.opsi.map((o, idx) => {
                 const userAns = answers[current];
                 let btnStyle =
@@ -228,9 +195,61 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
                 );
               })}
             </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
+      
+      {/* Modal Feedback Popup */}
+      <AnimatePresence>
+        {isAnswered && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="relative px-8 py-14 sm:px-24 sm:py-32 w-[95%] max-w-4xl flex flex-col drop-shadow-2xl"
+              style={{
+                backgroundImage: "url('/assets/papan-kayu.svg')",
+                backgroundSize: "100% 100%",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundColor: "transparent",
+                minHeight: "600px"
+              }}
+            >
+              <div className="w-full max-w-md mx-auto flex flex-col">
+                <div className="flex items-center gap-3 mb-4 mt-2">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-sm border-2 ${
+                    answers[current] === q.jawaban ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'
+                  }`}>
+                    {answers[current] === q.jawaban ? '✅' : '❌'}
+                  </div>
+                  <div>
+                    <h3 className={`font-['Fredoka'] font-bold text-xl drop-shadow-sm ${
+                      answers[current] === q.jawaban ? 'text-green-700' : 'text-red-700'
+                    }`}>
+                      {answers[current] === q.jawaban ? 'Tepat Sekali!' : 'Kurang Tepat!'}
+                    </h3>
+                    <p className="text-amber-900/70 text-xs font-bold tracking-widest">PEMBAHASAN</p>
+                  </div>
+                </div>
+                
+                <div className="bg-amber-50/90 backdrop-blur-sm rounded-2xl p-4 border border-amber-200/50 mb-10 max-h-48 overflow-y-auto custom-scrollbar shadow-inner">
+                  <p className="text-amber-950 text-sm leading-relaxed font-semibold">
+                    {q.pembahasan || 'Jawaban telah direkam.'}
+                  </p>
+                </div>
+                
+                <Btn onClick={handleNextQuestion} variant="blue" className="w-full py-3.5 text-base shadow-lg border-2 border-blue-300 mb-2">
+                  {current < POSTTEST_QUESTIONS.length - 1 ? 'Lanjut ke Soal Berikutnya' : 'Selesai Posttest'}
+                </Btn>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

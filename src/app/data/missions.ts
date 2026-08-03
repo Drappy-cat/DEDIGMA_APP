@@ -330,18 +330,4 @@ export const ACTIVITY_LABELS: Record<string, string> = {
   "detektif-berita": "Detektif Berita"
 };
 
-// Combined challenge questions from all 3 missions for Scene 17
-export const TANTANGAN_QUESTIONS = [
-  // From Larung Sesaji
-  { soal: "Di mana tradisi Larung Sesaji dilaksanakan?", opsi: ["Pantai Selatan", "Telaga Sarangan", "Waduk Gajah Mungkur", "Sungai Bengawan Solo"], jawaban: 1, misiAsal: 1 },
-  { soal: "Apa makna utama dari tradisi Larung Sesaji?", opsi: ["Mencari ikan", "Mengusir roh jahat", "Wujud syukur kepada Tuhan", "Olahraga air"], jawaban: 2, misiAsal: 1 },
-  { soal: "Nilai budaya apa yang tercermin dalam Larung Sesaji?", opsi: ["Persaingan", "Gotong Royong", "Individualisme", "Keserakahan"], jawaban: 1, misiAsal: 1 },
-  // From Nyadaran
-  { soal: "Apa kegiatan utama dalam tradisi Nyadaran?", opsi: ["Larung sesaji ke danau", "Ziarah & bersihkan makam leluhur", "Pertunjukan wayang", "Lomba lari desa"], jawaban: 1, misiAsal: 2 },
-  { soal: "Kapan biasanya tradisi Nyadaran dilakukan?", opsi: ["Hari kemerdekaan", "Menjelang bulan Ramadan", "Hari raya Natal", "Tahun Baru Masehi"], jawaban: 1, misiAsal: 2 },
-  { soal: "Nilai utama yang paling menonjol dalam Nyadaran adalah...", opsi: ["Persaingan", "Keserakahan", "Hormat kepada leluhur", "Kemewahan"], jawaban: 2, misiAsal: 2 },
-  // From Ledhug Suro
-  { soal: "Apa arti kata 'Ledhug' dalam tradisi Ledhug Suro?", opsi: ["Nama makanan khas", "Bunyi bedug/gendang", "Tarian sakral", "Nama tokoh sejarah"], jawaban: 1, misiAsal: 3 },
-  { soal: "Kapan perayaan Ledhug Suro dilaksanakan?", opsi: ["Tahun Baru Masehi", "1 Muharram/Suro (Tahun Baru Jawa)", "Hari Kartini", "Bulan Ramadan"], jawaban: 1, misiAsal: 3 },
-  { soal: "Apa yang membuat Ledhug Suro menjadi unik di Magetan?", opsi: ["Hanya menampilkan tari modern", "Menggabungkan tradisi Islam dan budaya Jawa", "Hanya diikuti oleh pejabat", "Dilarang untuk umum"], jawaban: 1, misiAsal: 3 }
-];
+

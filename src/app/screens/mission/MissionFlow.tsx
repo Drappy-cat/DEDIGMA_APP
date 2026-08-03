@@ -29,7 +29,7 @@ const stageIcons: Record<string, React.ReactNode> = {
 };
 
 export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete, onHome }) => {
-  const mission = MISSIONS.find((m) => m.id === missionId)!;
+  const mission = MISSIONS.find((m) => m.id === missionId) || MISSIONS[0];
   const [stage, setStage] = useState<MissionStage>("orientasi");
   const [activityScore, setActivityScore] = useState<number>(0);
   const [unlockedIndex, setUnlockedIndex] = useState<number>(0);

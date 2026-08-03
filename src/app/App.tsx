@@ -12,7 +12,7 @@ const PetunjukScreen = lazy(() => import("./screens/PetunjukScreen").then((m) =>
 const TujuanScreen = lazy(() => import("./screens/TujuanScreen").then((m) => ({ default: m.TujuanScreen })));
 const ProfilScreen = lazy(() => import("./screens/ProfilScreen").then((m) => ({ default: m.ProfilScreen })));
 const PetaMisiScreen = lazy(() => import("./screens/PetaMisiScreen").then((m) => ({ default: m.PetaMisiScreen })));
-const TantanganScreen = lazy(() => import("./screens/mission/TantanganScreen").then((m) => ({ default: m.TantanganScreen })));
+const PretestScreen = lazy(() => import("./screens/PretestScreen").then((m) => ({ default: m.PretestScreen })));
 const PosttestScreen = lazy(() => import("./screens/PosttestScreen").then((m) => ({ default: m.PosttestScreen })));
 const LencanaScreen = lazy(() => import("./screens/LencanaScreen").then((m) => ({ default: m.LencanaScreen })));
 const SertifikatScreen = lazy(() => import("./screens/SertifikatScreen").then((m) => ({ default: m.SertifikatScreen })));
@@ -48,6 +48,7 @@ function DemoPanel({
   setScreen,
   setCompletedMissions,
   setMissionScores,
+  setPretestScore,
   setPosttestScore,
   setCurrentMissionId
 }: {
@@ -55,6 +56,7 @@ function DemoPanel({
   setScreen: (s: Screen) => void;
   setCompletedMissions: (m: Set<number>) => void;
   setMissionScores: (s: Record<number, number>) => void;
+  setPretestScore: (s: number | null) => void;
   setPosttestScore: (s: number | null) => void;
   setCurrentMissionId: (id: number) => void;
 }) {
@@ -67,7 +69,7 @@ function DemoPanel({
     return isLoggedIn && screen === targetScreen;
   };
 
-  const handleSwitch = (target: "siswa-peta" | "guru-dashboard" | "login" | "splash" | "posttest" | "lencana" | "petunjuk" | "tujuan" | "tantangan" | "misi-1" | "misi-2" | "misi-3" | "sertifikat") => {
+  const handleSwitch = (target: "siswa-peta" | "guru-dashboard" | "login" | "splash" | "pretest" | "posttest" | "lencana" | "petunjuk" | "tujuan" | "misi-1" | "misi-2" | "misi-3" | "sertifikat") => {
     if (target === "login") {
       logout();
       setScreen("login");
@@ -85,9 +87,9 @@ function DemoPanel({
         setScreen("petunjuk");
       } else if (target === "tujuan") {
         setScreen("tujuan");
-      } else if (target === "tantangan") {
-        setCompletedMissions(new Set([1, 2, 3]));
-        setScreen("tantangan");
+      } else if (target === "pretest") {
+        setPretestScore(null);
+        setScreen("pretest");
       } else if (target === "misi-1") {
         setCurrentMissionId(1);
         setScreen("mission-flow");
@@ -99,6 +101,7 @@ function DemoPanel({
         setScreen("mission-flow");
       } else if (target === "posttest") {
         setCompletedMissions(new Set([1, 2, 3]));
+        setPretestScore(null);
         setPosttestScore(null);
         setScreen("posttest");
       } else if (target === "lencana") {
@@ -157,6 +160,9 @@ function DemoPanel({
             <button onClick={() => handleSwitch("tujuan")} className={`${btnClass} ${isActive("tujuan", "siswa") ? activeClass : inactiveClass}`}>
               <span>🎯</span> Tujuan Misi
             </button>
+            <button onClick={() => handleSwitch("pretest")} className={`${btnClass} ${isActive("pretest", "siswa") ? activeClass : inactiveClass}`}>
+              <span>📝</span> Pretest Kuis
+            </button>
           </div>
 
           <div className="space-y-1">
@@ -177,9 +183,6 @@ function DemoPanel({
 
           <div className="space-y-1">
             <div className="text-[9px] font-bold text-slate-500 uppercase tracking-wider ml-1 mb-1">Akhir (Syarat Selesai Misi)</div>
-            <button onClick={() => handleSwitch("tantangan")} className={`${btnClass} ${isActive("tantangan", "siswa") ? activeClass : inactiveClass}`}>
-              <span>🧩</span> Tantangan
-            </button>
             <button onClick={() => handleSwitch("posttest")} className={`${btnClass} ${isActive("posttest", "siswa") ? activeClass : inactiveClass}`}>
               <span>📝</span> Posttest Kuis
             </button>
@@ -203,6 +206,7 @@ function AppContent() {
   const [currentMissionId, setCurrentMissionId] = useState<number>(1);
   const [completedMissions, setCompletedMissions] = useState<Set<number>>(new Set());
   const [missionScores, setMissionScores] = useState<Record<number, number>>({});
+  const [pretestScore, setPretestScore] = useState<number | null>(null);
   const [posttestScore, setPosttestScore] = useState<number | null>(null);
   const [gameState, setGameState] = useState<GameState>(loadGameState());
 
@@ -235,6 +239,9 @@ function AppContent() {
         }
         setCompletedMissions(completed);
         setMissionScores(scores);
+        if (loaded.pretest && loaded.pretest.score !== null) {
+          setPretestScore(loaded.pretest.score);
+        }
         if (loaded.posttest.score !== null) {
           setPosttestScore(loaded.posttest.score);
         }
@@ -310,7 +317,7 @@ function AppContent() {
 
               {screen === "splash" && (
                 <SplashScreen
-                  onMulai={() => navigateTo("peta-misi")}
+                  onMulai={() => navigateTo(pretestScore === null ? "pretest" : "peta-misi")}
                   onPetunjuk={() => navigateTo("petunjuk")}
                   onProfil={() => navigateTo("profil")}
                 />
@@ -345,9 +352,7 @@ function AppContent() {
                       <Btn
                         onClick={() =>
                           navigateTo(
-                            gameState.tantanganScore === null
-                              ? "tantangan"
-                              : posttestScore === null
+                            posttestScore === null
                               ? "posttest"
                               : "lencana"
                           )
@@ -355,9 +360,7 @@ function AppContent() {
                         variant="amber"
                         className="w-full text-lg px-8 py-4 shadow-2xl justify-center font-bold"
                       >
-                        {gameState.tantanganScore === null
-                          ? "Tantangan DEDIGMA"
-                          : posttestScore === null
+                        {posttestScore === null
                           ? "Posttest Interaktif"
                           : "Lencana & Sertifikat"}
                       </Btn>
@@ -374,20 +377,21 @@ function AppContent() {
                 />
               )}
 
-              {screen === "tantangan" && (
-                <TantanganScreen
-                  onFinish={(score) => {
+              {screen === "pretest" && (
+                <PretestScreen
+                  onComplete={(score) => {
+                    setPretestScore(score);
                     setGameState((prev) => {
                       const updated = {
                         ...prev,
-                        tantanganScore: score
+                        pretest: { score }
                       };
                       saveGameState(updated);
                       return updated;
                     });
-                    navigateTo("posttest");
+                    navigateTo("peta-misi");
                   }}
-                  onBack={() => navigateTo("peta-misi")}
+                  onBack={() => navigateTo("splash")}
                 />
               )}
 
@@ -422,6 +426,8 @@ function AppContent() {
                 <SertifikatScreen
                   studentName={userName}
                   missionScores={missionScores}
+                  pretestScore={pretestScore}
+                  posttestScore={posttestScore}
                   onBack={() => navigateTo("splash")}
                 />
               )}
@@ -435,6 +441,7 @@ function AppContent() {
         setScreen={setScreen}
         setCompletedMissions={setCompletedMissions}
         setMissionScores={setMissionScores}
+        setPretestScore={setPretestScore}
         setPosttestScore={setPosttestScore}
         setCurrentMissionId={setCurrentMissionId}
       />

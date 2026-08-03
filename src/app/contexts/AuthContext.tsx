@@ -59,6 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Clear student progress upon logout as well
     localStorage.removeItem("dedigma_completed_missions");
     localStorage.removeItem("dedigma_mission_scores");
+    localStorage.removeItem("dedigma_game_state");
   };
 
   const isLoggedIn = role !== null;

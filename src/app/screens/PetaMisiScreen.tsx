@@ -58,7 +58,12 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
       const saved = localStorage.getItem("dedigma_mission_locks");
       if (saved) {
         const locks = JSON.parse(saved);
-        return Boolean(locks[`Semua-${missionId}`] || locks[`5A-${missionId}`]);
+        return Boolean(
+          locks[`Semua-${missionId}`] ||
+          locks[`5A-${missionId}`] ||
+          locks[`5B-${missionId}`] ||
+          locks[`5C-${missionId}`]
+        );
       }
     } catch {}
     return false;
