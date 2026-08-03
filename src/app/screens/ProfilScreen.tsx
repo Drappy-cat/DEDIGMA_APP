@@ -131,9 +131,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
           {/* Main Parchment Paper Container */}
           <div className="bg-[#f4ecd5] border-2 border-[#c2aa84] rounded-3xl p-4 sm:p-6 flex-1 overflow-y-auto space-y-5 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden relative">
 
-            {/* Decorative Pins */}
-            <div className="absolute top-3 left-3 text-xl opacity-80">📌</div>
-            <div className="absolute top-3 right-3 text-xl opacity-80">📌</div>
+
 
             {/* Wooden Header Sign Banner */}
             <div className="flex justify-center mb-4">
