@@ -13,6 +13,7 @@ const TujuanScreen = lazy(() => import("./screens/TujuanScreen").then((m) => ({ 
 const ProfilScreen = lazy(() => import("./screens/ProfilScreen").then((m) => ({ default: m.ProfilScreen })));
 const PetaMisiScreen = lazy(() => import("./screens/PetaMisiScreen").then((m) => ({ default: m.PetaMisiScreen })));
 const TantanganScreen = lazy(() => import("./screens/mission/TantanganScreen").then((m) => ({ default: m.TantanganScreen })));
+const PretestScreen = lazy(() => import("./screens/PretestScreen").then((m) => ({ default: m.PretestScreen })));
 const PosttestScreen = lazy(() => import("./screens/PosttestScreen").then((m) => ({ default: m.PosttestScreen })));
 const LencanaScreen = lazy(() => import("./screens/LencanaScreen").then((m) => ({ default: m.LencanaScreen })));
 const SertifikatScreen = lazy(() => import("./screens/SertifikatScreen").then((m) => ({ default: m.SertifikatScreen })));
@@ -99,7 +100,8 @@ function DemoPanel({
         setScreen("mission-flow");
       } else if (target === "posttest") {
         setCompletedMissions(new Set([1, 2, 3]));
-        setPosttestScore(null);
+        setPretestScore(null);
+      setPosttestScore(null);
         setScreen("posttest");
       } else if (target === "lencana") {
         setCompletedMissions(new Set([1, 2, 3]));
@@ -203,6 +205,7 @@ function AppContent() {
   const [currentMissionId, setCurrentMissionId] = useState<number>(1);
   const [completedMissions, setCompletedMissions] = useState<Set<number>>(new Set());
   const [missionScores, setMissionScores] = useState<Record<number, number>>({});
+  const [pretestScore, setPretestScore] = useState<number | null>(null);
   const [posttestScore, setPosttestScore] = useState<number | null>(null);
   const [gameState, setGameState] = useState<GameState>(loadGameState());
 
@@ -235,6 +238,9 @@ function AppContent() {
         }
         setCompletedMissions(completed);
         setMissionScores(scores);
+        if (loaded.pretest && loaded.pretest.score !== null) {
+          setPretestScore(loaded.pretest.score);
+        }
         if (loaded.posttest.score !== null) {
           setPosttestScore(loaded.posttest.score);
         }
@@ -310,7 +316,7 @@ function AppContent() {
 
               {screen === "splash" && (
                 <SplashScreen
-                  onMulai={() => navigateTo("peta-misi")}
+                  onMulai={() => navigateTo(pretestScore === null ? "pretest" : "peta-misi")}
                   onPetunjuk={() => navigateTo("petunjuk")}
                   onProfil={() => navigateTo("profil")}
                 />
@@ -388,6 +394,24 @@ function AppContent() {
                     navigateTo("posttest");
                   }}
                   onBack={() => navigateTo("peta-misi")}
+                />
+              )}
+
+              {screen === "pretest" && (
+                <PretestScreen
+                  onComplete={(score) => {
+                    setPretestScore(score);
+                    setGameState((prev) => {
+                      const updated = {
+                        ...prev,
+                        pretest: { score }
+                      };
+                      saveGameState(updated);
+                      return updated;
+                    });
+                    navigateTo("peta-misi");
+                  }}
+                  onBack={() => navigateTo("splash")}
                 />
               )}
 

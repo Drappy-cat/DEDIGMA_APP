@@ -9,6 +9,7 @@ export type Screen =
   | "peta-misi"
   | "mission-flow"
   | "tantangan"
+  | "pretest"
   | "posttest"
   | "lencana"
   | "sertifikat"
@@ -125,6 +126,9 @@ export interface GameState {
   totalScore: number;
   badges: BadgeId[];
   tantanganScore: number | null;
+  pretest: {
+    score: number | null;
+  };
   posttest: {
     answers: Record<number, number>;
     score: number | null;
@@ -184,6 +188,7 @@ export function createDefaultGameState(): GameState {
     totalScore: 0,
     badges: [],
     tantanganScore: null,
+    pretest: { score: null },
     posttest: { answers: {}, score: null }
   };
 }
