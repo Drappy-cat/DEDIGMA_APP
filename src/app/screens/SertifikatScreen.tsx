@@ -107,7 +107,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       ctx.fillText(
         "ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.",
         W / 2,
-        H * 0.68,
+        H * 0.61,
         W * 0.60
       );
       ctx.restore();
@@ -117,12 +117,12 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       ctx.textAlign = "center";
       ctx.fillStyle = "#888888";
       ctx.font = `italic ${Math.round(11 * SCALE)}px 'Nunito', sans-serif`;
-      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.715);
+      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.645);
       ctx.restore();
 
       // 7. Circular medal badges — w-20 h-20 = 80px in HTML → R = 40 * SCALE
       const R = Math.round(40 * SCALE); // medal radius in canvas pixels
-      const medalY = H * 0.785;
+      const medalY = H * 0.72;
       const pretestCX = W / 2 - R - Math.round(16 * SCALE);
       const posttestCX = W / 2 + R + Math.round(16 * SCALE);
 
@@ -239,7 +239,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
                 </div>
 
                 {/* Content Below Name (Centered) */}
-                <div className="absolute bottom-[16%] left-1/2 -translate-x-1/2 flex flex-col items-center w-full">
+                <div className="absolute bottom-[22%] left-1/2 -translate-x-1/2 flex flex-col items-center w-full">
                   
                   {/* Description */}
                   <p className="text-[#4a3728] font-bold text-xs leading-relaxed max-w-xl px-4 uppercase text-center mb-0.5">
