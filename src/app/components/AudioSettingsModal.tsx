@@ -67,7 +67,17 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
           </div>
 
           {/* Navigation Tabs */}
-          <div className="grid grid-cols-2 gap-2 bg-slate-800/80 p-1 rounded-2xl border border-slate-700 relative">
+          <div className="grid grid-cols-2 gap-2 bg-slate-800/80 p-1 rounded-2xl border border-slate-700 relative select-none">
+            {/* Smooth Horizontal Sliding Pill Indicator */}
+            <motion.div
+              className="absolute top-1 bottom-1 w-[calc(50%-0.375rem)] bg-amber-500 rounded-xl shadow-md z-0"
+              initial={false}
+              animate={{
+                left: activeTab === "audio" ? "0.25rem" : "calc(50% + 0.125rem)"
+              }}
+              transition={{ type: "spring", stiffness: 500, damping: 35 }}
+            />
+
             <button
               type="button"
               onClick={() => {
@@ -79,13 +89,6 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
               }`}
             >
               <Volume2 size={14} /> Suara & Audio
-              {activeTab === "audio" && (
-                <motion.div
-                  layoutId="activeTabIndicator"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  className="absolute inset-0 bg-amber-500 rounded-xl -z-10 shadow-md"
-                />
-              )}
             </button>
 
             <button
@@ -99,13 +102,6 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
               }`}
             >
               <Info size={14} /> Tentang Game
-              {activeTab === "about" && (
-                <motion.div
-                  layoutId="activeTabIndicator"
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  className="absolute inset-0 bg-amber-500 rounded-xl -z-10 shadow-md"
-                />
-              )}
             </button>
           </div>
 
