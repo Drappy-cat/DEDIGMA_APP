@@ -84,25 +84,25 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       // 3. Draw SVG background
       ctx.drawImage(svgImg, 0, 0, W, H);
 
-      // 4. Draw student name — positioned to match preview (below Diberikan Kepada)
+      // 4. Draw student name — positioned higher up (matching top-[42.5%])
       ctx.save();
       ctx.textAlign = "center";
       ctx.fillStyle = "#1b3d82";
-      ctx.font = `bold ${Math.round(H * 0.075)}px 'Fredoka', 'Nunito', sans-serif`;
-      ctx.shadowColor = "rgba(0,0,0,0.2)";
-      ctx.shadowBlur = 12;
-      ctx.fillText(studentName, W / 2, H * 0.52, W * 0.65);
+      ctx.font = `bold ${Math.round(H * 0.07)}px 'Fredoka', 'Nunito', sans-serif`;
+      ctx.shadowColor = "rgba(0,0,0,0.15)";
+      ctx.shadowBlur = 10;
+      ctx.fillText(studentName, W / 2, H * 0.44, W * 0.65);
       ctx.restore();
 
       // 5. Draw description text
       ctx.save();
       ctx.textAlign = "center";
       ctx.fillStyle = "#4a3728";
-      ctx.font = `700 ${Math.round(H * 0.025)}px 'Nunito', sans-serif`;
+      ctx.font = `700 ${Math.round(H * 0.024)}px 'Nunito', sans-serif`;
       ctx.fillText(
         "ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.",
         W / 2,
-        H * 0.75,
+        H * 0.68,
         W * 0.60
       );
       ctx.restore();
@@ -111,54 +111,54 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       ctx.save();
       ctx.textAlign = "center";
       ctx.fillStyle = "#888888";
-      ctx.font = `italic ${Math.round(H * 0.020)}px 'Nunito', sans-serif`;
-      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.785);
+      ctx.font = `italic ${Math.round(H * 0.019)}px 'Nunito', sans-serif`;
+      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.715);
       ctx.restore();
 
-      // 7. Score cards positioned to match preview
-      const cardW = 420;
-      const cardH = 190;
-      const cardY = H * 0.825;
-      const pretestX = W / 2 - cardW - 30;
-      const posttestX = W / 2 + 30;
+      // 7. Score cards (smaller & positioned higher)
+      const cardW = 280;
+      const cardH = 120;
+      const cardY = H * 0.75;
+      const pretestX = W / 2 - cardW - 20;
+      const posttestX = W / 2 + 20;
 
       const drawScoreCard = (x: number, label: string, score: number, color: string) => {
         ctx.save();
         ctx.fillStyle = "#f8f3e6";
         ctx.strokeStyle = "#d9c5a3";
-        ctx.lineWidth = 6;
+        ctx.lineWidth = 4;
         ctx.beginPath();
-        ctx.roundRect(x, cardY, cardW, cardH, 28);
+        ctx.roundRect(x, cardY, cardW, cardH, 18);
         ctx.fill();
         ctx.stroke();
 
         // Inner card
         ctx.fillStyle = "rgba(255,255,255,0.5)";
         ctx.strokeStyle = "#c2aa84";
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.roundRect(x + 10, cardY + 10, cardW - 20, cardH - 20, 20);
+        ctx.roundRect(x + 6, cardY + 6, cardW - 12, cardH - 12, 14);
         ctx.fill();
         ctx.stroke();
 
         // Label
         ctx.fillStyle = "#7e371b";
-        ctx.font = `800 ${Math.round(H * 0.032)}px 'Fredoka', sans-serif`;
+        ctx.font = `800 ${Math.round(H * 0.021)}px 'Fredoka', sans-serif`;
         ctx.textAlign = "center";
         ctx.fillText(label.toUpperCase(), x + cardW / 2, cardY + cardH * 0.38);
 
         // Divider
         ctx.strokeStyle = "#d9c5a3";
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(x + 30, cardY + cardH * 0.52);
-        ctx.lineTo(x + cardW - 30, cardY + cardH * 0.52);
+        ctx.moveTo(x + 20, cardY + cardH * 0.50);
+        ctx.lineTo(x + cardW - 20, cardY + cardH * 0.50);
         ctx.stroke();
 
         // Score
         ctx.fillStyle = color;
-        ctx.font = `800 ${Math.round(H * 0.075)}px 'Fredoka', sans-serif`;
-        ctx.fillText(String(score), x + cardW / 2, cardY + cardH * 0.90);
+        ctx.font = `800 ${Math.round(H * 0.048)}px 'Fredoka', sans-serif`;
+        ctx.fillText(String(score), x + cardW / 2, cardY + cardH * 0.88);
         ctx.restore();
       };
 
@@ -230,33 +230,33 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
                 </div>
 
                 {/* Content Below Name (Centered) */}
-                <div className="absolute bottom-[12%] left-1/2 -translate-x-1/2 flex flex-col items-center w-full">
+                <div className="absolute bottom-[16%] left-1/2 -translate-x-1/2 flex flex-col items-center w-full">
                   
                   {/* Description */}
-                  <p className="text-[#4a3728] font-bold text-sm leading-relaxed max-w-xl px-4 uppercase text-center mb-1">
+                  <p className="text-[#4a3728] font-bold text-xs leading-relaxed max-w-xl px-4 uppercase text-center mb-0.5">
                     ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.
                   </p>
-                  <p className="text-gray-500 font-medium text-xs mt-0 italic mb-6">
+                  <p className="text-gray-500 font-medium text-[11px] mt-0 italic mb-4">
                     yang dilaksanakan pada tanggal {today}.
                   </p>
 
-                  {/* Scores Cards (Pretest & Posttest) */}
-                  <div className="flex gap-10">
-                    <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-1 shadow-lg w-[160px]">
-                      <div className="border border-[#c2aa84] rounded-xl py-3 px-4 flex flex-col items-center justify-center bg-white/50 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-16 h-16 bg-blue-100/40 rounded-full blur-xl -mr-8 -mt-8"></div>
-                        <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-xs uppercase tracking-widest relative z-10">Pretest</p>
-                        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1.5 relative z-10"></div>
-                        <p className="font-['Fredoka'] font-extrabold text-4xl text-[#1b3d82] relative z-10 drop-shadow-sm">{pretestScore}</p>
+                  {/* Scores Cards (Pretest & Posttest) - Smaller */}
+                  <div className="flex gap-6">
+                    <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-xl p-0.5 shadow-md w-[130px]">
+                      <div className="border border-[#c2aa84] rounded-lg py-1.5 px-3 flex flex-col items-center justify-center bg-white/50 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-12 h-12 bg-blue-100/40 rounded-full blur-lg -mr-6 -mt-6"></div>
+                        <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-[10px] uppercase tracking-widest relative z-10">Pretest</p>
+                        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1 relative z-10"></div>
+                        <p className="font-['Fredoka'] font-extrabold text-2xl text-[#1b3d82] relative z-10 drop-shadow-sm leading-tight">{pretestScore}</p>
                       </div>
                     </div>
                     
-                    <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-1 shadow-lg w-[160px]">
-                      <div className="border border-[#c2aa84] rounded-xl py-3 px-4 flex flex-col items-center justify-center bg-white/50 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-16 h-16 bg-green-100/40 rounded-full blur-xl -mr-8 -mt-8"></div>
-                        <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-xs uppercase tracking-widest relative z-10">Posttest</p>
-                        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1.5 relative z-10"></div>
-                        <p className="font-['Fredoka'] font-extrabold text-4xl text-[#366635] relative z-10 drop-shadow-sm">{posttestScore}</p>
+                    <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-xl p-0.5 shadow-md w-[130px]">
+                      <div className="border border-[#c2aa84] rounded-lg py-1.5 px-3 flex flex-col items-center justify-center bg-white/50 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-12 h-12 bg-green-100/40 rounded-full blur-lg -mr-6 -mt-6"></div>
+                        <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-[10px] uppercase tracking-widest relative z-10">Posttest</p>
+                        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1 relative z-10"></div>
+                        <p className="font-['Fredoka'] font-extrabold text-2xl text-[#366635] relative z-10 drop-shadow-sm leading-tight">{posttestScore}</p>
                       </div>
                     </div>
                   </div>
