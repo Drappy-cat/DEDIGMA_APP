@@ -211,7 +211,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
               className="relative p-6 sm:p-10 w-[95%] max-w-md shadow-2xl flex flex-col"
               style={{
-                backgroundImage: "url('/assets/board-blank.png')",
+                backgroundImage: "url('/assets/papan-kayu.svg')",
                 backgroundSize: "100% 100%",
                 backgroundRepeat: "no-repeat",
                 backgroundColor: "transparent",
