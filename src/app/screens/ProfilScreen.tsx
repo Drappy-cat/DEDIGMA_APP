@@ -285,58 +285,57 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
                   {/* DOSEN PEMBIMBING */}
                   <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-4 shadow-sm space-y-3">
                     <div className="flex items-center gap-2 border-b border-[#d8c7a5] pb-2">
-                      <span className="text-2xl">🎓</span>
+                           <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-4 shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-amber-200/40 rounded-full blur-2xl -mr-10 -mt-10"></div>
+                    <div className="flex items-center gap-3 mb-3 relative z-10">
+                      <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-xl shadow-inner border border-amber-200">
+                        👨‍🏫
+                      </div>
                       <div>
                         <h3 className="font-['Fredoka'] font-extrabold text-base text-[#7e371b]">
-                          Dosen Pembimbing / Advisor Utama
+                          Dosen Pembimbing
                         </h3>
-                        <p className="text-[11px] text-[#5c4a3a] font-semibold">Penanggung Jawab & Pengarah Riset</p>
+                        <p className="text-[11px] text-[#5c4a3a] font-semibold">Penasihat Riset & Pengembangan</p>
                       </div>
                     </div>
-                    <div className="space-y-1 text-[#4a3728]">
-                      <h4 className="font-['Fredoka'] font-extrabold text-lg text-[#1b3d82]">
-                        [ Nama Dosen Pembimbing, M.Pd. ]
-                      </h4>
-                      <p className="font-['Nunito'] font-bold text-xs text-[#7e371b]">NIP. [ Nomor NIP Dosen ]</p>
-                      <p className="font-['Nunito'] font-semibold text-xs leading-relaxed pt-1">
-                        "Pengembangan edutainment DEDIGMA diharapkan mampu mencetak generasi muda Magetan yang kritis, bijak bermedia digital, dan bangga akan warisan budaya lokal."
-                      </p>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10 mt-2 border-t border-[#d8c7a5] pt-4">
+                      <div className="space-y-1 text-[#4a3728]">
+                        <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#1b3d82]">
+                          Prof. Drs. Nasution, M.Hum., M.Ed., Ph.D.
+                        </h4>
+                        <p className="font-['Nunito'] font-bold text-xs text-[#7e371b]">NIP. 196608021992121001</p>
+                        <p className="font-['Nunito'] font-semibold text-[10px] bg-white/50 px-2 py-1 rounded-md inline-block mt-1">Dosen Pembimbing 1</p>
+                      </div>
+                      <div className="space-y-1 text-[#4a3728]">
+                        <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#1b3d82]">
+                          Dr. Putri Rachmadyanti, S.Pd., M.Pd.
+                        </h4>
+                        <p className="font-['Nunito'] font-bold text-xs text-[#7e371b]">NIP. 198906022015042001</p>
+                        <p className="font-['Nunito'] font-semibold text-[10px] bg-white/50 px-2 py-1 rounded-md inline-block mt-1">Dosen Pembimbing 2</p>
+                      </div>
                     </div>
                   </div>
 
-                  {/* 3 DEVELOPERS */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3 text-center space-y-2 shadow-xs">
-                      <span className="text-3xl">💻</span>
-                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#1b3d82]">
-                        [ Nama Pengembang 1 ]
-                      </h4>
-                      <p className="font-['Fredoka'] font-bold text-[10px] text-[#7e371b] uppercase">Lead Developer</p>
-                      <p className="font-['Nunito'] font-semibold text-[11px] text-[#5c4a3a] leading-snug">
-                        Merancang arsitektur aplikasi dan logika game state DEDIGMA.
-                      </p>
+                  <div className="grid grid-cols-1 gap-3">
+                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+                      <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-3xl shadow-inner border border-blue-200 shrink-0">
+                        🎓
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="font-['Fredoka'] font-extrabold text-base text-[#7e371b]">
+                          Tim Pengembang (Mahasiswa)
+                        </h3>
+                        <h4 className="font-['Fredoka'] font-bold text-lg text-[#1b3d82]">
+                          Muhammad Sofwan Hadi
+                        </h4>
+                        <p className="font-['Nunito'] font-bold text-xs text-[#7e371b]">NIM: 25010855138</p>
+                        <p className="font-['Nunito'] font-semibold text-xs text-[#5c4a3a] leading-snug mt-1">
+                          Peneliti & Pengembang Utama Aplikasi DEDIGMA.
+                        </p>
+                      </div>
                     </div>
-
-                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3 text-center space-y-2 shadow-xs">
-                      <span className="text-3xl">📖</span>
-                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#366635]">
-                        [ Nama Pengembang 2 ]
-                      </h4>
-                      <p className="font-['Fredoka'] font-bold text-[10px] text-[#7e371b] uppercase">Konten & Materi</p>
-                      <p className="font-['Nunito'] font-semibold text-[11px] text-[#5c4a3a] leading-snug">
-                        Menyusun instrumen kuis, materi kebudayaan, dan narasi game.
-                      </p>
-                    </div>
-
-                    <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-3 text-center space-y-2 shadow-xs">
-                      <span className="text-3xl">🎨</span>
-                      <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#5a2e8c]">
-                        [ Nama Pengembang 3 ]
-                      </h4>
-                      <p className="font-['Fredoka'] font-bold text-[10px] text-[#7e371b] uppercase">UI/UX & Desain</p>
-                      <p className="font-['Nunito'] font-semibold text-[11px] text-[#5c4a3a] leading-snug">
-                        Mengembangkan tata letak UI, ilustrasi visual, dan aset game.
-                      </p>
+                  </div>
                     </div>
                   </div>
                 </motion.div>
