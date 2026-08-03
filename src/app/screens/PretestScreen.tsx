@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Award, BookOpen, ChevronRight } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { Btn } from "../components/Btn";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useAudio } from "../contexts/AudioContext";
@@ -88,7 +88,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
             🎓
           </motion.div>
           <h2 className="font-['Fredoka'] font-bold text-3xl text-amber-700 leading-tight">Pretest Selesai!</h2>
-          <p className="text-gray-500 font-semibold mt-2 text-sm">Kamu telah menyelesaikan seluruh evaluasi akhir.</p>
+          <p className="text-gray-500 font-semibold mt-2 text-sm">Kamu telah menyelesaikan evaluasi awal (Pretest).</p>
 
           <div className="bg-white/95 rounded-3xl shadow-xl p-5 my-6 w-full max-w-xs border border-amber-200">
             <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">Skor Akhir Evaluasi</p>

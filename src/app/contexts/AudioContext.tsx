@@ -77,6 +77,12 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         bgmRef.current.play().catch(() => {});
       }
     }
+
+    return () => {
+      if (bgmRef.current) {
+        bgmRef.current.pause();
+      }
+    };
   }, [audioEnabled, bgmEnabled, bgmVolume]);
 
   const toggleAudio = () => {
