@@ -112,43 +112,22 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
               {/* Dynamic Content */}
               <div className="relative z-10 w-full px-20 flex flex-col items-center justify-center h-full">
                 
-                {/* Certificate Title Area */}
-                <div className="mt-8 mb-6">
-                  <h1 className="font-['Fredoka'] font-extrabold text-5xl text-[#1b3d82] tracking-widest drop-shadow-sm">
-                    SERTIFIKAT
-                  </h1>
-                  <p className="text-[#7e371b] font-bold text-sm tracking-[0.2em] mt-2">
-                    DETEKTIF DIGITAL BUDAYA MAGETAN
-                  </p>
-                </div>
-
-                {/* Recipient Area */}
-                <p className="text-gray-600 font-semibold text-lg mb-4">Diberikan Kepada:</p>
-                
-                <div className="border-b-2 border-[#7e371b] pb-2 px-12 mb-6 min-w-[60%]">
-                  <h2 className="font-['Fredoka'] font-bold text-4xl text-[#1b3d82] drop-shadow-sm capitalize">
+                {/* Student Name (Positioned over the purple line) */}
+                <div className="absolute top-[47%] left-1/2 -translate-x-1/2 w-[60%] text-center">
+                  <h2 className="font-['Fredoka'] font-bold text-5xl text-[#1b3d82] drop-shadow-md capitalize truncate">
                     {studentName}
                   </h2>
                 </div>
 
-                {/* Description */}
-                <p className="text-[#4a3728] font-bold text-[15px] leading-relaxed max-w-2xl px-4 uppercase">
-                  ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.
-                </p>
-                <p className="text-gray-500 font-medium text-sm mt-2 italic">
-                  yang dilaksanakan pada tanggal {today}.
-                </p>
-
                 {/* Scores Cards (Pretest & Posttest) */}
-                <div className="flex gap-8 mt-10">
-                  <div className="bg-white/80 backdrop-blur-sm border-2 border-[#1b3d82] rounded-xl py-3 px-8 shadow-sm flex flex-col items-center min-w-[140px]">
-                    <p className="font-['Fredoka'] font-bold text-[#7e371b] text-xs uppercase tracking-wide">Pretest</p>
-                    <p className="font-['Fredoka'] font-extrabold text-3xl text-[#1b3d82] mt-1">{pretestScore}</p>
-                  </div>
-                  <div className="bg-white/80 backdrop-blur-sm border-2 border-[#366635] rounded-xl py-3 px-8 shadow-sm flex flex-col items-center min-w-[140px]">
-                    <p className="font-['Fredoka'] font-bold text-[#7e371b] text-xs uppercase tracking-wide">Posttest</p>
-                    <p className="font-['Fredoka'] font-extrabold text-3xl text-[#366635] mt-1">{posttestScore}</p>
-                  </div>
+                <div className="absolute bottom-16 left-20 bg-white/90 backdrop-blur-sm border-4 border-[#1b3d82] rounded-2xl py-3 px-8 shadow-xl flex flex-col items-center min-w-[150px] transform -rotate-2">
+                  <p className="font-['Fredoka'] font-bold text-[#7e371b] text-sm uppercase tracking-wide">Pretest</p>
+                  <p className="font-['Fredoka'] font-extrabold text-4xl text-[#1b3d82] mt-1 drop-shadow-sm">{pretestScore}</p>
+                </div>
+                
+                <div className="absolute bottom-16 right-20 bg-white/90 backdrop-blur-sm border-4 border-[#366635] rounded-2xl py-3 px-8 shadow-xl flex flex-col items-center min-w-[150px] transform rotate-2">
+                  <p className="font-['Fredoka'] font-bold text-[#7e371b] text-sm uppercase tracking-wide">Posttest</p>
+                  <p className="font-['Fredoka'] font-extrabold text-4xl text-[#366635] mt-1 drop-shadow-sm">{posttestScore}</p>
                 </div>
 
               </div>
