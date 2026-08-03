@@ -161,7 +161,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
                         <div className="absolute top-0 right-0 w-16 h-16 bg-blue-100/40 rounded-full blur-xl -mr-8 -mt-8"></div>
                         <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-xs uppercase tracking-widest relative z-10">Pretest</p>
                         <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1.5 relative z-10"></div>
-                        <p className="font-['Fredoka'] font-extrabold text-4xl text-[#1b3d82] relative z-10 drop-shadow-sm">{pretestScore}</p>
+                        <p className="font-['Fredoka'] font-extrabold text-4xl text-[#1b3d82] relative z-10 drop-shadow-sm">{pretestScore ?? 0}</p>
                       </div>
                     </div>
                     
@@ -170,7 +170,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
                         <div className="absolute top-0 right-0 w-16 h-16 bg-green-100/40 rounded-full blur-xl -mr-8 -mt-8"></div>
                         <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-xs uppercase tracking-widest relative z-10">Posttest</p>
                         <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1.5 relative z-10"></div>
-                        <p className="font-['Fredoka'] font-extrabold text-4xl text-[#366635] relative z-10 drop-shadow-sm">{posttestScore}</p>
+                        <p className="font-['Fredoka'] font-extrabold text-4xl text-[#366635] relative z-10 drop-shadow-sm">{posttestScore ?? 0}</p>
                       </div>
                     </div>
                   </div>
