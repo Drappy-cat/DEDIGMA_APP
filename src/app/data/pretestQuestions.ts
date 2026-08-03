@@ -10,7 +10,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "komentar pengguna internet",
       "pesan yang dikirim teman"
     ],
-    "jawaban": 1
+    "jawaban": 1,
+    "pembahasan": "Jawaban yang tepat adalah: \"situs resmi pemerintah daerah\". Memastikan informasi dari sumber resmi sangat penting dalam literasi digital agar kita tidak terjebak berita bohong (hoaks)."
   },
   {
     "id": 2,
@@ -21,7 +22,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "mengubah informasi",
       "menghapus informasi"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"mengakses informasi digital\". Larung Sesaji di Telaga Sarangan adalah bentuk kearifan lokal sebagai ungkapan syukur masyarakat kepada Tuhan atas berkah alam."
   },
   {
     "id": 3,
@@ -32,7 +34,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "mengedit video",
       "menggambar budaya"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"mengakses informasi digital\". Tradisi Bersih Desa tidak hanya bermakna syukur, tetapi juga mempererat gotong royong dan kerukunan antarwarga desa."
   },
   {
     "id": 4,
@@ -43,7 +46,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Larung Sesaji hanya dilakukan wisatawan",
       "Larung Sesaji dilakukan setiap hari"
     ],
-    "jawaban": 1
+    "jawaban": 1,
+    "pembahasan": "Jawaban yang tepat adalah: \"Larung Sesaji merupakan bentuk rasa syukur\". Larung Sesaji di Telaga Sarangan adalah bentuk kearifan lokal sebagai ungkapan syukur masyarakat kepada Tuhan atas berkah alam."
   },
   {
     "id": 5,
@@ -54,7 +58,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "budaya hanya untuk orang tua",
       "budaya tidak penting dipelajari"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"budaya dapat mempererat kebersamaan masyarakat\". Ledug Suro (Lesung Bedug Suro) merupakan tradisi menyambut Tahun Baru Islam dan Jawa yang memperkuat kebersamaan masyarakat."
   },
   {
     "id": 6,
@@ -65,7 +70,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "permainan tradisional",
       "perlombaan olahraga"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"kerja sama masyarakat dalam menjaga lingkungan\". Tradisi Bersih Desa tidak hanya bermakna syukur, tetapi juga mempererat gotong royong dan kerukunan antarwarga desa."
   },
   {
     "id": 7,
@@ -76,7 +82,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "pendapat pribadi",
       "tebakan"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"fakta yang dapat diperiksa kebenarannya\". Larung Sesaji di Telaga Sarangan adalah bentuk kearifan lokal sebagai ungkapan syukur masyarakat kepada Tuhan atas berkah alam."
   },
   {
     "id": 8,
@@ -87,7 +94,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "menghafal informasi",
       "menggambar informasi"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"mengevaluasi informasi\". Membandingkan dan mengevaluasi dari beberapa sumber adalah kunci utama berpikir kritis dalam literasi digital."
   },
   {
     "id": 9,
@@ -98,7 +106,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "mengikuti pendapat teman",
       "menyebarkan keduanya"
     ],
-    "jawaban": 1
+    "jawaban": 1,
+    "pembahasan": "Jawaban yang tepat adalah: \"membandingkan dan memeriksa sumber informasi\". Membandingkan dan mengevaluasi dari beberapa sumber adalah kunci utama berpikir kritis dalam literasi digital."
   },
   {
     "id": 10,
@@ -109,7 +118,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "pesan berantai",
       "akun anonim"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"sumber resmi dan jelas\". Memastikan informasi dari sumber resmi sangat penting dalam literasi digital agar kita tidak terjebak berita bohong (hoaks)."
   },
   {
     "id": 11,
@@ -120,7 +130,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "agar gambarnya lebih menarik",
       "agar cepat selesai membaca"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"agar tahu siapa yang menulis dan dapat memeriksa kebenarannya\". Memastikan informasi dari sumber resmi sangat penting dalam literasi digital agar kita tidak terjebak berita bohong (hoaks)."
   },
   {
     "id": 12,
@@ -131,7 +142,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "mengubah isinya",
       "menghapusnya"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"memverifikasi kebenaran informasi\". Menjaga warisan leluhur adalah tugas kita bersama agar identitas dan kearifan lokal daerah tidak punah ditelan zaman."
   },
   {
     "id": 13,
@@ -142,7 +154,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "mengganti isi artikel sesuai keinginannya",
       "hanya melihat judul artikel"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"memastikan bahwa informasi tersebut benar dan berasal dari       sumber terpercaya\". Tradisi Bersih Desa tidak hanya bermakna syukur, tetapi juga mempererat gotong royong dan kerukunan antarwarga desa."
   },
   {
     "id": 14,
@@ -153,7 +166,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "menyebarkan informasi tersebut kepada teman",
       "menganggap semua informasi pasti benar"
     ],
-    "jawaban": 1
+    "jawaban": 1,
+    "pembahasan": "Jawaban yang tepat adalah: \"mencari informasi pembanding dari sumber lain yang lebih jelas\". Memastikan informasi dari sumber resmi sangat penting dalam literasi digital agar kita tidak terjebak berita bohong (hoaks)."
   },
   {
     "id": 15,
@@ -164,7 +178,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "mengubah informasi sesuai keinginan",
       "menambahkan cerita yang tidak sesuai fakta"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"membagikan informasi yang sudah diperiksa kebenarannya\". Kita harus selalu memverifikasi kebenaran sebuah informasi sebelum membagikannya ke orang lain agar tidak menyebarkan informasi palsu."
   },
   {
     "id": 16,
@@ -175,7 +190,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Larung Sesaji",
       "Karapan Sapi"
     ],
-    "jawaban": 2
+    "jawaban": 2,
+    "pembahasan": "Jawaban yang tepat adalah: \"Larung Sesaji\". Larung Sesaji di Telaga Sarangan adalah bentuk kearifan lokal sebagai ungkapan syukur masyarakat kepada Tuhan atas berkah alam."
   },
   {
     "id": 17,
@@ -186,7 +202,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Larung Sesaji",
       "Sedekah Laut"
     ],
-    "jawaban": 1
+    "jawaban": 1,
+    "pembahasan": "Jawaban yang tepat adalah: \"Ledug Suro\". Ledug Suro (Lesung Bedug Suro) merupakan tradisi menyambut Tahun Baru Islam dan Jawa yang memperkuat kebersamaan masyarakat."
   },
   {
     "id": 18,
@@ -197,7 +214,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Kirab Pemuda",
       "Pentas Seni"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"Bersih Desa\". Ini adalah langkah yang tepat dalam mempelajari dan melestarikan warisan budaya Magetan."
   },
   {
     "id": 19,
@@ -208,7 +226,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "mencari keuntungan ekonomi",
       "menarik wisatawan semata"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"mengungkapkan rasa syukur kepada Tuhan\". Larung Sesaji di Telaga Sarangan adalah bentuk kearifan lokal sebagai ungkapan syukur masyarakat kepada Tuhan atas berkah alam."
   },
   {
     "id": 20,
@@ -219,7 +238,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "mengurangi kerja sama",
       "memisahkan warga desa"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"mempererat hubungan antarwarga\". Tradisi Bersih Desa tidak hanya bermakna syukur, tetapi juga mempererat gotong royong dan kerukunan antarwarga desa."
   },
   {
     "id": 21,
@@ -230,7 +250,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "tidak menyukai teknologi",
       "tidak mau belajar budaya lain"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"menjaga budaya yang diwariskan oleh leluhur\". Ledug Suro (Lesung Bedug Suro) merupakan tradisi menyambut Tahun Baru Islam dan Jawa yang memperkuat kebersamaan masyarakat."
   },
   {
     "id": 22,
@@ -241,7 +262,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "kemarahan",
       "egoisme"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"gotong royong\". Larung Sesaji di Telaga Sarangan adalah bentuk kearifan lokal sebagai ungkapan syukur masyarakat kepada Tuhan atas berkah alam."
   },
   {
     "id": 23,
@@ -252,7 +274,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "persaingan",
       "kemalasan"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"kepedulian terhadap lingkungan\". Tradisi Bersih Desa tidak hanya bermakna syukur, tetapi juga mempererat gotong royong dan kerukunan antarwarga desa."
   },
   {
     "id": 24,
@@ -263,7 +286,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "perpecahan",
       "perselisihan"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"kebersamaan\". Ledug Suro (Lesung Bedug Suro) merupakan tradisi menyambut Tahun Baru Islam dan Jawa yang memperkuat kebersamaan masyarakat."
   },
   {
     "id": 25,
@@ -274,7 +298,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "penolakan terhadap budaya",
       "sikap meremehkan budaya"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"penghargaan terhadap budaya daerah\". Larung Sesaji di Telaga Sarangan adalah bentuk kearifan lokal sebagai ungkapan syukur masyarakat kepada Tuhan atas berkah alam."
   },
   {
     "id": 26,
@@ -285,7 +310,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "mengabaikan penjelasan teman",
       "menolak mendengarkan"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"mendengarkan dan menghargai cerita tersebut\". Ledug Suro (Lesung Bedug Suro) merupakan tradisi menyambut Tahun Baru Islam dan Jawa yang memperkuat kebersamaan masyarakat."
   },
   {
     "id": 27,
@@ -296,7 +322,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "menyebarkan informasi yang salah",
       "menganggap budaya tidak penting"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"mempelajari dan menghormati budaya tersebut\". Menjaga warisan leluhur adalah tugas kita bersama agar identitas dan kearifan lokal daerah tidak punah ditelan zaman."
   },
   {
     "id": 28,
@@ -307,7 +334,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "penolakan budaya",
       "pengabaian budaya"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"pelestarian budaya\". Larung Sesaji di Telaga Sarangan adalah bentuk kearifan lokal sebagai ungkapan syukur masyarakat kepada Tuhan atas berkah alam."
   },
   {
     "id": 29,
@@ -318,7 +346,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "menolak mengikuti kegiatan budaya",
       "menyembunyikan informasi budaya"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"mempelajari dan mengenalkan budaya kepada orang lain\". Menjaga warisan leluhur adalah tugas kita bersama agar identitas dan kearifan lokal daerah tidak punah ditelan zaman."
   },
   {
     "id": 30,
@@ -329,6 +358,7 @@ export const PRETEST_QUESTIONS: Question[] = [
       "melupakan budaya yang telah dipelajari",
       "menolak tradisi yang ada"
     ],
-    "jawaban": 0
+    "jawaban": 0,
+    "pembahasan": "Jawaban yang tepat adalah: \"bangga dan ikut menjaga budaya daerah\". Larung Sesaji di Telaga Sarangan adalah bentuk kearifan lokal sebagai ungkapan syukur masyarakat kepada Tuhan atas berkah alam."
   }
 ];

@@ -26,6 +26,8 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
     };
   }, []);
 
+  const [isAnswered, setIsAnswered] = useState(false);
+
   const handleSelect = (idx: number) => {
     if (answers[current] !== null) return;
     const newAnswers = answers.map((a, i) => (i === current ? idx : a));
@@ -38,19 +40,23 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
       playSFX("fail");
     }
 
-    setTimeout(() => {
-      if (current < POSTTEST_QUESTIONS.length - 1) {
-        setCurrent((c) => c + 1);
-      } else {
-        setDone(true);
-        const correctCount = newAnswers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
-        const finalScore = Math.round((correctCount / POSTTEST_QUESTIONS.length) * 100);
+    setIsAnswered(true);
+  };
 
-        fireConfetti();
-        playSFX("badge");
-        playNarrator(`Luar biasa! Kamu menyelesaikan Posttest dengan skor akhir ${finalScore}. Ketuk tombol di bawah untuk melihat sertifikat kelulusanmu.`);
-      }
-    }, 1000);
+  const handleNextQuestion = () => {
+    playSFX("click");
+    if (current < POSTTEST_QUESTIONS.length - 1) {
+      setCurrent((c) => c + 1);
+      setIsAnswered(false);
+    } else {
+      setDone(true);
+      const correctCount = answers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
+      const finalScore = Math.round((correctCount / POSTTEST_QUESTIONS.length) * 100);
+
+      fireConfetti();
+      playSFX("badge");
+      playNarrator(`Luar biasa! Kamu menyelesaikan Posttest dengan skor akhir ${finalScore}. Ketuk tombol di bawah untuk melihat sertifikat kelulusanmu.`);
+    }
   };
 
   const correctCount = answers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
@@ -188,6 +194,35 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
                   </button>
                 );
               })}
+              
+              <AnimatePresence>
+                {isAnswered && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="pt-4 overflow-hidden"
+                  >
+                    <div className={`p-4 rounded-xl shadow-inner border-2 ${
+                      answers[current] === q.jawaban ? 'bg-green-50 border-green-200 text-green-900' : 'bg-red-50 border-red-200 text-red-900'
+                    }`}>
+                      <p className="font-bold text-sm mb-1">
+                        {answers[current] === q.jawaban ? '✅ Tepat Sekali!' : '❌ Kurang Tepat!'}
+                      </p>
+                      <p className="text-xs leading-relaxed font-semibold">
+                        {q.pembahasan || 'Jawaban telah direkam.'}
+                      </p>
+                    </div>
+                    
+                    <button
+                      onClick={handleNextQuestion}
+                      className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md active:scale-95 cursor-pointer"
+                    >
+                      {current < POSTTEST_QUESTIONS.length - 1 ? 'Lanjut ke Soal Berikutnya' : 'Selesai Posttest'}
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
             </motion.div>
           </div>

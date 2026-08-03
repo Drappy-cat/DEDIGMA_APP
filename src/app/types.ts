@@ -27,6 +27,14 @@ export type MateriTab = "pengertian" | "sejarah" | "tujuan" | "nilai-budaya" | "
 // Activity variant per mission
 export type ActivityType = "cek-fakta" | "analisis-sumber" | "detektif-berita";
 
+export interface Question {
+  id: number;
+  soal: string;
+  opsi: string[];
+  jawaban: number;
+  pembahasan?: string;
+}
+
 export interface Mission {
   id: number;
   name: string;
