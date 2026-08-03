@@ -135,7 +135,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -30, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeOut" }}
-            className="w-full max-w-4xl h-[90%] sm:h-full max-h-[650px] shadow-2xl relative flex flex-col justify-between mx-auto"
+            className="w-[95%] max-w-none h-[90%] sm:h-full max-h-[650px] shadow-2xl relative flex flex-col justify-between mx-auto"
             style={{
               backgroundImage: "url('/assets/content-bg.png')",
               backgroundSize: "100% 100%",
@@ -149,12 +149,12 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
               <BookOpen size={20} /> Soal Evaluasi
             </h2>
 
-            <div className="px-16 sm:px-32 pt-20 sm:pt-24 select-none flex-1 flex flex-col justify-center">
+            <div className="px-10 sm:px-16 pt-20 sm:pt-24 select-none flex-1 flex flex-col justify-center">
               <p className="font-bold text-gray-900 text-sm sm:text-base leading-relaxed mb-6 text-center drop-shadow-sm">{q.soal}</p>
             </div>
 
             {/* Added pb-14 to avoid overlapping the bottom border */}
-            <div className="px-16 sm:px-32 pb-14 sm:pb-16 space-y-3">
+            <div className="px-10 sm:px-16 pb-14 sm:pb-16 space-y-3">
               {q.opsi.map((o, idx) => {
                 const userAns = answers[current];
                 let btnStyle =
