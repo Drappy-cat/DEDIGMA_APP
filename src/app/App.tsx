@@ -49,6 +49,7 @@ function DemoPanel({
   setScreen,
   setCompletedMissions,
   setMissionScores,
+  setPretestScore,
   setPosttestScore,
   setCurrentMissionId
 }: {
@@ -56,6 +57,7 @@ function DemoPanel({
   setScreen: (s: Screen) => void;
   setCompletedMissions: (m: Set<number>) => void;
   setMissionScores: (s: Record<number, number>) => void;
+  setPretestScore: (s: number | null) => void;
   setPosttestScore: (s: number | null) => void;
   setCurrentMissionId: (id: number) => void;
 }) {
@@ -465,6 +467,7 @@ function AppContent() {
         setScreen={setScreen}
         setCompletedMissions={setCompletedMissions}
         setMissionScores={setMissionScores}
+        setPretestScore={setPretestScore}
         setPosttestScore={setPosttestScore}
         setCurrentMissionId={setCurrentMissionId}
       />
