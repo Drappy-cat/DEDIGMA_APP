@@ -24,127 +24,189 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
   }, []);
 
   return (
-    <div 
-      className="flex flex-col h-full items-center justify-center p-4 sm:p-6 text-center font-['Nunito'] select-none relative overflow-hidden rounded-[1.25rem]"
-      style={{
-        backgroundImage: "url('/assets/bg-login.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
+    <div className="flex flex-col h-full font-['Nunito'] justify-between overflow-hidden max-h-full min-h-0 relative p-1 sm:p-2 select-none">
       
-      {/* Light Rays Background Effect */}
-      <motion.div 
-        animate={{ rotate: 360 }}
-        transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] sm:w-[800px] sm:h-[800px] pointer-events-none opacity-40"
-        style={{
-          background: "repeating-conic-gradient(from 0deg, transparent 0deg 15deg, rgba(255, 255, 255, 0.15) 15deg 30deg)",
-          maskImage: "radial-gradient(circle, black 20%, transparent 60%)",
-          WebkitMaskImage: "radial-gradient(circle, black 20%, transparent 60%)",
-        }}
-      />
+      {/* Scrollable Main Content Container */}
+      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden space-y-3 sm:space-y-4 pr-1 pb-16 flex flex-col items-center">
+        
+        {/* Top Header Section with Ribbon Medal & Wood Signboard */}
+        <div className="flex flex-col items-center relative mt-3 mb-1 w-full max-w-md flex-shrink-0">
+          
+          {/* Top Gold Star Ribbon Medal 🎖️ (Overhanging Top Center) */}
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-b from-[#fcd34d] via-[#f59e0b] to-[#d97706] border-2 border-[#fff5ce] shadow-lg flex items-center justify-center text-2xl sm:text-3xl z-20 -mb-5 relative">
+            <div className="absolute inset-0 rounded-full bg-yellow-400 blur-md opacity-40 animate-pulse" />
+            <span className="relative z-10">⭐</span>
+          </div>
 
-      {/* Mascots Celebrating */}
-      <motion.img 
-        src="/assets/mascot/dimas-peta.svg" 
-        alt="Dimas"
-        initial={{ x: -100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1, y: [0, -10, 0] }}
-        transition={{ x: { duration: 0.8 }, opacity: { duration: 0.8 }, y: { duration: 2, repeat: Infinity } }}
-        className="absolute bottom-0 -left-6 sm:left-4 w-40 sm:w-56 md:w-72 lg:w-80 max-h-[28vh] sm:max-h-[35vh] md:max-h-[45vh] h-auto object-contain drop-shadow-xl z-20 pointer-events-none origin-bottom"
-      />
-      <motion.img 
-        src="/assets/mascot/gita-peta.svg" 
-        alt="Gita"
-        initial={{ x: 100, opacity: 0 }}
-        animate={{ x: 0, opacity: 1, y: [0, -12, 0] }}
-        transition={{ x: { duration: 0.8 }, opacity: { duration: 0.8 }, y: { duration: 2.2, repeat: Infinity, delay: 0.3 } }}
-        className="absolute bottom-0 -right-6 sm:right-4 w-36 sm:w-52 md:w-64 lg:w-72 max-h-[25vh] sm:max-h-[32vh] md:max-h-[40vh] h-auto object-contain drop-shadow-xl z-20 pointer-events-none origin-bottom"
-      />
+          {/* Centered Wooden Header Signboard Banner */}
+          <div className="bg-[#6b3c1b] border-2 border-[#4a270f] rounded-2xl px-8 sm:px-10 pt-5 pb-2 text-[#fff5ce] font-['Fredoka'] font-extrabold text-lg sm:text-xl md:text-2xl uppercase tracking-wider shadow-md border-b-4 flex items-center justify-center gap-2 relative z-10 w-full text-center">
+            <span className="text-base select-none">🌿</span>
+            <span>MISI SELESAI!</span>
+            <span className="text-base select-none transform scale-x-[-1]">🌿</span>
+          </div>
 
-      <div className="relative z-30 flex flex-col items-center gap-4 sm:gap-5 w-full max-w-md">
-        {/* Animated badge */}
-        <motion.div
-          initial={{ scale: 0, rotate: -30 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 15 }}
-          className="relative text-7xl sm:text-8xl filter drop-shadow-2xl"
-        >
-          <div className="absolute inset-0 bg-yellow-400 rounded-full blur-xl opacity-40 animate-pulse"></div>
-          <span className="relative z-10">🏅</span>
-        </motion.div>
-
-        <div>
-          <h2 className="font-['Fredoka'] font-extrabold text-3xl sm:text-4xl text-amber-300 leading-tight drop-shadow-lg uppercase tracking-wide">
-            Misi Selesai! 🎉
-          </h2>
-          <p className="font-['Fredoka'] text-[#366635] text-lg sm:text-xl font-bold mt-2 bg-white/90 px-5 py-1.5 rounded-full inline-block border-2 border-[#366635]/20 shadow-sm">
+          {/* Sub-banner Green Capsule Badge */}
+          <div className="bg-[#256c3a] border border-[#184826] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm uppercase tracking-wider rounded-full px-5 py-1 shadow-xs -mt-3.5 z-20">
             {mission.name}
-          </p>
+          </div>
         </div>
 
-        {/* Average Score display */}
-        <motion.div 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-[0_10px_25px_rgba(0,0,0,0.15)] p-4 sm:p-6 w-full border-2 border-amber-300 relative overflow-hidden"
-        >
-          <div className="absolute top-0 inset-x-0 h-1.5 bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300"></div>
+        {/* Outer Parchment Container for Score & Achievement */}
+        <div className="w-full max-w-md space-y-3">
           
-          <p className="text-gray-500 text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-1">Rata-rata Skor Aktivitas</p>
-          <div className="flex items-baseline justify-center gap-1">
-            <p className="font-['Fredoka'] font-extrabold text-5xl sm:text-6xl text-amber-500 drop-shadow-sm">{totalScore}</p>
-            <span className="text-gray-400 text-xs font-bold uppercase">/ 100</span>
-          </div>
+          {/* Upper Score Display Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.1 }}
+            className="bg-[#fdfcf7] border border-[#e8dcb8] rounded-3xl p-5 sm:p-6 shadow-xs text-center space-y-3 relative"
+          >
+            {/* Section Label */}
+            <h4 className="text-[#7a6450] font-['Fredoka'] font-extrabold text-xs sm:text-sm tracking-wider uppercase">
+              SKOR AKTIVITAS
+            </h4>
 
-          <div className={`mt-4 border rounded-xl p-3 sm:p-4 shadow-inner ${
-            totalScore >= 85 ? "bg-green-50/80 border-green-200" : 
-            totalScore >= 70 ? "bg-amber-50/80 border-amber-200" : 
-            "bg-orange-50/80 border-orange-200"
-          }`}>
-            <p className={`text-xs sm:text-sm font-bold leading-relaxed ${
-              totalScore >= 85 ? "text-green-800" : 
-              totalScore >= 70 ? "text-amber-800" : 
-              "text-orange-800"
-            }`}>
-              {totalScore >= 85
-                ? "🌟 Luar biasa! Kamu Detektif Budaya sejati yang sangat cerdas!"
-                : totalScore >= 70
-                ? "⭐ Hebat! Kamu memahami materi ini dengan baik. Teruskan!"
-                : "💪 Tidak apa-apa! Setiap petualangan membuatmu lebih bijak."}
-            </p>
-          </div>
-        </motion.div>
+            {/* Big Numeric Score Display */}
+            <div className="flex items-baseline justify-center gap-1 my-1">
+              <span className="font-['Fredoka'] font-extrabold text-5xl sm:text-6xl text-[#256c3a] drop-shadow-xs">
+                {totalScore}
+              </span>
+              <span className="font-['Fredoka'] font-bold text-lg sm:text-xl text-[#59432e]">
+                / 100
+              </span>
+            </div>
 
-        {/* Earned Badge Detail */}
-        <motion.div 
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="bg-black/30 backdrop-blur-md border border-white/20 rounded-2xl p-3 sm:p-4 w-full flex items-center gap-3 sm:gap-4 shadow-lg"
+            {/* Motivational Feedback Box (Light Green Tinted) */}
+            <div className="bg-[#eaf4ea] border border-[#c4e0c4] rounded-2xl p-3.5 sm:p-4 flex items-start gap-3 text-left">
+              <span className="text-lg select-none flex-shrink-0 mt-0.5">🍃</span>
+              <p className="text-[#235430] text-xs sm:text-sm font-['Nunito'] font-bold leading-relaxed">
+                {totalScore >= 85
+                  ? "Luar biasa! Pemahaman budayamu sangat cemerlang."
+                  : totalScore >= 70
+                  ? "Hebat sekali! Kamu memahami materi ini dengan baik."
+                  : "Tidak apa-apa! Setiap petualangan membuatmu lebih bijak."}
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Lower Achievement Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.2 }}
+            className="bg-[#fdfcf7] border border-[#e8dcb8] rounded-3xl p-4 sm:p-5 shadow-xs space-y-2"
+          >
+            {/* Section Label */}
+            <h4 className="text-[#7a6450] font-['Fredoka'] font-extrabold text-xs tracking-wider uppercase">
+              PENCAPAIAN
+            </h4>
+
+            {/* Achievement Detail Item */}
+            <div className="flex items-center gap-3.5 pt-0.5">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-[#f5ebd6] border border-[#e8dcb8] flex items-center justify-center text-2xl flex-shrink-0 shadow-xs">
+                🏅
+              </div>
+              <div className="text-left">
+                <h5 className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-sm sm:text-base leading-tight">
+                  Penjelajah Budaya
+                </h5>
+                <p className="text-[#59432e] text-xs font-semibold mt-0.5">
+                  Telah menyelesaikan Misi {mission.id}
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Left Mascot: Dimas (dimas-peta.svg) — Significantly Enlarged & Dynamic Floating */}
+      <motion.div
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute bottom-10 sm:bottom-12 left-1 sm:left-3 z-40 pointer-events-auto flex flex-col items-center select-none max-w-[220px] sm:max-w-[280px] md:max-w-[320px]"
+      >
+        {/* Dimas Speech Dialogue Explanation */}
+        <motion.div
+          initial={{ opacity: 0, y: 10, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.3 }}
+          className="bg-[#fdfcf7] border-2 border-[#e8dcb8] rounded-2xl p-2.5 sm:p-3 shadow-md mb-2 relative z-50 hidden md:block max-w-[220px]"
         >
-          <span className="text-3xl sm:text-4xl filter drop-shadow">🏅</span>
-          <div className="text-left">
-            <p className="font-['Fredoka'] font-bold text-white text-sm sm:text-base drop-shadow-sm">Penjelajah Budaya</p>
-            <p className="text-white/80 text-[10px] sm:text-xs font-bold uppercase tracking-wide">Telah Menyelesaikan Misi {mission.id}</p>
+          <div className="flex items-center gap-1 pb-1 mb-1 border-b border-[#e8dcb8]">
+            <span className="text-xs">💡</span>
+            <span className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-[10px] uppercase">PESAN DIMAS</span>
           </div>
+          <p className="text-[#4a3728] text-[11px] sm:text-xs font-['Nunito'] font-bold leading-tight">
+            Hebat! Kamu berhasil menyelesaikan tantangan verifikasi fakta budaya ini!
+          </p>
+          <div className="absolute -bottom-2 left-6 w-0 h-0 border-t-[8px] border-t-[#e8dcb8] border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent" />
         </motion.div>
 
-        {/* Action button */}
-        <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", delay: 0.7 }}
+        {/* Dimas Image & Overlapping Bottom Name Badge */}
+        <div className="relative flex flex-col items-center w-full">
+          <img
+            src="/assets/mascot/dimas-peta.svg"
+            alt="Dimas Mascot"
+            className="w-40 sm:w-56 md:w-64 lg:w-72 h-auto object-contain filter drop-shadow-2xl"
+          />
+
+          {/* Dimas Name Badge — Overlapping & Covering Bottom Boundary Line */}
+          <div className="bg-[#fcf5e3] border-2 border-[#e5cca0] text-[#7a5316] text-xs sm:text-sm md:text-base font-['Fredoka'] font-extrabold rounded-full px-5 sm:px-7 py-1 shadow-lg absolute -bottom-3 sm:-bottom-4 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap">
+            Dimas
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Right Mascot: Gita (Gita-Petunjuk.svg) — Significantly Enlarged & Dynamic Floating */}
+      <motion.div
+        animate={{ y: [0, -6, 0] }}
+        transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+        className="absolute bottom-10 sm:bottom-12 right-1 sm:right-3 z-40 pointer-events-auto flex flex-col items-center select-none max-w-[220px] sm:max-w-[280px] md:max-w-[320px]"
+      >
+        {/* Gita Speech Dialogue Explanation */}
+        <motion.div
+          initial={{ opacity: 0, y: 10, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.4 }}
+          className="bg-[#fdfcf7] border-2 border-[#e8dcb8] rounded-2xl p-2.5 sm:p-3 shadow-md mb-2 relative z-50 hidden md:block max-w-[220px]"
+        >
+          <div className="flex items-center gap-1 pb-1 mb-1 border-b border-[#e8dcb8]">
+            <span className="text-xs">🌸</span>
+            <span className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-[10px] uppercase">PESAN GITA</span>
+          </div>
+          <p className="text-[#4a3728] text-[11px] sm:text-xs font-['Nunito'] font-bold leading-tight">
+            Terus lestarikan warisan budaya kita dan tingkatkan pemahamanmu!
+          </p>
+          <div className="absolute -bottom-2 right-6 w-0 h-0 border-t-[8px] border-t-[#e8dcb8] border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent" />
+        </motion.div>
+
+        {/* Gita Image & Overlapping Bottom Name Badge */}
+        <div className="relative flex flex-col items-center w-full">
+          <img
+            src="/assets/mascot/Gita-Petunjuk.svg"
+            alt="Gita Mascot"
+            className="w-40 sm:w-56 md:w-64 lg:w-72 h-auto object-contain filter drop-shadow-2xl"
+          />
+
+          {/* Gita Name Badge — Overlapping & Covering Bottom Boundary Line */}
+          <div className="bg-[#fcf5e3] border-2 border-[#e5cca0] text-[#7a5316] text-xs sm:text-sm md:text-base font-['Fredoka'] font-extrabold rounded-full px-5 sm:px-7 py-1 shadow-lg absolute -bottom-3 sm:-bottom-4 left-1/2 -translate-x-1/2 z-50 whitespace-nowrap">
+            Gita
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Bottom Action Navigation Bar */}
+      <div className="flex justify-center items-center px-2 py-1 flex-shrink-0 z-50 relative mt-1">
+        <button
           onClick={() => { playSFX("click"); onContinue(); }}
-          className="mt-4 flex items-center justify-center gap-3 bg-gradient-to-b from-amber-300 to-amber-500 hover:from-amber-400 hover:to-amber-600 active:scale-95 px-8 py-3.5 rounded-full shadow-xl border-4 border-white transition-all focus:outline-none"
+          className="bg-gradient-to-b from-[#2a6838] via-[#1c5c32] to-[#144826] hover:from-[#358a4c] hover:to-[#1b572d] border-2 border-[#52ad69] text-white rounded-full px-8 py-2.5 font-['Fredoka'] font-extrabold text-sm sm:text-base flex items-center gap-2.5 shadow-lg transition-transform active:scale-95 cursor-pointer focus:outline-none"
         >
-          <img src="/assets/button/home.svg" alt="Home" className="w-8 sm:w-10 h-auto object-contain drop-shadow-md" />
-          <span className="font-['Fredoka'] font-bold text-white text-lg sm:text-xl drop-shadow-md">Kembali ke Peta</span>
-        </motion.button>
+          <span>Kembali ke Peta Misi</span>
+          <span>→</span>
+        </button>
       </div>
     </div>
   );
 };
+
 export default MisiSelesaiScreen;
