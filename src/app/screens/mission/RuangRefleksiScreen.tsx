@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Lightbulb, ChevronRight } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 import { Mission } from "../../types";
-import { Btn } from "../../components/Btn";
 import { MascotGita } from "../../components/Mascot";
 import { useAudio } from "../../contexts/AudioContext";
 

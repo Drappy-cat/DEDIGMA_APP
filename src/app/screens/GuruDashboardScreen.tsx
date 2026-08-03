@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, Plus, FileText } from "lucide-react";
+import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, FileText } from "lucide-react";
 import jsPDF from "jspdf";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
@@ -14,7 +14,15 @@ export const GuruDashboardScreen: React.FC = () => {
   const classes = ["Semua", "5A", "5B", "5C"];
 
   // Lock state: key is `${kelas}-${missionId}`, value is boolean (true = locked, false = open)
-  const [locks, setLocks] = useState<Record<string, boolean>>({});
+  const [locks, setLocks] = useState<Record<string, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem("dedigma_mission_locks");
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error("Error reading locks from localStorage:", e);
+    }
+    return {};
+  });
 
   // Merge real student data from localStorage if available
   const allStudents = React.useMemo(() => {
@@ -57,7 +65,13 @@ export const GuruDashboardScreen: React.FC = () => {
     playSFX("click");
     setLocks((prev) => {
       const key = `${kelas}-${missionId}`;
-      return { ...prev, [key]: !prev[key] };
+      const updated = { ...prev, [key]: !prev[key] };
+      try {
+        localStorage.setItem("dedigma_mission_locks", JSON.stringify(updated));
+      } catch (e) {
+        console.error("Error saving locks to localStorage:", e);
+      }
+      return updated;
     });
   };
 
@@ -85,9 +99,6 @@ export const GuruDashboardScreen: React.FC = () => {
     selesai: completedAll,
     avgScore: avgScore
   };
-
-  // Find students who have an active mission
-  const activeNowStudents = allStudents.filter((s) => s.misi1 || s.misi2 || s.misi3);
 
   const exportCSV = () => {
     playSFX("click");
@@ -117,8 +128,8 @@ export const GuruDashboardScreen: React.FC = () => {
         s.misi2 ? "Selesai" : "Belum",
         s.misi3 ? "Selesai" : "Belum",
         s.skor > 0 ? `${s.skor}%` : "0%",
-        (s as any).tantangan ?? "-",
-        (s as any).posttest ?? "-",
+        s.tantangan ?? "-",
+        s.posttest ?? "-",
         status,
         s.waktu || "-",
         s.tanggal || new Date().toISOString().split("T")[0]
@@ -188,7 +199,7 @@ export const GuruDashboardScreen: React.FC = () => {
         doc.text(s.misi2 ? "Selesai" : "-", 115, y);
         doc.text(s.misi3 ? "Selesai" : "-", 135, y);
         doc.text(s.skor > 0 ? `${s.skor}%` : "-", 155, y);
-        doc.text(String((s as any).posttest ?? "-"), 175, y);
+        doc.text(String(s.posttest ?? "-"), 175, y);
         y += 6.5;
       });
 
@@ -213,7 +224,7 @@ export const GuruDashboardScreen: React.FC = () => {
         </div>
 
         <div className="hidden md:flex items-center bg-[#1E40AF] px-4 py-2 rounded-full border border-blue-600/50">
-          <span className="text-sm font-semibold text-blue-100">"Selamat bertugas! {activeNowStudents.length} detektif cilik sedang aktif."</span>
+          <span className="text-sm font-semibold text-blue-100">"Selamat bertugas! {activeStudents} detektif cilik sedang aktif."</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -356,9 +367,9 @@ export const GuruDashboardScreen: React.FC = () => {
                   className="bg-black/20 rounded-xl p-3 flex items-center justify-between border border-white/10"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="text-2xl">{m.icon}</span>
+                    <span className="text-2xl">{m.emoji}</span>
                     <div>
-                      <p className="font-['Fredoka'] font-bold text-xs text-white">Misi {m.id}: {m.title}</p>
+                      <p className="font-['Fredoka'] font-bold text-xs text-white">Misi {m.id}: {m.name}</p>
                       <p className="text-[10px] text-blue-200">{isLocked ? "🔒 Terkunci" : "🔓 Terbuka"}</p>
                     </div>
                   </div>
@@ -440,11 +451,11 @@ export const GuruDashboardScreen: React.FC = () => {
                       <td className="py-3 px-4 text-center font-bold text-blue-700">
                         {s.skor > 0 ? `${s.skor}%` : "-"}
                       </td>
-                      <td className="py-3 px-4 text-center font-bold text-amber-600">
-                        {(s as any).tantangan ?? "-"}
+                      <td className="py-3 px-4 text-center font-bold text-[#D97706] text-amber-600">
+                        {s.tantangan ?? "-"}
                       </td>
                       <td className="py-3 px-4 text-center font-bold text-purple-600">
-                        {(s as any).posttest ?? "-"}
+                        {s.posttest ?? "-"}
                       </td>
                       <td className="py-3 px-4 text-center">
                         {allDone ? (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Shield, ChevronRight } from "lucide-react";
+import { Shield } from "lucide-react";
 import { Mission } from "../../types";
 import { Btn } from "../../components/Btn";
 import { useAudio } from "../../contexts/AudioContext";

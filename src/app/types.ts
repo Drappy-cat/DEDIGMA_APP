@@ -97,6 +97,8 @@ export interface Student {
   activeMission?: string;
   activeStage?: string;
   loginTime?: string;
+  tantangan?: number | string;
+  posttest?: number | string;
 }
 
 // Badge system

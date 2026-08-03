@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Play, MapPin, ChevronRight } from "lucide-react";
+import { Play, MapPin } from "lucide-react";
 import { Mission } from "../../types";
-import { Btn } from "../../components/Btn";
 import { MascotDimas } from "../../components/Mascot";
 import { useAudio } from "../../contexts/AudioContext";
 

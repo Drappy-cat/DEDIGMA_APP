@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { AlertTriangle, ChevronRight, Check, X, ArrowDown } from "lucide-react";
+import { Check, X, ArrowDown } from "lucide-react";
 import { Mission } from "../../types";
 import { Btn } from "../../components/Btn";
 import { useAudio } from "../../contexts/AudioContext";

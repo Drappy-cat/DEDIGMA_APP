@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-import { Award, Download, FileText, RefreshCw } from "lucide-react";
+import { Download, RefreshCw } from "lucide-react";
 import { MISSIONS } from "../data/missions";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { Btn } from "../components/Btn";
-import { SkyBg } from "../components/SkyBg";
 import { useAudio } from "../contexts/AudioContext";
 
 interface SertifikatScreenProps {
@@ -47,7 +46,6 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
     const el = certRef.current;
     if (!el) return;
 
-    playSFX("click");
     setIsGenerating(true);
 
     try {
@@ -66,7 +64,6 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
 
       // Set up PDF properties
       const isLandscape = orientation === "landscape";
-      const pdfFormat = [297, 210]; // A4 size in mm
       const pdf = new jsPDF({
         orientation: isLandscape ? "landscape" : "portrait",
         unit: "mm",

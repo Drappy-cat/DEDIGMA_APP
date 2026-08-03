@@ -20,7 +20,7 @@ interface AudioContextType {
   setSfxVolume: (val: number) => void;
   playNarrator: (text: string, mp3Path?: string, options?: VoiceOptions) => void;
   stopNarrator: () => void;
-  playSFX: (type: "success" | "fail" | "click" | "badge") => void;
+  playSFX: (type: "success" | "fail" | "click" | "badge" | "wrong") => void;
   playBGM: (path?: string) => void;
   stopBGM: () => void;
 }
@@ -175,21 +175,26 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     synthRef.current.speak(utterance);
   };
 
-  const playSFX = (type: "success" | "fail" | "click" | "badge") => {
+  const playSFX = (type: "success" | "fail" | "click" | "badge" | "wrong") => {
     if (!audioEnabled || !sfxEnabled) return;
 
-    const sfxPaths = {
-      click: "/audio/pop click.MP3",
-      success: "/audio/sfx-success.mp3",
-      fail: "/audio/sfx-fail.mp3",
-      badge: "/audio/misi-complate.MP3"
+    const sfxPaths: Record<string, { primary: string; fallback?: string }> = {
+      click: { primary: "/audio/pop click.MP3" },
+      badge: { primary: "/audio/misi-complate.MP3" },
+      success: { primary: "/audio/sfx-success.mp3", fallback: "/audio/misi-complate.MP3" },
+      fail: { primary: "/audio/sfx-fail.mp3", fallback: "/audio/pop click.MP3" },
+      wrong: { primary: "/audio/sfx-fail.mp3", fallback: "/audio/pop click.MP3" }
     };
 
-    const path = sfxPaths[type];
-    const audio = new Audio(path);
+    const config = sfxPaths[type] || sfxPaths.click;
+    const audio = new Audio(config.primary);
     audio.volume = sfxVolume;
     audio.play().catch(() => {
-      console.log(`SFX played: ${type}`);
+      if (config.fallback) {
+        const fallbackAudio = new Audio(config.fallback);
+        fallbackAudio.volume = sfxVolume;
+        fallbackAudio.play().catch(() => {});
+      }
     });
   };
 

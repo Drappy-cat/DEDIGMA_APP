@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { BookOpen, ChevronRight } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { Mission } from "../../types";
 import { Btn } from "../../components/Btn";
 import { useAudio } from "../../contexts/AudioContext";
