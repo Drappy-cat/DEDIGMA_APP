@@ -88,15 +88,40 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       // All sizes are calculated as: HTML_px * 2.946 / H for H-relative values
       const SCALE = W / 842; // = 2.946
 
-      // 4. Draw student name — text-4xl = 36px in HTML → 36 * SCALE in canvas
+      // 4. Draw student name — Glossy 3D style
       ctx.save();
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = "#1b3d82";
-      ctx.font = `bold ${Math.round(36 * SCALE)}px 'Fredoka', 'Nunito', sans-serif`;
-      ctx.shadowColor = "rgba(0,0,0,0.15)";
-      ctx.shadowBlur = 10;
-      ctx.fillText(studentName, W / 2, H * 0.485, W * 0.65);
+
+      const nameY = H * 0.485;
+      const fontSp = Math.round(36 * SCALE);
+      ctx.font = `900 ${fontSp}px 'Fredoka', 'Nunito', sans-serif`;
+
+      // 3D Depth Layer (extrusion shadow)
+      const depth = Math.round(3 * (SCALE / 2.946));
+      ctx.fillStyle = "#09142b";
+      for (let i = depth; i > 0; i--) {
+        ctx.fillText(studentName, W / 2, nameY + i, W * 0.65);
+      }
+
+      // Linear Gradient Fill (Glossy metallic gradient)
+      const textGrad = ctx.createLinearGradient(0, nameY - fontSp / 2, 0, nameY + fontSp / 2);
+      textGrad.addColorStop(0, "#4d82f3");
+      textGrad.addColorStop(0.35, "#2b59c3");
+      textGrad.addColorStop(0.7, "#1b3d82");
+      textGrad.addColorStop(1, "#0f234e");
+
+      ctx.fillStyle = textGrad;
+      ctx.shadowColor = "rgba(0,0,0,0.35)";
+      ctx.shadowBlur = Math.round(6 * SCALE);
+      ctx.shadowOffsetY = Math.round(3 * SCALE);
+      ctx.fillText(studentName, W / 2, nameY, W * 0.65);
+
+      // Glossy highlight stroke
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.lineWidth = Math.round(1.5 * SCALE);
+      ctx.strokeText(studentName, W / 2, nameY - 1, W * 0.65);
+
       ctx.restore();
 
       // 5. Draw description text — text-xs = 12px in HTML
@@ -231,9 +256,17 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
               {/* Dynamic Content */}
               <div className="relative z-10 w-full px-20 flex flex-col items-center justify-center h-full">
                 
-                {/* Student Name (Positioned in the empty space below "Diberikan Kepada:") */}
+                {/* Student Name (Glossy 3D Style) */}
                 <div className="absolute top-[48.5%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] text-center">
-                  <h2 className="font-['Fredoka'] font-bold text-4xl text-[#1b3d82] drop-shadow-md capitalize truncate">
+                  <h2 
+                    className="font-['Fredoka'] font-black text-4xl capitalize truncate tracking-wide py-1"
+                    style={{
+                      background: "linear-gradient(180deg, #4d82f3 0%, #2b59c3 35%, #1b3d82 70%, #0f234e 100%)",
+                      WebkitBackgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      filter: "drop-shadow(0 2px 0px #0a1633) drop-shadow(0 4px 8px rgba(0,0,0,0.35))"
+                    }}
+                  >
                     {studentName}
                   </h2>
                 </div>
