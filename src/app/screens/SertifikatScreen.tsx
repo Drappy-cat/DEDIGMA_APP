@@ -143,22 +143,36 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
                   </h2>
                 </div>
 
-                {/* Scores Cards (Pretest & Posttest) */}
-                <div className="absolute bottom-[20%] left-[10%] bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-1 shadow-lg w-[160px]">
-                  <div className="border border-[#c2aa84] rounded-xl py-3 px-4 flex flex-col items-center justify-center bg-white/50 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-blue-100/40 rounded-full blur-xl -mr-8 -mt-8"></div>
-                    <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-xs uppercase tracking-widest relative z-10">Pretest</p>
-                    <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1.5 relative z-10"></div>
-                    <p className="font-['Fredoka'] font-extrabold text-4xl text-[#1b3d82] relative z-10 drop-shadow-sm">{pretestScore}</p>
-                  </div>
-                </div>
-                
-                <div className="absolute bottom-[20%] right-[10%] bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-1 shadow-lg w-[160px]">
-                  <div className="border border-[#c2aa84] rounded-xl py-3 px-4 flex flex-col items-center justify-center bg-white/50 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-green-100/40 rounded-full blur-xl -mr-8 -mt-8"></div>
-                    <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-xs uppercase tracking-widest relative z-10">Posttest</p>
-                    <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1.5 relative z-10"></div>
-                    <p className="font-['Fredoka'] font-extrabold text-4xl text-[#366635] relative z-10 drop-shadow-sm">{posttestScore}</p>
+                {/* Content Below Name (Centered) */}
+                <div className="absolute bottom-[12%] left-1/2 -translate-x-1/2 flex flex-col items-center w-full">
+                  
+                  {/* Description */}
+                  <p className="text-[#4a3728] font-bold text-sm leading-relaxed max-w-xl px-4 uppercase text-center mb-1">
+                    ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.
+                  </p>
+                  <p className="text-gray-500 font-medium text-xs mt-0 italic mb-6">
+                    yang dilaksanakan pada tanggal {today}.
+                  </p>
+
+                  {/* Scores Cards (Pretest & Posttest) */}
+                  <div className="flex gap-10">
+                    <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-1 shadow-lg w-[160px]">
+                      <div className="border border-[#c2aa84] rounded-xl py-3 px-4 flex flex-col items-center justify-center bg-white/50 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-16 h-16 bg-blue-100/40 rounded-full blur-xl -mr-8 -mt-8"></div>
+                        <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-xs uppercase tracking-widest relative z-10">Pretest</p>
+                        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1.5 relative z-10"></div>
+                        <p className="font-['Fredoka'] font-extrabold text-4xl text-[#1b3d82] relative z-10 drop-shadow-sm">{pretestScore}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-2xl p-1 shadow-lg w-[160px]">
+                      <div className="border border-[#c2aa84] rounded-xl py-3 px-4 flex flex-col items-center justify-center bg-white/50 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-16 h-16 bg-green-100/40 rounded-full blur-xl -mr-8 -mt-8"></div>
+                        <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-xs uppercase tracking-widest relative z-10">Posttest</p>
+                        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1.5 relative z-10"></div>
+                        <p className="font-['Fredoka'] font-extrabold text-4xl text-[#366635] relative z-10 drop-shadow-sm">{posttestScore}</p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
