@@ -8,9 +8,10 @@ import { useAudio } from "../../contexts/AudioContext";
 interface RuangRefleksiScreenProps {
   mission: Mission;
   onNext: () => void;
+  onBack?: () => void;
 }
 
-export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ mission, onNext }) => {
+export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ mission, onNext, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [answers, setAnswers] = useState<string[]>(mission.refleksiPertanyaan.map(() => ""));
 
@@ -76,16 +77,33 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
         ))}
       </div>
 
-      {/* Sticky footer action button */}
-      <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
-        <Btn
-          onClick={handleNext}
-          variant="lanjut"
-          disabled={!canContinue}
-        />
+      {/* Bottom Navigation */}
+      <div className="flex flex-col flex-shrink-0 z-30 relative bg-transparent px-3 py-2 w-full">
+        <div className="flex justify-between items-center w-full">
+          {onBack ? (
+            <button
+              onClick={() => { playSFX("click"); onBack(); }}
+              className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+              aria-label="Kembali"
+            >
+              <img src="/assets/button/back.svg" alt="Kembali" className="w-12 sm:w-16 h-auto object-contain drop-shadow-md" />
+            </button>
+          ) : (
+            <div className="w-12 sm:w-16" />
+          )}
+
+          <button
+            onClick={() => { playSFX("click"); handleNext(); }}
+            disabled={!canContinue}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Lanjut"
+          >
+            <img src="/assets/button/next.svg" alt="Lanjut" className="w-12 sm:w-16 h-auto object-contain drop-shadow-md" />
+          </button>
+        </div>
         {!canContinue && (
-          <p className="text-center text-[10px] text-gray-400 font-semibold mt-1.5 select-none">
-            Isi seluruh pertanyaan dengan jawaban minimal 5 karakter untuk melanjutkan.
+          <p className="text-center text-[10px] text-gray-500 font-semibold mt-1.5 select-none w-full">
+            Isi seluruh pertanyaan dengan minimal 5 karakter.
           </p>
         )}
       </div>

@@ -105,116 +105,131 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
   if (done) {
     return (
-      <div
-        className="h-full flex flex-col items-center justify-center p-6 text-center select-none font-['Nunito']"
-        style={{
-          backgroundImage: "url('/assets/bg-lobby.svg')",
-          backgroundSize: "cover",
-          backgroundPosition: "center"
-        }}
-      >
-        <motion.div
-          initial={{ scale: 0, rotate: -15 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 15 }}
-          className="text-8xl filter drop-shadow-lg mb-4"
-        >
-          🎓
-        </motion.div>
-        <h2 className="font-['Fredoka'] font-bold text-3xl text-amber-700 leading-tight">Posttest Selesai!</h2>
-        <p className="text-gray-500 font-semibold mt-2 text-sm">Kamu telah menyelesaikan seluruh evaluasi akhir.</p>
+      <div className="h-full flex flex-col items-center justify-center p-6 text-center select-none font-['Nunito'] relative overflow-hidden">
+        {/* Blurred Background Layer */}
+        <div
+          className="absolute inset-0 z-0 bg-black/10 backdrop-blur-sm"
+          style={{
+            backgroundImage: "url('/assets/bg-login.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center"
+          }}
+        />
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center w-full">
+          <motion.div
+            initial={{ scale: 0, rotate: -15 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 200, damping: 15 }}
+            className="text-8xl filter drop-shadow-lg mb-4"
+          >
+            🎓
+          </motion.div>
+          <h2 className="font-['Fredoka'] font-bold text-3xl text-amber-700 leading-tight">Posttest Selesai!</h2>
+          <p className="text-gray-500 font-semibold mt-2 text-sm">Kamu telah menyelesaikan seluruh evaluasi akhir.</p>
 
-        <div className="bg-white/95 rounded-3xl shadow-xl p-5 my-6 w-full max-w-xs border border-amber-200">
-          <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">Skor Akhir Evaluasi</p>
-          <p className="font-['Fredoka'] font-bold text-6xl text-amber-500 my-1">{score}</p>
-          <p className="text-xs text-gray-500 font-semibold">{correctCount} dari {totalQ} benar</p>
+          <div className="bg-white/95 rounded-3xl shadow-xl p-5 my-6 w-full max-w-xs border border-amber-200">
+            <p className="text-gray-400 text-xs font-bold uppercase tracking-wider">Skor Akhir Evaluasi</p>
+            <p className="font-['Fredoka'] font-bold text-6xl text-amber-500 my-1">{score}</p>
+            <p className="text-xs text-gray-500 font-semibold">{correctCount} dari {totalQ} benar</p>
+          </div>
+
+          <Btn onClick={() => onComplete(score)} variant="lanjut" className="w-full max-w-xs mt-6" />
         </div>
-
-        <Btn onClick={() => onComplete(score)} variant="lanjut" className="w-full max-w-xs" />
       </div>
     );
   }
 
   return (
-    <div
-      className="h-full flex flex-col overflow-hidden font-['Nunito']"
-      style={{
-        backgroundImage: "url('/assets/bg-lobby.svg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
-    >
-      <ScreenHeader title="Posttest DEDIGMA 📝" onBack={onBack} onHome={onBack} />
+    <div className="h-full flex flex-col overflow-hidden font-['Nunito'] relative">
+      {/* Blurred Background Layer */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url('/assets/bg-login.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center"
+        }}
+      />
+      <div className="absolute inset-0 z-0 bg-white/10 backdrop-blur-[4px]"></div>
 
-      {/* Progress bar */}
-      <div className="bg-white/90 backdrop-blur-sm px-4 py-2.5 border-b border-gray-200 select-none">
-        <div className="flex justify-between text-xs text-gray-500 mb-1">
-          <span className="font-bold">Evaluasi: Pertanyaan {current + 1} dari {totalQ}</span>
-          <span className="text-blue-600 font-bold">{Math.round((current / totalQ) * 100)}%</span>
-        </div>
-        <div className="h-2 bg-blue-100 rounded-full overflow-hidden shadow-inner">
-          <div
-            className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full transition-all duration-300"
-            style={{ width: `${(current / totalQ) * 100}%` }}
-          />
-        </div>
-      </div>
+      {/* Content */}
+      <div className="relative z-10 flex flex-col h-full w-full">
+        <ScreenHeader title="Posttest DEDIGMA 📝" onBack={onBack} onHome={onBack} />
 
-      {/* Question container */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4">
-        <motion.div
-          key={current}
-          initial={{ x: 30, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: -30, opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
-          className="w-full max-w-md p-6 shadow-2xl relative flex flex-col justify-between"
-          style={{
-            backgroundImage: "url('/assets/content-bg.png')",
-            backgroundSize: "100% 100%",
-            backgroundRepeat: "no-repeat",
-            backgroundColor: "transparent",
-            minHeight: "420px"
-          }}
-        >
-          <div className="px-3 pt-4 select-none">
-            <h2 className="font-['Fredoka'] font-bold text-base text-blue-800 flex items-center gap-1.5 mb-3">
-              <BookOpen size={18} /> Soal Evaluasi
+        {/* Progress bar */}
+        <div className="bg-white/90 backdrop-blur-sm px-4 py-2.5 border-b border-gray-200 select-none">
+          <div className="flex justify-between text-xs text-gray-500 mb-1">
+            <span className="font-bold">Evaluasi: Pertanyaan {current + 1} dari {totalQ}</span>
+            <span className="text-blue-600 font-bold">{Math.round((current / totalQ) * 100)}%</span>
+          </div>
+          <div className="h-2 bg-blue-100 rounded-full overflow-hidden shadow-inner">
+            <div
+              className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full transition-all duration-300"
+              style={{ width: `${(current / totalQ) * 100}%` }}
+            />
+          </div>
+        </div>
+
+        {/* Question container */}
+        <div className="flex-1 flex flex-col items-center justify-center p-4">
+          <motion.div
+            key={current}
+            initial={{ x: 30, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -30, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="w-full max-w-lg h-[90%] sm:h-full max-h-[650px] shadow-2xl relative flex flex-col justify-between mx-auto"
+            style={{
+              backgroundImage: "url('/assets/content-bg.png')",
+              backgroundSize: "100% 100%",
+              backgroundRepeat: "no-repeat",
+              backgroundColor: "transparent",
+              minHeight: "480px"
+            }}
+          >
+            {/* Absolute positioning for the heading so it sits inside the top ribbon shape */}
+            <h2 className="font-['Fredoka'] font-bold text-lg sm:text-xl text-blue-900 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] absolute top-6 sm:top-7 left-0 right-0 flex items-center justify-center gap-2 z-10 pointer-events-none">
+              <BookOpen size={20} /> Soal Evaluasi
             </h2>
-            <p className="font-bold text-gray-800 text-sm leading-relaxed mb-4">{q.soal}</p>
-          </div>
 
-          <div className="px-3 pb-6 space-y-2.5">
-            {q.opsi.map((o, idx) => {
-              const userAns = answers[current];
-              let btnStyle =
-                "border-2 border-blue-150 bg-blue-50/20 text-gray-700 hover:border-blue-400 hover:bg-blue-50/50";
+            <div className="px-8 sm:px-12 pt-20 sm:pt-24 select-none flex-1 flex flex-col justify-center">
+              <p className="font-bold text-gray-900 text-sm sm:text-base leading-relaxed mb-6 text-center drop-shadow-sm">{q.soal}</p>
+            </div>
 
-              if (userAns !== null) {
-                if (idx === q.jawaban) {
-                  btnStyle = "border-2 border-green-400 bg-green-100 text-green-800 shadow shadow-green-100";
-                } else if (idx === userAns && userAns !== q.jawaban) {
-                  btnStyle = "border-2 border-red-400 bg-red-100 text-red-700 shadow shadow-red-100";
-                } else {
-                  btnStyle = "border-2 border-gray-100 bg-gray-50/50 text-gray-400 opacity-60";
+            {/* Added pb-14 to avoid overlapping the bottom border */}
+            <div className="px-8 sm:px-12 pb-14 sm:pb-16 space-y-3">
+              {q.opsi.map((o, idx) => {
+                const userAns = answers[current];
+                let btnStyle =
+                  "border-2 border-blue-200 bg-white/90 backdrop-blur-sm text-gray-800 hover:border-blue-500 hover:bg-blue-50 shadow-sm";
+
+                if (userAns !== null) {
+                  if (idx === q.jawaban) {
+                    btnStyle = "border-2 border-green-500 bg-green-100/95 text-green-900 shadow-md shadow-green-200/50";
+                  } else if (idx === userAns && userAns !== q.jawaban) {
+                    btnStyle = "border-2 border-red-500 bg-red-100/95 text-red-900 shadow-md shadow-red-200/50";
+                  } else {
+                    btnStyle = "border-2 border-gray-200 bg-gray-50/80 text-gray-400 opacity-60";
+                  }
                 }
-              }
 
-              return (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => handleSelect(idx)}
-                  disabled={answers[current] !== null}
-                  className={`w-full text-left rounded-2xl px-4 py-2.5 text-xs font-semibold transition-all cursor-pointer select-none leading-relaxed ${btnStyle}`}
-                >
-                  <span className="font-bold mr-1.5">{String.fromCharCode(65 + idx)}.</span>
-                  {o}
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
+                return (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => handleSelect(idx)}
+                    disabled={answers[current] !== null}
+                    className={`w-full text-left rounded-2xl px-5 py-3 text-xs sm:text-sm font-semibold transition-all cursor-pointer select-none leading-relaxed ${btnStyle}`}
+                  >
+                    <span className="font-bold mr-2 text-base">{String.fromCharCode(65 + idx)}.</span>
+                    {o}
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        </div>
       </div>
     </div>
   );
