@@ -129,12 +129,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
         {/* Question container */}
         <div className="flex-1 flex flex-col items-center justify-center p-4">
-          <motion.div
-            key={current}
-            initial={{ x: 30, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -30, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
+          <div
             className="w-[95%] max-w-none h-[90%] sm:h-full max-h-[650px] shadow-2xl relative flex flex-col justify-between mx-auto"
             style={{
               backgroundImage: "url('/assets/content-bg.png')",
@@ -149,9 +144,17 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
               <BookOpen size={20} /> Soal Evaluasi
             </h2>
 
-            <div className="px-10 sm:px-16 pt-20 sm:pt-24 select-none flex-1 flex flex-col justify-center">
-              <p className="font-bold text-gray-900 text-sm sm:text-base leading-relaxed mb-6 text-center drop-shadow-sm">{q.soal}</p>
-            </div>
+            <motion.div
+              key={current}
+              initial={{ x: 30, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -30, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="flex-1 flex flex-col justify-between"
+            >
+              <div className="px-10 sm:px-16 pt-20 sm:pt-24 select-none flex-1 flex flex-col justify-center">
+                <p className="font-bold text-gray-900 text-sm sm:text-base leading-relaxed mb-6 text-center drop-shadow-sm">{q.soal}</p>
+              </div>
 
             {/* Added pb-14 to avoid overlapping the bottom border */}
             <div className="px-10 sm:px-16 pb-14 sm:pb-16 space-y-3">
@@ -184,7 +187,8 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
                 );
               })}
             </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </div>
