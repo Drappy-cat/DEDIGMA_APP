@@ -426,6 +426,8 @@ function AppContent() {
                 <SertifikatScreen
                   studentName={userName}
                   missionScores={missionScores}
+                  pretestScore={pretestScore}
+                  posttestScore={posttestScore}
                   onBack={() => navigateTo("splash")}
                 />
               )}

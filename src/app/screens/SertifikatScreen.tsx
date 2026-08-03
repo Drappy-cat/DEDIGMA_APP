@@ -1,8 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { Download, RefreshCw } from "lucide-react";
-import { MISSIONS } from "../data/missions";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { Btn } from "../components/Btn";
 import { useAudio } from "../contexts/AudioContext";
@@ -10,23 +9,22 @@ import { useAudio } from "../contexts/AudioContext";
 interface SertifikatScreenProps {
   studentName: string;
   missionScores: Record<number, number>;
+  pretestScore?: number;
+  posttestScore?: number;
   onBack: () => void;
 }
-
-type Orientation = "landscape" | "portrait";
 
 export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
   studentName,
   missionScores,
+  pretestScore = 0,
+  posttestScore = 0,
   onBack
 }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
-  const [orientation, setOrientation] = useState<Orientation>("landscape");
   const [isGenerating, setIsGenerating] = useState(false);
   const certRef = useRef<HTMLDivElement>(null);
 
-  const scoreValues = Object.values(missionScores);
-  const avg = scoreValues.length > 0 ? Math.round(scoreValues.reduce((a, b) => a + b, 0) / scoreValues.length) : 0;
   const today = new Date().toLocaleDateString("id-ID", {
     day: "numeric",
     month: "long",
@@ -35,7 +33,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
 
   useEffect(() => {
     playNarrator(
-      `Ini adalah sertifikat kelulusan digitalmu, ${studentName}! Pilih orientasi sertifikat mendatar atau tegak, lalu ketuk tombol Simpan Sertifikat.`
+      `Ini adalah sertifikat kelulusan digitalmu, ${studentName}! Nilai Pretest dan Posttest-mu juga tercatat di sini. Ketuk tombol Simpan Sertifikat untuk mengunduhnya.`
     );
     return () => {
       stopNarrator();
@@ -52,31 +50,22 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       // Small delay to ensure rendering completes
       await new Promise((resolve) => setTimeout(resolve, 300));
 
-      // Capture the element as canvas
       const canvas = await html2canvas(el, {
-        scale: 2, // high quality
-        useCORS: true, // handles external images
+        scale: 2, 
+        useCORS: true, 
         allowTaint: true,
-        backgroundColor: "#ffffff"
+        backgroundColor: null
       });
 
       const imgData = canvas.toDataURL("image/png");
 
-      // Set up PDF properties
-      const isLandscape = orientation === "landscape";
       const pdf = new jsPDF({
-        orientation: isLandscape ? "landscape" : "portrait",
+        orientation: "landscape",
         unit: "mm",
         format: "a4"
       });
 
-      const pdfWidth = isLandscape ? 297 : 210;
-      const pdfHeight = isLandscape ? 210 : 297;
-
-      // Draw the image onto the page fitting the A4 bounds
-      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-
-      // Save the PDF
+      pdf.addImage(imgData, "PNG", 0, 0, 297, 210);
       pdf.save(`Sertifikat_DEDIGMA_${studentName.replace(/\s+/g, "_")}.pdf`);
       playSFX("badge");
     } catch (err) {
@@ -100,128 +89,68 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       <ScreenHeader title="Sertifikat Digital 🎓" onBack={onBack} />
 
       <div className="flex-1 overflow-y-auto p-4 flex flex-col items-center gap-4">
-        {/* Orientation Toggle Options */}
-        <div className="bg-white rounded-2xl shadow-md p-2.5 flex items-center gap-3 w-full max-w-sm border border-blue-100/40 select-none">
-          <span className="font-['Fredoka'] font-semibold text-blue-800 text-sm flex-1 pl-1.5">
-            Orientasi Sertifikat:
-          </span>
-          <div className="flex bg-blue-50 p-1 rounded-xl gap-1">
-            <button
-              onClick={() => {
-                playSFX("click");
-                setOrientation("landscape");
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-['Fredoka'] font-bold transition-all cursor-pointer ${
-                orientation === "landscape" ? "bg-blue-600 text-white shadow-sm" : "text-blue-600 hover:bg-blue-100"
-              }`}
-            >
-              Landscape
-            </button>
-            <button
-              onClick={() => {
-                playSFX("click");
-                setOrientation("portrait");
-              }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-['Fredoka'] font-bold transition-all cursor-pointer ${
-                orientation === "portrait" ? "bg-blue-600 text-white shadow-sm" : "text-blue-600 hover:bg-blue-100"
-              }`}
-            >
-              Portrait
-            </button>
-          </div>
-        </div>
-
         {/* Certificate Container Wrapper */}
         <div className="w-full flex justify-center items-center flex-1 max-h-[60vh] md:max-h-[65vh]">
-          {/* Certificate View Container (Forces layout sizes for canvas capture) */}
-          <div className="shadow-2xl rounded-2xl overflow-hidden border-2 border-amber-300 bg-white max-w-full max-h-full aspect-auto flex justify-center items-center relative group">
-            {/* Glossy hologram shimmer glare layer */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none z-30" />
-            {/* The element we convert to image */}
+          
+          <div className="shadow-2xl rounded-sm overflow-hidden bg-white max-w-full max-h-full aspect-[1.414] flex justify-center items-center relative group">
+            {/* The element we convert to image (A4 Landscape ratio) */}
             <div
               ref={certRef}
-              className={`bg-white border-[12px] border-amber-400 p-6 flex flex-col justify-between items-center text-center font-['Nunito'] relative flex-shrink-0`}
+              className="relative flex-shrink-0 flex flex-col justify-center items-center text-center font-['Nunito']"
               style={{
-                width: orientation === "landscape" ? "842px" : "595px",
-                height: orientation === "landscape" ? "595px" : "842px"
+                width: "842px",
+                height: "595px",
+                backgroundImage: "url('/assets/bg-sertifikat.svg')",
+                backgroundSize: "100% 100%",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat"
               }}
             >
-              {/* Decorative Corner Ornaments */}
-              <div className="absolute top-2 left-2 text-2xl opacity-40 select-none">🔍</div>
-              <div className="absolute top-2 right-2 text-2xl opacity-40 select-none">🗺️</div>
-              <div className="absolute bottom-2 left-2 text-2xl opacity-40 select-none">⭐</div>
-              <div className="absolute bottom-2 right-2 text-2xl opacity-40 select-none">🏆</div>
+              {/* Fallback border if no image is uploaded yet */}
+              <div className="absolute inset-0 border-[12px] border-[#1b3d82] pointer-events-none z-0 opacity-10" />
 
-              {/* Certificate Header Banner */}
-              <div className="w-full bg-gradient-to-r from-blue-700 via-blue-800 to-blue-700 text-white py-4 px-6 rounded-xl shadow-md flex flex-col items-center">
-                <p className="font-['Fredoka'] font-bold text-3xl tracking-widest text-yellow-300 drop-shadow-sm">DEDIGMA</p>
-                <p className="text-blue-200 text-xs font-['Fredoka'] font-medium tracking-wide mt-0.5">
-                  DETEKTIF DIGITAL BUDAYA MAGETAN
-                </p>
-              </div>
-
-              {/* Core Text Body */}
-              <div className="my-auto space-y-4 px-4 w-full">
-                <div className="space-y-1">
-                  <p className="text-gray-400 text-xs tracking-widest font-extrabold uppercase">Sertifikat Kelulusan</p>
-                  <p className="text-gray-500 text-xs font-semibold">Diberikan kepada siswa berprestasi:</p>
+              {/* Dynamic Content */}
+              <div className="relative z-10 w-full px-20 flex flex-col items-center justify-center h-full">
+                
+                {/* Certificate Title Area */}
+                <div className="mt-8 mb-6">
+                  <h1 className="font-['Fredoka'] font-extrabold text-5xl text-[#1b3d82] tracking-widest drop-shadow-sm">
+                    SERTIFIKAT
+                  </h1>
+                  <p className="text-[#7e371b] font-bold text-sm tracking-[0.2em] mt-2">
+                    DETEKTIF DIGITAL BUDAYA MAGETAN
+                  </p>
                 </div>
 
-                <div className="border-b-4 border-double border-amber-400 pb-2 inline-block px-8 max-w-full">
-                  <h2 className="font-['Fredoka'] font-bold text-3xl text-blue-700 drop-shadow-sm truncate">
+                {/* Recipient Area */}
+                <p className="text-gray-600 font-semibold text-lg mb-4">Diberikan Kepada:</p>
+                
+                <div className="border-b-2 border-[#7e371b] pb-2 px-12 mb-6 min-w-[60%]">
+                  <h2 className="font-['Fredoka'] font-bold text-4xl text-[#1b3d82] drop-shadow-sm capitalize">
                     {studentName}
                   </h2>
                 </div>
 
-                <p className="text-gray-600 text-sm leading-relaxed max-w-xl mx-auto">
-                  Telah berhasil menyelesaikan seluruh misi petualangan budaya dalam media pembelajaran interaktif{" "}
-                  <strong>DEDIGMA (Detektif Digital Budaya Magetan)</strong> dan membuktikan kompetensi berpikir kritis,
-                  literasi digital, serta kecintaan yang mendalam terhadap budaya lokal Magetan.
+                {/* Description */}
+                <p className="text-[#4a3728] font-bold text-[15px] leading-relaxed max-w-2xl px-4 uppercase">
+                  ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.
                 </p>
-              </div>
+                <p className="text-gray-500 font-medium text-sm mt-2 italic">
+                  yang dilaksanakan pada tanggal {today}.
+                </p>
 
-              {/* Badges and Scores Row */}
-              <div
-                className={`grid gap-4 w-full max-w-lg mb-4 ${
-                  orientation === "landscape" ? "grid-cols-4 items-center" : "grid-cols-2"
-                }`}
-              >
-                {MISSIONS.map((m) => (
-                  <div key={m.id} className="bg-blue-50/70 border border-blue-100/40 rounded-xl p-2 flex flex-col items-center">
-                    <span className="text-2xl filter drop-shadow select-none">{m.emoji}</span>
-                    <p className="font-['Fredoka'] text-blue-700 text-[10px] font-bold mt-1 truncate max-w-full">
-                      {m.name}
-                    </p>
-                    <p className="text-[10px] text-gray-500 font-semibold font-['Nunito']">
-                      Skor: {missionScores[m.id] ?? 0}
-                    </p>
+                {/* Scores Cards (Pretest & Posttest) */}
+                <div className="flex gap-8 mt-10">
+                  <div className="bg-white/80 backdrop-blur-sm border-2 border-[#1b3d82] rounded-xl py-3 px-8 shadow-sm flex flex-col items-center min-w-[140px]">
+                    <p className="font-['Fredoka'] font-bold text-[#7e371b] text-xs uppercase tracking-wide">Pretest</p>
+                    <p className="font-['Fredoka'] font-extrabold text-3xl text-[#1b3d82] mt-1">{pretestScore}</p>
                   </div>
-                ))}
-
-                {/* Avg Badge */}
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-2 flex flex-col items-center justify-center">
-                  <span className="text-2xl filter drop-shadow select-none">🏆</span>
-                  <p className="font-['Fredoka'] text-amber-700 text-[10px] font-bold mt-1">Rata-rata</p>
-                  <p className="text-[10px] text-amber-600 font-bold">{avg}</p>
-                </div>
-              </div>
-
-              {/* Signatures Footer Row */}
-              <div className="w-full flex justify-between items-end px-4 mt-auto">
-                <div className="text-left">
-                  <p className="text-gray-400 text-[10px] font-semibold">{today}</p>
-                  <p className="text-gray-500 text-[11px] font-bold border-t border-gray-200 pt-1 mt-1">Tanggal</p>
+                  <div className="bg-white/80 backdrop-blur-sm border-2 border-[#366635] rounded-xl py-3 px-8 shadow-sm flex flex-col items-center min-w-[140px]">
+                    <p className="font-['Fredoka'] font-bold text-[#7e371b] text-xs uppercase tracking-wide">Posttest</p>
+                    <p className="font-['Fredoka'] font-extrabold text-3xl text-[#366635] mt-1">{posttestScore}</p>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-2 bg-yellow-50 px-3 py-1.5 rounded-full border border-yellow-200 shadow-sm">
-                  <span className="text-lg">🏅</span>
-                  <span className="text-xs font-['Fredoka'] font-bold text-amber-800">Detektif Resmi</span>
-                </div>
-
-                <div className="text-right">
-                  <div className="text-2xl filter drop-shadow select-none">👩‍🏫</div>
-                  <p className="text-gray-500 text-[11px] font-bold border-t border-gray-200 pt-1 mt-1">Pengajar Kelas</p>
-                </div>
               </div>
             </div>
           </div>
