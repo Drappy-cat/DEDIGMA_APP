@@ -97,30 +97,30 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       const fontSp = Math.round(36 * SCALE);
       ctx.font = `900 ${fontSp}px 'Fredoka', 'Nunito', sans-serif`;
 
-      // 3D Depth Layer (extrusion shadow)
+      // 3D Depth Layer (dark bronze extrusion shadow for high contrast)
       const depth = Math.round(3 * (SCALE / 2.946));
-      ctx.fillStyle = "#661400";
+      ctx.fillStyle = "#3d2400";
       for (let i = depth; i > 0; i--) {
         ctx.fillText(studentName, W / 2, nameY + i, W * 0.65);
       }
 
-      // Linear Gradient Fill (Bright Glossy Orange Gradient)
+      // Linear Gradient Fill (Rich Golden Yellow)
       const textGrad = ctx.createLinearGradient(0, nameY - fontSp / 2, 0, nameY + fontSp / 2);
-      textGrad.addColorStop(0, "#ffe066");
-      textGrad.addColorStop(0.3, "#ff9900");
-      textGrad.addColorStop(0.7, "#e64a00");
-      textGrad.addColorStop(1, "#801a00");
+      textGrad.addColorStop(0, "#fff7ad");
+      textGrad.addColorStop(0.35, "#ffd700");
+      textGrad.addColorStop(0.7, "#d49b00");
+      textGrad.addColorStop(1, "#996d00");
 
       ctx.fillStyle = textGrad;
-      ctx.shadowColor = "rgba(102, 20, 0, 0.4)";
+      ctx.shadowColor = "rgba(61, 36, 0, 0.5)";
       ctx.shadowBlur = Math.round(6 * SCALE);
       ctx.shadowOffsetY = Math.round(3 * SCALE);
       ctx.fillText(studentName, W / 2, nameY, W * 0.65);
 
-      // Glossy highlight stroke
-      ctx.strokeStyle = "rgba(255, 245, 204, 0.6)";
-      ctx.lineWidth = Math.round(1.5 * SCALE);
-      ctx.strokeText(studentName, W / 2, nameY - 1, W * 0.65);
+      // Dark thin outline stroke to make yellow text pop crystal clear
+      ctx.strokeStyle = "#3d2400";
+      ctx.lineWidth = Math.round(1 * SCALE);
+      ctx.strokeText(studentName, W / 2, nameY, W * 0.65);
 
       ctx.restore();
 
@@ -261,10 +261,10 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
                   <h2 
                     className="font-['Fredoka'] font-black text-4xl capitalize truncate tracking-wide py-1"
                     style={{
-                      background: "linear-gradient(180deg, #ffe066 0%, #ff9900 35%, #e64a00 70%, #801a00 100%)",
+                      background: "linear-gradient(180deg, #fff7ad 0%, #ffd700 35%, #d49b00 70%, #996d00 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
-                      filter: "drop-shadow(0 2px 0px #661400) drop-shadow(0 4px 8px rgba(102, 20, 0, 0.4))"
+                      filter: "drop-shadow(0 2px 0px #3d2400) drop-shadow(0 3px 6px rgba(61, 36, 0, 0.5))"
                     }}
                   >
                     {studentName}
