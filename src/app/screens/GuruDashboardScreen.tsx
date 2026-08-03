@@ -210,7 +210,7 @@ export const GuruDashboardScreen: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#183655] flex flex-col font-['Nunito'] select-none">
+    <div className="w-full h-full min-h-0 bg-[#183655] flex flex-col font-['Nunito'] select-none">
       {/* Top Header */}
       <div className="px-6 py-4 flex items-center justify-between border-b border-white/10">
         <div className="flex items-center gap-3">

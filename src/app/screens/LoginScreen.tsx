@@ -68,7 +68,7 @@ export const LoginScreen: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center p-3 sm:p-6 relative overflow-hidden select-none font-['Nunito']"
+      className="w-full h-full min-h-0 flex items-center justify-center p-3 sm:p-6 relative overflow-y-auto select-none font-['Nunito']"
       style={{
         backgroundImage: "url('/assets/bg-login.png')",
         backgroundSize: "cover",
@@ -84,7 +84,7 @@ export const LoginScreen: React.FC = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, type: "spring", stiffness: 100 }}
-        className="w-full max-w-2xl bg-[#f4ecd5] border-4 border-[#c2aa84] rounded-3xl shadow-[0_12px_35px_rgba(0,0,0,0.5)] p-4 sm:p-6 relative z-10 overflow-hidden"
+        className="w-full max-w-2xl max-h-full overflow-y-auto bg-[#f4ecd5] border-4 border-[#c2aa84] rounded-3xl shadow-[0_12px_35px_rgba(0,0,0,0.5)] p-4 sm:p-6 relative z-10 my-auto flex flex-col justify-center"
       >
         {/* Top Header Card */}
         <div className="border-2 border-dashed border-[#bda682] rounded-2xl bg-[#eee4c5]/60 p-3 text-center mb-5">

@@ -67,15 +67,15 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
           </div>
 
           {/* Navigation Tabs */}
-          <div className="grid grid-cols-2 gap-2 bg-slate-800/80 p-1 rounded-2xl border border-slate-700 relative select-none">
-            {/* Smooth Horizontal Sliding Pill Indicator */}
+          <div className="flex bg-slate-800/80 p-1 rounded-2xl border border-slate-700 relative select-none">
+            {/* Perfectly Aligned Sliding Active Pill */}
             <motion.div
-              className="absolute top-1 bottom-1 w-[calc(50%-0.375rem)] bg-amber-500 rounded-xl shadow-md z-0"
+              className="absolute left-1 top-1 bottom-1 w-[calc(50%-0.25rem)] bg-amber-500 rounded-xl shadow-md z-0"
               initial={false}
               animate={{
-                left: activeTab === "audio" ? "0.25rem" : "calc(50% + 0.125rem)"
+                x: activeTab === "audio" ? "0%" : "100%"
               }}
-              transition={{ type: "spring", stiffness: 500, damping: 35 }}
+              transition={{ type: "spring", stiffness: 450, damping: 32 }}
             />
 
             <button
@@ -84,7 +84,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                 playSFX("click");
                 setActiveTab("audio");
               }}
-              className={`py-2 rounded-xl font-['Fredoka'] text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer relative z-10 ${
+              className={`flex-1 py-2 rounded-xl font-['Fredoka'] text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer relative z-10 ${
                 activeTab === "audio" ? "text-slate-950" : "text-slate-300 hover:text-white"
               }`}
             >
@@ -97,7 +97,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                 playSFX("click");
                 setActiveTab("about");
               }}
-              className={`py-2 rounded-xl font-['Fredoka'] text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer relative z-10 ${
+              className={`flex-1 py-2 rounded-xl font-['Fredoka'] text-xs font-bold transition-colors flex items-center justify-center gap-1.5 cursor-pointer relative z-10 ${
                 activeTab === "about" ? "text-slate-950" : "text-slate-300 hover:text-white"
               }`}
             >
