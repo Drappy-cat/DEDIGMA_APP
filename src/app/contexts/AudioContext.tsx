@@ -179,7 +179,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (!audioEnabled || !sfxEnabled) return;
 
     const sfxPaths = {
-      click: "/audio/sfx-click.mp3",
+      click: "/audio/pop click.MP3",
       success: "/audio/sfx-success.mp3",
       fail: "/audio/sfx-fail.mp3",
       badge: "/audio/sfx-badge.mp3"
