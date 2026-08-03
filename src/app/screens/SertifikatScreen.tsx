@@ -62,9 +62,9 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
     setIsGenerating(true);
 
     try {
-      // A4 Landscape in pixels at 150dpi
-      const W = 1122;
-      const H = 794;
+      // A4 Landscape at 300dpi for sharp print quality (2x)
+      const W = 2480;
+      const H = 1754;
 
       // 1. Load the SVG background as an Image
       const svgImg = await new Promise<HTMLImageElement>((resolve, reject) => {
@@ -84,26 +84,26 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       // 3. Draw SVG background
       ctx.drawImage(svgImg, 0, 0, W, H);
 
-      // 4. Draw student name centered at ~43% height
+      // 4. Draw student name — positioned to match preview (below Diberikan Kepada)
       ctx.save();
       ctx.textAlign = "center";
       ctx.fillStyle = "#1b3d82";
       ctx.font = `bold ${Math.round(H * 0.075)}px 'Fredoka', 'Nunito', sans-serif`;
       ctx.shadowColor = "rgba(0,0,0,0.2)";
-      ctx.shadowBlur = 8;
-      ctx.fillText(studentName, W / 2, H * 0.445, W * 0.75);
+      ctx.shadowBlur = 12;
+      ctx.fillText(studentName, W / 2, H * 0.52, W * 0.65);
       ctx.restore();
 
       // 5. Draw description text
       ctx.save();
       ctx.textAlign = "center";
       ctx.fillStyle = "#4a3728";
-      ctx.font = `700 ${Math.round(H * 0.027)}px 'Nunito', sans-serif`;
+      ctx.font = `700 ${Math.round(H * 0.025)}px 'Nunito', sans-serif`;
       ctx.fillText(
         "ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.",
         W / 2,
-        H * 0.72,
-        W * 0.65
+        H * 0.75,
+        W * 0.60
       );
       ctx.restore();
 
@@ -111,54 +111,54 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       ctx.save();
       ctx.textAlign = "center";
       ctx.fillStyle = "#888888";
-      ctx.font = `italic ${Math.round(H * 0.022)}px 'Nunito', sans-serif`;
-      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.755);
+      ctx.font = `italic ${Math.round(H * 0.020)}px 'Nunito', sans-serif`;
+      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.785);
       ctx.restore();
 
-      // 7. Draw Pretest card (left)
-      const cardW = 200;
-      const cardH = 90;
-      const cardY = H * 0.81;
-      const pretestX = W / 2 - cardW - 20;
-      const posttestX = W / 2 + 20;
+      // 7. Score cards positioned to match preview
+      const cardW = 420;
+      const cardH = 190;
+      const cardY = H * 0.825;
+      const pretestX = W / 2 - cardW - 30;
+      const posttestX = W / 2 + 30;
 
       const drawScoreCard = (x: number, label: string, score: number, color: string) => {
         ctx.save();
         ctx.fillStyle = "#f8f3e6";
         ctx.strokeStyle = "#d9c5a3";
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 6;
         ctx.beginPath();
-        ctx.roundRect(x, cardY, cardW, cardH, 14);
+        ctx.roundRect(x, cardY, cardW, cardH, 28);
         ctx.fill();
         ctx.stroke();
 
         // Inner card
         ctx.fillStyle = "rgba(255,255,255,0.5)";
         ctx.strokeStyle = "#c2aa84";
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.roundRect(x + 5, cardY + 5, cardW - 10, cardH - 10, 10);
+        ctx.roundRect(x + 10, cardY + 10, cardW - 20, cardH - 20, 20);
         ctx.fill();
         ctx.stroke();
 
         // Label
         ctx.fillStyle = "#7e371b";
-        ctx.font = `800 ${Math.round(H * 0.022)}px 'Fredoka', sans-serif`;
+        ctx.font = `800 ${Math.round(H * 0.032)}px 'Fredoka', sans-serif`;
         ctx.textAlign = "center";
-        ctx.fillText(label.toUpperCase(), x + cardW / 2, cardY + 28);
+        ctx.fillText(label.toUpperCase(), x + cardW / 2, cardY + cardH * 0.38);
 
         // Divider
         ctx.strokeStyle = "#d9c5a3";
-        ctx.lineWidth = 1;
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(x + 20, cardY + 38);
-        ctx.lineTo(x + cardW - 20, cardY + 38);
+        ctx.moveTo(x + 30, cardY + cardH * 0.52);
+        ctx.lineTo(x + cardW - 30, cardY + cardH * 0.52);
         ctx.stroke();
 
         // Score
         ctx.fillStyle = color;
-        ctx.font = `800 ${Math.round(H * 0.065)}px 'Fredoka', sans-serif`;
-        ctx.fillText(String(score), x + cardW / 2, cardY + 78);
+        ctx.font = `800 ${Math.round(H * 0.075)}px 'Fredoka', sans-serif`;
+        ctx.fillText(String(score), x + cardW / 2, cardY + cardH * 0.90);
         ctx.restore();
       };
 
