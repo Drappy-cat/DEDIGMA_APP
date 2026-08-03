@@ -55,7 +55,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 
   const triggerShake = (id: number) => {
     try {
-      playSFX("wrong");
+      playSFX("fail");
     } catch {
       playSFX("click");
     }

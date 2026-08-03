@@ -356,9 +356,9 @@ export const GuruDashboardScreen: React.FC = () => {
                   className="bg-black/20 rounded-xl p-3 flex items-center justify-between border border-white/10"
                 >
                   <div className="flex items-center gap-2.5">
-                    <span className="text-2xl">{m.icon}</span>
+                    <span className="text-2xl">{m.emoji}</span>
                     <div>
-                      <p className="font-['Fredoka'] font-bold text-xs text-white">Misi {m.id}: {m.title}</p>
+                      <p className="font-['Fredoka'] font-bold text-xs text-white">Misi {m.id}: {m.name}</p>
                       <p className="text-[10px] text-blue-200">{isLocked ? "🔒 Terkunci" : "🔓 Terbuka"}</p>
                     </div>
                   </div>
