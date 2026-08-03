@@ -212,7 +212,8 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
               className="relative p-6 sm:p-10 w-[95%] max-w-md shadow-2xl flex flex-col"
               style={{
                 backgroundImage: "url('/assets/papan-kayu.svg')",
-                backgroundSize: "100% 100%",
+                backgroundSize: "120% 135%",
+                backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
                 backgroundColor: "transparent",
                 minHeight: "350px"
