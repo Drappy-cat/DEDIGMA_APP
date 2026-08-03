@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Award, BookOpen, ChevronRight } from "lucide-react";
 import { Btn } from "../components/Btn";
 import { ScreenHeader } from "../components/ScreenHeader";
@@ -158,7 +158,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -30, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="flex-1 flex flex-col justify-between"
+              className="flex-1 flex flex-col justify-between overflow-y-auto"
             >
               <div className="px-10 sm:px-16 pt-20 sm:pt-24 select-none flex-1 flex flex-col justify-center">
                 <p className="font-bold text-gray-900 text-sm sm:text-base leading-relaxed mb-6 text-center drop-shadow-sm">{q.soal}</p>
@@ -194,40 +194,52 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
                   </button>
                 );
               })}
-              
-              <AnimatePresence>
-                {isAnswered && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    className="pt-4 overflow-hidden"
-                  >
-                    <div className={`p-4 rounded-xl shadow-inner border-2 ${
-                      answers[current] === q.jawaban ? 'bg-green-50 border-green-200 text-green-900' : 'bg-red-50 border-red-200 text-red-900'
-                    }`}>
-                      <p className="font-bold text-sm mb-1">
-                        {answers[current] === q.jawaban ? '✅ Tepat Sekali!' : '❌ Kurang Tepat!'}
-                      </p>
-                      <p className="text-xs leading-relaxed font-semibold">
-                        {q.pembahasan || 'Jawaban telah direkam.'}
-                      </p>
-                    </div>
-                    
-                    <button
-                      onClick={handleNextQuestion}
-                      className="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md active:scale-95 cursor-pointer"
-                    >
-                      {current < POSTTEST_QUESTIONS.length - 1 ? 'Lanjut ke Soal Berikutnya' : 'Selesai Posttest'}
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
             </motion.div>
           </div>
         </div>
       </div>
+      
+      {/* Modal Feedback Popup */}
+      <AnimatePresence>
+        {isAnswered && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              className="bg-white rounded-3xl p-6 w-full max-w-md shadow-2xl border-4 border-amber-200 flex flex-col"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-sm ${
+                  answers[current] === q.jawaban ? 'bg-green-100' : 'bg-red-100'
+                }`}>
+                  {answers[current] === q.jawaban ? '✅' : '❌'}
+                </div>
+                <div>
+                  <h3 className={`font-['Fredoka'] font-bold text-xl ${
+                    answers[current] === q.jawaban ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    {answers[current] === q.jawaban ? 'Tepat Sekali!' : 'Kurang Tepat!'}
+                  </h3>
+                  <p className="text-gray-500 text-xs font-bold">PEMBAHASAN</p>
+                </div>
+              </div>
+              
+              <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100 mb-6 max-h-60 overflow-y-auto custom-scrollbar">
+                <p className="text-gray-700 text-sm leading-relaxed font-semibold">
+                  {q.pembahasan || 'Jawaban telah direkam.'}
+                </p>
+              </div>
+              
+              <Btn onClick={handleNextQuestion} variant="blue" className="w-full py-3.5 text-base shadow-md">
+                {current < POSTTEST_QUESTIONS.length - 1 ? 'Lanjut ke Soal Berikutnya' : 'Selesai Posttest'}
+              </Btn>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
