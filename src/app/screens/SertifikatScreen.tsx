@@ -63,16 +63,28 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
     const el = certRef.current;
     if (!el) return;
 
+    // Remove CSS transform scale temporarily to fix html2canvas coordinate calculation bug
+    const scaledParent = el.parentElement;
+    let originalTransform = "";
+    let originalTransition = "";
+    if (scaledParent) {
+      originalTransform = scaledParent.style.transform;
+      originalTransition = scaledParent.style.transition;
+      scaledParent.style.transition = "none";
+      scaledParent.style.transform = "none";
+    }
+
     setIsGenerating(true);
 
     try {
-      // Small delay to ensure rendering completes
+      // Small delay to ensure rendering completes after removing scale
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       const canvas = await html2canvas(el, {
         scale: 2, 
         useCORS: true,
-        backgroundColor: null
+        backgroundColor: null,
+        logging: false
       });
 
       const imgData = canvas.toDataURL("image/png");
@@ -90,6 +102,14 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       console.error("Error generating PDF:", err);
       alert("Terjadi kesalahan saat mengunduh PDF. Silakan coba kembali.");
     } finally {
+      if (scaledParent) {
+        // Restore CSS transform scale
+        scaledParent.style.transform = originalTransform;
+        // Restore transition after a small delay to prevent visual jump
+        setTimeout(() => {
+          scaledParent.style.transition = originalTransition;
+        }, 50);
+      }
       setIsGenerating(false);
     }
   };
