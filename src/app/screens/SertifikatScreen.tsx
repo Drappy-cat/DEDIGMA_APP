@@ -84,22 +84,26 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       // 3. Draw SVG background
       ctx.drawImage(svgImg, 0, 0, W, H);
 
-      // 4. Draw student name — centered perfectly in the space below "Diberikan Kepada:" (48.5%)
+      // Scale factor: canvas is 2480px wide, HTML preview is 842px wide → 2.946x
+      // All sizes are calculated as: HTML_px * 2.946 / H for H-relative values
+      const SCALE = W / 842; // = 2.946
+
+      // 4. Draw student name — text-4xl = 36px in HTML → 36 * SCALE in canvas
       ctx.save();
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#1b3d82";
-      ctx.font = `bold ${Math.round(H * 0.065)}px 'Fredoka', 'Nunito', sans-serif`;
+      ctx.font = `bold ${Math.round(36 * SCALE)}px 'Fredoka', 'Nunito', sans-serif`;
       ctx.shadowColor = "rgba(0,0,0,0.15)";
       ctx.shadowBlur = 10;
       ctx.fillText(studentName, W / 2, H * 0.485, W * 0.65);
       ctx.restore();
 
-      // 5. Draw description text
+      // 5. Draw description text — text-xs = 12px in HTML
       ctx.save();
       ctx.textAlign = "center";
       ctx.fillStyle = "#4a3728";
-      ctx.font = `700 ${Math.round(H * 0.024)}px 'Nunito', sans-serif`;
+      ctx.font = `700 ${Math.round(12 * SCALE)}px 'Nunito', sans-serif`;
       ctx.fillText(
         "ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.",
         W / 2,
@@ -108,19 +112,19 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       );
       ctx.restore();
 
-      // 6. Draw date
+      // 6. Draw date — text-[11px] in HTML
       ctx.save();
       ctx.textAlign = "center";
       ctx.fillStyle = "#888888";
-      ctx.font = `italic ${Math.round(H * 0.019)}px 'Nunito', sans-serif`;
+      ctx.font = `italic ${Math.round(11 * SCALE)}px 'Nunito', sans-serif`;
       ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.715);
       ctx.restore();
 
-      // 7. Circular medal badges for scores
-      const R = 110; // medal radius
-      const medalY = H * 0.77; // vertical center
-      const pretestCX = W / 2 - R - 50;
-      const posttestCX = W / 2 + R + 50;
+      // 7. Circular medal badges — w-20 h-20 = 80px in HTML → R = 40 * SCALE
+      const R = Math.round(40 * SCALE); // medal radius in canvas pixels
+      const medalY = H * 0.785;
+      const pretestCX = W / 2 - R - Math.round(16 * SCALE);
+      const posttestCX = W / 2 + R + Math.round(16 * SCALE);
 
       const drawMedal = (cx: number, label: string, score: number, darkColor: string, lightColor: string) => {
         ctx.save();
@@ -144,25 +148,25 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
         ctx.fillStyle = innerGrad;
         ctx.fill();
 
-        // Label text
+        // Label text — text-[8px] in HTML
         ctx.fillStyle = "rgba(255,255,255,0.88)";
-        ctx.font = `900 ${Math.round(H * 0.026)}px 'Fredoka', sans-serif`;
+        ctx.font = `900 ${Math.round(8 * SCALE)}px 'Fredoka', sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(label.toUpperCase(), cx, medalY - R * 0.32);
 
-        // Score text
+        // Score text — text-2xl = 24px in HTML
         ctx.fillStyle = "#ffffff";
         ctx.shadowColor = "rgba(0,0,0,0.3)";
-        ctx.shadowBlur = 10;
-        ctx.font = `900 ${Math.round(H * 0.075)}px 'Fredoka', sans-serif`;
+        ctx.shadowBlur = Math.round(4 * SCALE);
+        ctx.font = `900 ${Math.round(24 * SCALE)}px 'Fredoka', sans-serif`;
         ctx.fillText(String(score), cx, medalY + R * 0.22);
 
-        // Bottom star ornament
+        // Bottom star ornament — text-[8px]
         ctx.shadowBlur = 0;
         ctx.fillStyle = "rgba(255,255,255,0.55)";
-        ctx.font = `${Math.round(H * 0.024)}px serif`;
-        ctx.fillText("★", cx, medalY + R * 0.68);
+        ctx.font = `${Math.round(8 * SCALE)}px serif`;
+        ctx.fillText("★", cx, medalY + R * 0.70);
 
         ctx.restore();
       };
