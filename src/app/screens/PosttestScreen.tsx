@@ -209,14 +209,14 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="relative p-4 sm:p-6 w-[95%] max-w-md flex flex-col drop-shadow-2xl"
+              className="relative p-4 sm:p-6 w-[95%] max-w-xl flex flex-col drop-shadow-2xl"
               style={{
                 backgroundImage: "url('/assets/papan-kayu.svg')",
                 backgroundSize: "100% 100%",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
                 backgroundColor: "transparent",
-                minHeight: "350px"
+                minHeight: "450px"
               }}
             >
               <div className="flex items-center gap-3 mb-4 mt-2">
