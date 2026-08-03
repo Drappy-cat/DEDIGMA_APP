@@ -299,7 +299,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10 mt-2 border-t border-[#d8c7a5] pt-4">
+                    <div className="flex flex-col gap-4 relative z-10 mt-2 border-t border-[#d8c7a5] pt-4">
                       <div className="space-y-1 text-[#4a3728]">
                         <h4 className="font-['Fredoka'] font-extrabold text-sm text-[#1b3d82]">
                           Prof. Drs. Nasution, M.Hum., M.Ed., Ph.D.
