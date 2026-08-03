@@ -239,7 +239,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
                 </div>
 
                 {/* Content Below Name (Centered) */}
-                <div className="absolute bottom-[22%] left-1/2 -translate-x-1/2 flex flex-col items-center w-full">
+                <div className="absolute bottom-[16%] left-1/2 -translate-x-1/2 flex flex-col items-center w-full">
                   
                   {/* Description */}
                   <p className="text-[#4a3728] font-bold text-xs leading-relaxed max-w-xl px-4 uppercase text-center mb-0.5">
