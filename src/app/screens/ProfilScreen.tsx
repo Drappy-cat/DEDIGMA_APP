@@ -319,8 +319,17 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
 
                   <div className="grid grid-cols-1 gap-3">
                     <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-4 flex items-center gap-4 shadow-sm">
-                      <div className="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-3xl shadow-inner border border-blue-200 shrink-0">
-                        🎓
+                      <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-4xl shadow-inner border-2 border-blue-300 shrink-0 overflow-hidden relative group">
+                        <img 
+                          src="/assets/hadi.png" 
+                          alt="Muhammad Sofwan Hadi" 
+                          className="w-full h-full object-cover object-top"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                          }}
+                        />
+                        <span className="hidden">🎓</span>
                       </div>
                       <div className="space-y-1">
                         <h3 className="font-['Fredoka'] font-extrabold text-base text-[#7e371b]">
