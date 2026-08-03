@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, Plus, FileText } from "lucide-react";
+import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, FileText } from "lucide-react";
 import jsPDF from "jspdf";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
@@ -86,9 +86,6 @@ export const GuruDashboardScreen: React.FC = () => {
     avgScore: avgScore
   };
 
-  // Find students who have an active mission
-  const activeNowStudents = allStudents.filter((s) => s.misi1 || s.misi2 || s.misi3);
-
   const exportCSV = () => {
     playSFX("click");
     const headers = [
@@ -117,8 +114,8 @@ export const GuruDashboardScreen: React.FC = () => {
         s.misi2 ? "Selesai" : "Belum",
         s.misi3 ? "Selesai" : "Belum",
         s.skor > 0 ? `${s.skor}%` : "0%",
-        (s as any).tantangan ?? "-",
-        (s as any).posttest ?? "-",
+        s.tantangan ?? "-",
+        s.posttest ?? "-",
         status,
         s.waktu || "-",
         s.tanggal || new Date().toISOString().split("T")[0]
@@ -188,7 +185,7 @@ export const GuruDashboardScreen: React.FC = () => {
         doc.text(s.misi2 ? "Selesai" : "-", 115, y);
         doc.text(s.misi3 ? "Selesai" : "-", 135, y);
         doc.text(s.skor > 0 ? `${s.skor}%` : "-", 155, y);
-        doc.text(String((s as any).posttest ?? "-"), 175, y);
+        doc.text(String(s.posttest ?? "-"), 175, y);
         y += 6.5;
       });
 
@@ -213,7 +210,7 @@ export const GuruDashboardScreen: React.FC = () => {
         </div>
 
         <div className="hidden md:flex items-center bg-[#1E40AF] px-4 py-2 rounded-full border border-blue-600/50">
-          <span className="text-sm font-semibold text-blue-100">"Selamat bertugas! {activeNowStudents.length} detektif cilik sedang aktif."</span>
+          <span className="text-sm font-semibold text-blue-100">"Selamat bertugas! {activeStudents} detektif cilik sedang aktif."</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -440,11 +437,11 @@ export const GuruDashboardScreen: React.FC = () => {
                       <td className="py-3 px-4 text-center font-bold text-blue-700">
                         {s.skor > 0 ? `${s.skor}%` : "-"}
                       </td>
-                      <td className="py-3 px-4 text-center font-bold text-amber-600">
-                        {(s as any).tantangan ?? "-"}
+                      <td className="py-3 px-4 text-center font-bold text-[#D97706] text-amber-600">
+                        {s.tantangan ?? "-"}
                       </td>
                       <td className="py-3 px-4 text-center font-bold text-purple-600">
-                        {(s as any).posttest ?? "-"}
+                        {s.posttest ?? "-"}
                       </td>
                       <td className="py-3 px-4 text-center">
                         {allDone ? (
