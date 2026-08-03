@@ -116,55 +116,60 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.715);
       ctx.restore();
 
-      // 7. Score cards (smaller & positioned higher)
-      const cardW = 280;
-      const cardH = 120;
-      const cardY = H * 0.75;
-      const pretestX = W / 2 - cardW - 20;
-      const posttestX = W / 2 + 20;
+      // 7. Circular medal badges for scores
+      const R = 110; // medal radius
+      const medalY = H * 0.77; // vertical center
+      const pretestCX = W / 2 - R - 50;
+      const posttestCX = W / 2 + R + 50;
 
-      const drawScoreCard = (x: number, label: string, score: number, color: string) => {
+      const drawMedal = (cx: number, label: string, score: number, darkColor: string, lightColor: string) => {
         ctx.save();
-        ctx.fillStyle = "#f8f3e6";
-        ctx.strokeStyle = "#d9c5a3";
-        ctx.lineWidth = 4;
-        ctx.beginPath();
-        ctx.roundRect(x, cardY, cardW, cardH, 18);
-        ctx.fill();
-        ctx.stroke();
 
-        // Inner card
-        ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.strokeStyle = "#c2aa84";
-        ctx.lineWidth = 2;
+        // Outer gold ring
+        const gradient = ctx.createRadialGradient(cx, medalY, R * 0.5, cx, medalY, R);
+        gradient.addColorStop(0, "#f5e6a3");
+        gradient.addColorStop(0.5, "#d4a82a");
+        gradient.addColorStop(1, "#a07820");
         ctx.beginPath();
-        ctx.roundRect(x + 6, cardY + 6, cardW - 12, cardH - 12, 14);
+        ctx.arc(cx, medalY, R, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
         ctx.fill();
-        ctx.stroke();
 
-        // Label
-        ctx.fillStyle = "#7e371b";
-        ctx.font = `800 ${Math.round(H * 0.021)}px 'Fredoka', sans-serif`;
+        // Inner filled circle
+        const innerGrad = ctx.createRadialGradient(cx - R * 0.2, medalY - R * 0.2, R * 0.05, cx, medalY, R * 0.82);
+        innerGrad.addColorStop(0, lightColor);
+        innerGrad.addColorStop(1, darkColor);
+        ctx.beginPath();
+        ctx.arc(cx, medalY, R * 0.82, 0, Math.PI * 2);
+        ctx.fillStyle = innerGrad;
+        ctx.fill();
+
+        // Label text
+        ctx.fillStyle = "rgba(255,255,255,0.88)";
+        ctx.font = `900 ${Math.round(H * 0.026)}px 'Fredoka', sans-serif`;
         ctx.textAlign = "center";
-        ctx.fillText(label.toUpperCase(), x + cardW / 2, cardY + cardH * 0.38);
+        ctx.textBaseline = "middle";
+        ctx.letterSpacing = "2px";
+        ctx.fillText(label.toUpperCase(), cx, medalY - R * 0.32);
 
-        // Divider
-        ctx.strokeStyle = "#d9c5a3";
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.moveTo(x + 20, cardY + cardH * 0.50);
-        ctx.lineTo(x + cardW - 20, cardY + cardH * 0.50);
-        ctx.stroke();
+        // Score text
+        ctx.fillStyle = "#ffffff";
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.shadowBlur = 10;
+        ctx.font = `900 ${Math.round(H * 0.075)}px 'Fredoka', sans-serif`;
+        ctx.fillText(String(score), cx, medalY + R * 0.22);
 
-        // Score
-        ctx.fillStyle = color;
-        ctx.font = `800 ${Math.round(H * 0.048)}px 'Fredoka', sans-serif`;
-        ctx.fillText(String(score), x + cardW / 2, cardY + cardH * 0.88);
+        // Bottom star ornament
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = `${Math.round(H * 0.024)}px serif`;
+        ctx.fillText("★", cx, medalY + R * 0.68);
+
         ctx.restore();
       };
 
-      drawScoreCard(pretestX, "Pretest", pretestScore, "#1b3d82");
-      drawScoreCard(posttestX, "Posttest", posttestScore, "#366635");
+      drawMedal(pretestCX, "Pretest", pretestScore, "#1b3d82", "#3a65c0");
+      drawMedal(posttestCX, "Posttest", posttestScore, "#1d5c1d", "#368a36");
 
       // 8. Convert canvas to PDF
       const imgData = canvas.toDataURL("image/png", 1.0);
@@ -241,23 +246,37 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
                     yang dilaksanakan pada tanggal {today}.
                   </p>
 
-                  {/* Scores Cards (Pretest & Posttest) - Smaller */}
-                  <div className="flex gap-6">
-                    <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-xl p-0.5 shadow-md w-[130px]">
-                      <div className="border border-[#c2aa84] rounded-lg py-1.5 px-3 flex flex-col items-center justify-center bg-white/50 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-12 h-12 bg-blue-100/40 rounded-full blur-lg -mr-6 -mt-6"></div>
-                        <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-[10px] uppercase tracking-widest relative z-10">Pretest</p>
-                        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1 relative z-10"></div>
-                        <p className="font-['Fredoka'] font-extrabold text-2xl text-[#1b3d82] relative z-10 drop-shadow-sm leading-tight">{pretestScore}</p>
+                  {/* Scores — Circular Medal Badges */}
+                  <div className="flex gap-8 mt-2">
+                    {/* Pretest Medal */}
+                    <div className="relative flex flex-col items-center">
+                      <div
+                        className="w-20 h-20 rounded-full flex flex-col items-center justify-center shadow-lg"
+                        style={{
+                          background: "radial-gradient(circle at 35% 35%, #3a65c0, #1b3d82)",
+                          border: "4px solid #d4a82a",
+                          boxShadow: "0 0 0 2px #a07820, 0 6px 18px rgba(27,61,130,0.35)"
+                        }}
+                      >
+                        <span className="font-['Fredoka'] text-white text-[8px] font-black uppercase tracking-widest leading-none mt-1">Pretest</span>
+                        <span className="font-['Fredoka'] text-white text-2xl font-black leading-tight drop-shadow">{pretestScore}</span>
+                        <span className="text-yellow-200 text-[8px] leading-none">★</span>
                       </div>
                     </div>
-                    
-                    <div className="bg-[#f8f3e6] border-2 border-[#d9c5a3] rounded-xl p-0.5 shadow-md w-[130px]">
-                      <div className="border border-[#c2aa84] rounded-lg py-1.5 px-3 flex flex-col items-center justify-center bg-white/50 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-12 h-12 bg-green-100/40 rounded-full blur-lg -mr-6 -mt-6"></div>
-                        <p className="font-['Fredoka'] font-extrabold text-[#7e371b] text-[10px] uppercase tracking-widest relative z-10">Posttest</p>
-                        <div className="w-full h-px bg-gradient-to-r from-transparent via-[#d9c5a3] to-transparent my-1 relative z-10"></div>
-                        <p className="font-['Fredoka'] font-extrabold text-2xl text-[#366635] relative z-10 drop-shadow-sm leading-tight">{posttestScore}</p>
+
+                    {/* Posttest Medal */}
+                    <div className="relative flex flex-col items-center">
+                      <div
+                        className="w-20 h-20 rounded-full flex flex-col items-center justify-center shadow-lg"
+                        style={{
+                          background: "radial-gradient(circle at 35% 35%, #368a36, #1d5c1d)",
+                          border: "4px solid #d4a82a",
+                          boxShadow: "0 0 0 2px #a07820, 0 6px 18px rgba(29,92,29,0.35)"
+                        }}
+                      >
+                        <span className="font-['Fredoka'] text-white text-[8px] font-black uppercase tracking-widest leading-none mt-1">Posttest</span>
+                        <span className="font-['Fredoka'] text-white text-2xl font-black leading-tight drop-shadow">{posttestScore}</span>
+                        <span className="text-yellow-200 text-[8px] leading-none">★</span>
                       </div>
                     </div>
                   </div>
