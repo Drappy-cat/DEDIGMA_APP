@@ -137,19 +137,19 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
               <div className="relative z-10 w-full px-20 flex flex-col items-center justify-center h-full">
                 
                 {/* Student Name (Positioned over the purple line) */}
-                <div className="absolute top-[47%] left-1/2 -translate-x-1/2 w-[60%] text-center">
+                <div className="absolute top-[42.5%] left-1/2 -translate-x-1/2 w-[80%] text-center">
                   <h2 className="font-['Fredoka'] font-bold text-5xl text-[#1b3d82] drop-shadow-md capitalize truncate">
                     {studentName}
                   </h2>
                 </div>
 
                 {/* Scores Cards (Pretest & Posttest) */}
-                <div className="absolute bottom-16 left-20 bg-white/90 backdrop-blur-sm border-4 border-[#1b3d82] rounded-2xl py-3 px-8 shadow-xl flex flex-col items-center min-w-[150px] transform -rotate-2">
+                <div className="absolute bottom-[22%] left-[12%] bg-white/90 backdrop-blur-sm border-4 border-[#1b3d82] rounded-2xl py-3 px-10 shadow-xl flex flex-col items-center min-w-[160px]">
                   <p className="font-['Fredoka'] font-bold text-[#7e371b] text-sm uppercase tracking-wide">Pretest</p>
                   <p className="font-['Fredoka'] font-extrabold text-4xl text-[#1b3d82] mt-1 drop-shadow-sm">{pretestScore}</p>
                 </div>
                 
-                <div className="absolute bottom-16 right-20 bg-white/90 backdrop-blur-sm border-4 border-[#366635] rounded-2xl py-3 px-8 shadow-xl flex flex-col items-center min-w-[150px] transform rotate-2">
+                <div className="absolute bottom-[22%] right-[12%] bg-white/90 backdrop-blur-sm border-4 border-[#366635] rounded-2xl py-3 px-10 shadow-xl flex flex-col items-center min-w-[160px]">
                   <p className="font-['Fredoka'] font-bold text-[#7e371b] text-sm uppercase tracking-wide">Posttest</p>
                   <p className="font-['Fredoka'] font-extrabold text-4xl text-[#366635] mt-1 drop-shadow-sm">{posttestScore}</p>
                 </div>
