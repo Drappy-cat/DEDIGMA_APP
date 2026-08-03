@@ -212,7 +212,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
               className="relative p-6 sm:p-10 w-[95%] max-w-md shadow-2xl flex flex-col"
               style={{
                 backgroundImage: "url('/assets/papan-kayu.svg')",
-                backgroundSize: "120% 135%",
+                backgroundSize: "120% 250%",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
                 backgroundColor: "transparent",
