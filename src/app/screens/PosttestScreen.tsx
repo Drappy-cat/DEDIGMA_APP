@@ -219,31 +219,33 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
                 minHeight: "600px"
               }}
             >
-              <div className="flex items-center gap-3 mb-4 mt-2">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-sm border-2 ${
-                  answers[current] === q.jawaban ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'
-                }`}>
-                  {answers[current] === q.jawaban ? '✅' : '❌'}
-                </div>
-                <div>
-                  <h3 className={`font-['Fredoka'] font-bold text-xl drop-shadow-sm ${
-                    answers[current] === q.jawaban ? 'text-green-700' : 'text-red-700'
+              <div className="w-full max-w-md mx-auto flex flex-col">
+                <div className="flex items-center gap-3 mb-4 mt-2">
+                  <div className={`w-12 h-12 rounded-full flex items-center justify-center text-2xl shadow-sm border-2 ${
+                    answers[current] === q.jawaban ? 'bg-green-100 border-green-300' : 'bg-red-100 border-red-300'
                   }`}>
-                    {answers[current] === q.jawaban ? 'Tepat Sekali!' : 'Kurang Tepat!'}
-                  </h3>
-                  <p className="text-amber-900/70 text-xs font-bold tracking-widest">PEMBAHASAN</p>
+                    {answers[current] === q.jawaban ? '✅' : '❌'}
+                  </div>
+                  <div>
+                    <h3 className={`font-['Fredoka'] font-bold text-xl drop-shadow-sm ${
+                      answers[current] === q.jawaban ? 'text-green-700' : 'text-red-700'
+                    }`}>
+                      {answers[current] === q.jawaban ? 'Tepat Sekali!' : 'Kurang Tepat!'}
+                    </h3>
+                    <p className="text-amber-900/70 text-xs font-bold tracking-widest">PEMBAHASAN</p>
+                  </div>
                 </div>
+                
+                <div className="bg-amber-50/90 backdrop-blur-sm rounded-2xl p-4 border border-amber-200/50 mb-10 max-h-48 overflow-y-auto custom-scrollbar shadow-inner">
+                  <p className="text-amber-950 text-sm leading-relaxed font-semibold">
+                    {q.pembahasan || 'Jawaban telah direkam.'}
+                  </p>
+                </div>
+                
+                <Btn onClick={handleNextQuestion} variant="blue" className="w-full py-3.5 text-base shadow-lg border-2 border-blue-300 mb-2">
+                  {current < POSTTEST_QUESTIONS.length - 1 ? 'Lanjut ke Soal Berikutnya' : 'Selesai Posttest'}
+                </Btn>
               </div>
-              
-              <div className="bg-amber-50/90 backdrop-blur-sm rounded-2xl p-4 border border-amber-200/50 mb-6 max-h-48 overflow-y-auto custom-scrollbar shadow-inner">
-                <p className="text-amber-950 text-sm leading-relaxed font-semibold">
-                  {q.pembahasan || 'Jawaban telah direkam.'}
-                </p>
-              </div>
-              
-              <Btn onClick={handleNextQuestion} variant="blue" className="w-full py-3.5 text-base shadow-lg border-2 border-blue-300 mb-2">
-                {current < POSTTEST_QUESTIONS.length - 1 ? 'Lanjut ke Soal Berikutnya' : 'Selesai Posttest'}
-              </Btn>
             </motion.div>
           </div>
         )}
