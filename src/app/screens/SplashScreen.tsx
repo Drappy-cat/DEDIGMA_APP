@@ -187,14 +187,14 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="flex flex-col items-center gap-3 w-full max-w-[250px] z-20 pointer-events-auto"
+          className="flex flex-col items-center gap-3 w-full max-w-[250px] sm:max-w-[270px] z-50 relative pointer-events-auto"
         >
           {/* MULAI Button */}
           <motion.button
             onClick={() => handleAction(onMulai)}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
-            className="w-full flex justify-center cursor-pointer focus:outline-none"
+            className="w-full flex justify-center cursor-pointer focus:outline-none z-50 relative"
           >
             <img
               src="/assets/button/mulai.svg"
@@ -204,12 +204,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           </motion.button>
 
           {/* Sub buttons row: Petunjuk and Profil */}
-          <div className="grid grid-cols-2 gap-3 mt-1 w-full">
+          <div className="grid grid-cols-2 gap-3.5 mt-1 w-full relative z-50">
             <motion.button
               onClick={() => handleAction(onPetunjuk)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="cursor-pointer focus:outline-none flex justify-center"
+              className="cursor-pointer focus:outline-none flex justify-center z-50 relative"
             >
               <img
                 src="/assets/button/petunjuk.svg"
@@ -222,7 +222,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
               onClick={() => handleAction(onProfil)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="cursor-pointer focus:outline-none flex justify-center"
+              className="cursor-pointer focus:outline-none flex justify-center z-50 relative"
             >
               <img
                 src="/assets/button/profil.svg"
@@ -238,15 +238,17 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -left-6 sm:left-2 md:left-8 landscape:left-4 -bottom-6 sm:-bottom-8 landscape:bottom-0 z-20 pointer-events-auto flex flex-col items-center"
+          className="absolute -left-10 xs:-left-6 sm:-left-4 md:left-0 lg:left-4 -bottom-4 sm:-bottom-8 landscape:bottom-0 z-10 pointer-events-none flex flex-col items-center"
         >
           <div className="relative flex flex-col items-center">
-            <MascotDimas size="4xl" animate={true} isLobby={true} />
-            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#2a5bb5] via-[#1c4899] to-[#143778] border-2 border-[#6095f5] rounded-2xl px-4 sm:px-6 py-1 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-30 min-w-[120px] sm:min-w-[155px]">
-              <h3 className="font-['Fredoka'] font-extrabold text-xs sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
+            <div className="pointer-events-auto">
+              <MascotDimas size="lobby" animate={true} isLobby={true} />
+            </div>
+            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#2a5bb5] via-[#1c4899] to-[#143778] border-2 border-[#6095f5] rounded-2xl px-2.5 sm:px-6 py-0.5 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[95px] sm:min-w-[155px] pointer-events-auto">
+              <h3 className="font-['Fredoka'] font-extrabold text-[10px] sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
                 DIMAS
               </h3>
-              <p className="font-['Nunito'] font-bold text-[9px] sm:text-[11px] text-blue-100 leading-none mt-0.5 drop-shadow-xs">
+              <p className="font-['Nunito'] font-bold text-[8px] sm:text-[11px] text-blue-100 leading-none mt-0.5 drop-shadow-xs">
                 Detektif Digital
               </p>
             </div>
@@ -257,15 +259,17 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -right-6 sm:right-2 md:right-8 landscape:right-4 -bottom-6 sm:-bottom-8 landscape:bottom-0 z-20 pointer-events-auto flex flex-col items-center"
+          className="absolute -right-10 xs:-right-6 sm:-right-4 md:right-0 lg:right-4 -bottom-4 sm:-bottom-8 landscape:bottom-0 z-10 pointer-events-none flex flex-col items-center"
         >
           <div className="relative flex flex-col items-center">
-            <MascotGita size="4xl" animate={true} isLobby={true} />
-            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#8f4121] via-[#7e371b] to-[#592410] border-2 border-[#bd6d46] rounded-2xl px-4 sm:px-6 py-1 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-30 min-w-[120px] sm:min-w-[155px]">
-              <h3 className="font-['Fredoka'] font-extrabold text-xs sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
+            <div className="pointer-events-auto">
+              <MascotGita size="lobby" animate={true} isLobby={true} />
+            </div>
+            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#8f4121] via-[#7e371b] to-[#592410] border-2 border-[#bd6d46] rounded-2xl px-2.5 sm:px-6 py-0.5 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[95px] sm:min-w-[155px] pointer-events-auto">
+              <h3 className="font-['Fredoka'] font-extrabold text-[10px] sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
                 GITA
               </h3>
-              <p className="font-['Nunito'] font-bold text-[9px] sm:text-[11px] text-amber-100 leading-none mt-0.5 drop-shadow-xs">
+              <p className="font-['Nunito'] font-bold text-[8px] sm:text-[11px] text-amber-100 leading-none mt-0.5 drop-shadow-xs">
                 Penjaga Budaya
               </p>
             </div>
