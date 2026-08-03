@@ -86,6 +86,9 @@ function DemoPanel({
         setScreen("petunjuk");
       } else if (target === "tujuan") {
         setScreen("tujuan");
+      } else if (target === "pretest") {
+        setPretestScore(null);
+        setScreen("pretest");
       } else if (target === "tantangan") {
         setCompletedMissions(new Set([1, 2, 3]));
         setScreen("tantangan");
@@ -158,6 +161,9 @@ function DemoPanel({
             </button>
             <button onClick={() => handleSwitch("tujuan")} className={`${btnClass} ${isActive("tujuan", "siswa") ? activeClass : inactiveClass}`}>
               <span>🎯</span> Tujuan Misi
+            </button>
+            <button onClick={() => handleSwitch("pretest")} className={`${btnClass} ${isActive("pretest", "siswa") ? activeClass : inactiveClass}`}>
+              <span>📝</span> Pretest Kuis
             </button>
           </div>
 
