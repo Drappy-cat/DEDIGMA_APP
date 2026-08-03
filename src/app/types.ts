@@ -9,6 +9,7 @@ export type Screen =
   | "peta-misi"
   | "mission-flow"
   | "tantangan"
+  | "pretest"
   | "posttest"
   | "lencana"
   | "sertifikat"
@@ -25,6 +26,14 @@ export type MateriTab = "pengertian" | "sejarah" | "tujuan" | "nilai-budaya" | "
 
 // Activity variant per mission
 export type ActivityType = "cek-fakta" | "analisis-sumber" | "detektif-berita";
+
+export interface Question {
+  id: number;
+  soal: string;
+  opsi: string[];
+  jawaban: number;
+  pembahasan?: string;
+}
 
 export interface Mission {
   id: number;
@@ -127,6 +136,9 @@ export interface GameState {
   totalScore: number;
   badges: BadgeId[];
   tantanganScore: number | null;
+  pretest: {
+    score: number | null;
+  };
   posttest: {
     answers: Record<number, number>;
     score: number | null;
@@ -186,6 +198,7 @@ export function createDefaultGameState(): GameState {
     totalScore: 0,
     badges: [],
     tantanganScore: null,
+    pretest: { score: null },
     posttest: { answers: {}, score: null }
   };
 }

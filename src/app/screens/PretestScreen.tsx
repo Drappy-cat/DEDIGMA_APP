@@ -5,21 +5,21 @@ import { Btn } from "../components/Btn";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useAudio } from "../contexts/AudioContext";
 import { fireConfetti } from "../utils/confetti";
-import { POSTTEST_QUESTIONS } from "../data/posttestQuestions";
-interface PosttestScreenProps {
+import { PRETEST_QUESTIONS } from "../data/pretestQuestions";
+interface PretestScreenProps {
   onComplete: (score: number) => void;
   onBack: () => void;
 }
 
-export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBack }) => {
+export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<(number | null)[]>(POSTTEST_QUESTIONS.map(() => null));
+  const [answers, setAnswers] = useState<(number | null)[]>(PRETEST_QUESTIONS.map(() => null));
   const [done, setDone] = useState(false);
 
   useEffect(() => {
     playNarrator(
-      "Selamat datang di Posttest Interaktif DEDIGMA. Jawab pertanyaan evaluasi akhir ini dengan teliti untuk mendapatkan sertifikat kelulusanmu."
+      "Selamat datang di Pretest Interaktif DEDIGMA. Jawab pertanyaan awal ini dengan teliti untuk mendapatkan memulai petualanganmu."
     );
     return () => {
       stopNarrator();
@@ -33,7 +33,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
     const newAnswers = answers.map((a, i) => (i === current ? idx : a));
     setAnswers(newAnswers);
 
-    const isCorrect = idx === POSTTEST_QUESTIONS[current].jawaban;
+    const isCorrect = idx === PRETEST_QUESTIONS[current].jawaban;
     if (isCorrect) {
       playSFX("success");
     } else {
@@ -45,25 +45,25 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
   const handleNextQuestion = () => {
     playSFX("click");
-    if (current < POSTTEST_QUESTIONS.length - 1) {
+    if (current < PRETEST_QUESTIONS.length - 1) {
       setCurrent((c) => c + 1);
       setIsAnswered(false);
     } else {
       setDone(true);
-      const correctCount = answers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
-      const finalScore = Math.round((correctCount / POSTTEST_QUESTIONS.length) * 100);
+      const correctCount = answers.filter((a, i) => a === PRETEST_QUESTIONS[i].jawaban).length;
+      const finalScore = Math.round((correctCount / PRETEST_QUESTIONS.length) * 100);
 
       fireConfetti();
       playSFX("badge");
-      playNarrator(`Luar biasa! Kamu menyelesaikan Posttest dengan skor akhir ${finalScore}. Ketuk tombol di bawah untuk melihat sertifikat kelulusanmu.`);
+      playNarrator(`Luar biasa! Kamu menyelesaikan Pretest dengan skor akhir ${finalScore}. Ketuk tombol di bawah untuk memulai petualanganmu.`);
     }
   };
 
-  const correctCount = answers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
-  const score = Math.round((correctCount / POSTTEST_QUESTIONS.length) * 100);
+  const correctCount = answers.filter((a, i) => a === PRETEST_QUESTIONS[i].jawaban).length;
+  const score = Math.round((correctCount / PRETEST_QUESTIONS.length) * 100);
 
-  const q = POSTTEST_QUESTIONS[current];
-  const totalQ = POSTTEST_QUESTIONS.length;
+  const q = PRETEST_QUESTIONS[current];
+  const totalQ = PRETEST_QUESTIONS.length;
 
   if (done) {
     return (
@@ -87,7 +87,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
           >
             🎓
           </motion.div>
-          <h2 className="font-['Fredoka'] font-bold text-3xl text-amber-700 leading-tight">Posttest Selesai!</h2>
+          <h2 className="font-['Fredoka'] font-bold text-3xl text-amber-700 leading-tight">Pretest Selesai!</h2>
           <p className="text-gray-500 font-semibold mt-2 text-sm">Kamu telah menyelesaikan seluruh evaluasi akhir.</p>
 
           <div className="bg-white/95 rounded-3xl shadow-xl p-5 my-6 w-full max-w-xs border border-amber-200">
@@ -97,7 +97,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
           </div>
 
           <Btn onClick={() => onComplete(score)} variant="amber" className="w-full max-w-xs mt-6 py-3 text-lg font-bold">
-            Lihat Sertifikat
+            Mulai Petualangan
           </Btn>
         </div>
       </div>
@@ -119,7 +119,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
       {/* Content */}
       <div className="relative z-10 flex flex-col h-full w-full">
-        <ScreenHeader title="Posttest DEDIGMA 📝" onBack={onBack} onHome={onBack} />
+        <ScreenHeader title="Pretest DEDIGMA 📝" onBack={onBack} onHome={onBack} />
 
         {/* Progress bar */}
         <div className="bg-white/90 backdrop-blur-sm px-4 py-2.5 border-b border-gray-200 select-none">
@@ -243,7 +243,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
                 </div>
                 
                 <Btn onClick={handleNextQuestion} variant="blue" className="w-full py-3.5 text-base shadow-lg border-2 border-blue-300 mb-2">
-                  {current < POSTTEST_QUESTIONS.length - 1 ? 'Lanjut ke Soal Berikutnya' : 'Selesai Posttest'}
+                  {current < PRETEST_QUESTIONS.length - 1 ? 'Lanjut ke Soal Berikutnya' : 'Selesai Pretest'}
                 </Btn>
               </div>
             </motion.div>
@@ -253,4 +253,4 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
     </div>
   );
 };
-export default PosttestScreen;
+export default PretestScreen;
