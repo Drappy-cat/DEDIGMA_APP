@@ -81,14 +81,11 @@ export const LoginScreen: React.FC = () => {
 
       {/* Main Parchment Paper Board */}
       <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, type: "spring", stiffness: 100 }}
         className="w-full max-w-2xl bg-[#f4ecd5] border-4 border-[#c2aa84] rounded-3xl shadow-[0_12px_35px_rgba(0,0,0,0.5)] p-4 sm:p-6 relative z-10 overflow-hidden"
       >
-        {/* Decorative corner pin elements */}
-        <div className="absolute top-2 left-2 text-xl opacity-60">📌</div>
-        <div className="absolute top-2 right-2 text-xl opacity-60">📌</div>
-
         {/* Top Header Card */}
         <div className="border-2 border-dashed border-[#bda682] rounded-2xl bg-[#eee4c5]/60 p-3 text-center mb-5">
           <h1 className="font-['Fredoka'] font-extrabold text-2xl sm:text-3xl text-[#2f5632] tracking-wide drop-shadow-xs">
