@@ -81,7 +81,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
               <Volume2 size={14} /> Suara & Audio
               {activeTab === "audio" && (
                 <motion.div
-                  layoutId="activeTabIndicator"
+                  layoutId="audioModalActiveTabIndicator"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-500 rounded-xl -z-10 shadow-md border border-amber-300"
                 />
@@ -101,7 +101,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
               <Info size={14} /> Tentang Game
               {activeTab === "about" && (
                 <motion.div
-                  layoutId="activeTabIndicator"
+                  layoutId="audioModalActiveTabIndicator"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   className="absolute inset-0 bg-gradient-to-r from-amber-400 to-amber-500 rounded-xl -z-10 shadow-md border border-amber-300"
                 />

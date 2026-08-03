@@ -29,6 +29,7 @@ export const GuruDashboardScreen: React.FC = () => {
     try {
       const savedState = localStorage.getItem("dedigma_game_state");
       const savedUser = localStorage.getItem("dedigma_username") || "Siswa Terdaftar";
+      const savedKelas = localStorage.getItem("dedigma_kelas") || "5A";
       if (savedState) {
         const parsed = JSON.parse(savedState);
         const m1 = Boolean(parsed.missions?.[1]?.completed);
@@ -41,7 +42,7 @@ export const GuruDashboardScreen: React.FC = () => {
         const realStudent = {
           id: 999,
           nama: savedUser,
-          kelas: "5A",
+          kelas: savedKelas,
           misi1: m1,
           misi2: m2,
           misi3: m3,
