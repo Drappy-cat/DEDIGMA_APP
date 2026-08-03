@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { Download, RefreshCw } from "lucide-react";
 import { ScreenHeader } from "../components/ScreenHeader";
@@ -60,41 +59,115 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
   }, []);
 
   const handleDownloadPdf = async () => {
-    const el = certRef.current;
-    if (!el) return;
-
-    // Remove CSS transform scale temporarily to fix html2canvas coordinate calculation bug
-    const scaledParent = el.parentElement;
-    let originalTransform = "";
-    let originalTransition = "";
-    if (scaledParent) {
-      originalTransform = scaledParent.style.transform;
-      originalTransition = scaledParent.style.transition;
-      scaledParent.style.transition = "none";
-      scaledParent.style.transform = "none";
-    }
-
     setIsGenerating(true);
 
     try {
-      // Small delay to ensure rendering completes after removing scale
-      await new Promise((resolve) => setTimeout(resolve, 300));
+      // A4 Landscape in pixels at 150dpi
+      const W = 1122;
+      const H = 794;
 
-      const canvas = await html2canvas(el, {
-        scale: 2, 
-        useCORS: true,
-        backgroundColor: null,
-        logging: false
+      // 1. Load the SVG background as an Image
+      const svgImg = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = `/assets/bg-sertifikat.svg?v=${Date.now()}`;
       });
 
-      const imgData = canvas.toDataURL("image/png");
+      // 2. Create an offscreen canvas
+      const canvas = document.createElement("canvas");
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext("2d")!;
 
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "mm",
-        format: "a4"
-      });
+      // 3. Draw SVG background
+      ctx.drawImage(svgImg, 0, 0, W, H);
 
+      // 4. Draw student name centered at ~43% height
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#1b3d82";
+      ctx.font = `bold ${Math.round(H * 0.075)}px 'Fredoka', 'Nunito', sans-serif`;
+      ctx.shadowColor = "rgba(0,0,0,0.2)";
+      ctx.shadowBlur = 8;
+      ctx.fillText(studentName, W / 2, H * 0.445, W * 0.75);
+      ctx.restore();
+
+      // 5. Draw description text
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#4a3728";
+      ctx.font = `700 ${Math.round(H * 0.027)}px 'Nunito', sans-serif`;
+      ctx.fillText(
+        "ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.",
+        W / 2,
+        H * 0.72,
+        W * 0.65
+      );
+      ctx.restore();
+
+      // 6. Draw date
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#888888";
+      ctx.font = `italic ${Math.round(H * 0.022)}px 'Nunito', sans-serif`;
+      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.755);
+      ctx.restore();
+
+      // 7. Draw Pretest card (left)
+      const cardW = 200;
+      const cardH = 90;
+      const cardY = H * 0.81;
+      const pretestX = W / 2 - cardW - 20;
+      const posttestX = W / 2 + 20;
+
+      const drawScoreCard = (x: number, label: string, score: number, color: string) => {
+        ctx.save();
+        ctx.fillStyle = "#f8f3e6";
+        ctx.strokeStyle = "#d9c5a3";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(x, cardY, cardW, cardH, 14);
+        ctx.fill();
+        ctx.stroke();
+
+        // Inner card
+        ctx.fillStyle = "rgba(255,255,255,0.5)";
+        ctx.strokeStyle = "#c2aa84";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.roundRect(x + 5, cardY + 5, cardW - 10, cardH - 10, 10);
+        ctx.fill();
+        ctx.stroke();
+
+        // Label
+        ctx.fillStyle = "#7e371b";
+        ctx.font = `800 ${Math.round(H * 0.022)}px 'Fredoka', sans-serif`;
+        ctx.textAlign = "center";
+        ctx.fillText(label.toUpperCase(), x + cardW / 2, cardY + 28);
+
+        // Divider
+        ctx.strokeStyle = "#d9c5a3";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x + 20, cardY + 38);
+        ctx.lineTo(x + cardW - 20, cardY + 38);
+        ctx.stroke();
+
+        // Score
+        ctx.fillStyle = color;
+        ctx.font = `800 ${Math.round(H * 0.065)}px 'Fredoka', sans-serif`;
+        ctx.fillText(String(score), x + cardW / 2, cardY + 78);
+        ctx.restore();
+      };
+
+      drawScoreCard(pretestX, "Pretest", pretestScore, "#1b3d82");
+      drawScoreCard(posttestX, "Posttest", posttestScore, "#366635");
+
+      // 8. Convert canvas to PDF
+      const imgData = canvas.toDataURL("image/png", 1.0);
+      const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
       pdf.addImage(imgData, "PNG", 0, 0, 297, 210);
       pdf.save(`Sertifikat_DEDIGMA_${studentName.replace(/\s+/g, "_")}.pdf`);
       playSFX("badge");
@@ -102,14 +175,6 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       console.error("Error generating PDF:", err);
       alert("Terjadi kesalahan saat mengunduh PDF. Silakan coba kembali.");
     } finally {
-      if (scaledParent) {
-        // Restore CSS transform scale
-        scaledParent.style.transform = originalTransform;
-        // Restore transition after a small delay to prevent visual jump
-        setTimeout(() => {
-          scaledParent.style.transition = originalTransition;
-        }, 50);
-      }
       setIsGenerating(false);
     }
   };
