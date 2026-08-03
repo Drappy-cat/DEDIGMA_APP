@@ -287,7 +287,7 @@ export const AudioSettingsModal: React.FC<AudioSettingsModalProps> = ({ isOpen, 
                     Game media pembelajaran interaktif berbasis <em>edutainment</em> untuk mengenalkan kebudayaan lokal Kabupaten Magetan (Larung Sesaji, Nyadaran, Ledhug Suro) sekaligus melatih literasi digital dan verifikasi berita bagi siswa.
                   </p>
                   <div className="bg-[#1a0b03]/80 p-2.5 rounded-xl text-[11px] text-amber-200 font-semibold space-y-1 border border-amber-500/30">
-                    <p>✨ <strong>Fitur Utama:</strong> 3 Misi Kebudayaan, Cek Fakta Interaktif, Tantangan Budaya, & Posttest Evaluasi.</p>
+                    <p>✨ <strong>Fitur Utama:</strong> 3 Misi Kebudayaan, Cek Fakta Interaktif, & Posttest Evaluasi.</p>
                   </div>
                 </div>
 
