@@ -90,7 +90,9 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
             <p className="text-xs text-gray-500 font-semibold">{correctCount} dari {totalQ} benar</p>
           </div>
 
-          <Btn onClick={() => onComplete(score)} variant="lanjut" className="w-full max-w-xs mt-6" />
+          <Btn onClick={() => onComplete(score)} variant="amber" className="w-full max-w-xs mt-6 py-3 text-lg font-bold">
+            Mulai Petualangan
+          </Btn>
         </div>
       </div>
     );
