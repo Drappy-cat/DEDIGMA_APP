@@ -149,7 +149,6 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
         ctx.font = `900 ${Math.round(H * 0.026)}px 'Fredoka', sans-serif`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.letterSpacing = "2px";
         ctx.fillText(label.toUpperCase(), cx, medalY - R * 0.32);
 
         // Score text
