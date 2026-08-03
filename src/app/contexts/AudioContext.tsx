@@ -182,7 +182,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       click: "/audio/pop click.MP3",
       success: "/audio/sfx-success.mp3",
       fail: "/audio/sfx-fail.mp3",
-      badge: "/audio/sfx-badge.mp3"
+      badge: "/audio/misi-complate.MP3"
     };
 
     const path = sfxPaths[type];
