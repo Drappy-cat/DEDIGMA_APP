@@ -84,14 +84,15 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       // 3. Draw SVG background
       ctx.drawImage(svgImg, 0, 0, W, H);
 
-      // 4. Draw student name — positioned higher up (matching top-[42.5%])
+      // 4. Draw student name — centered perfectly in the space below "Diberikan Kepada:" (48.5%)
       ctx.save();
       ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
       ctx.fillStyle = "#1b3d82";
-      ctx.font = `bold ${Math.round(H * 0.07)}px 'Fredoka', 'Nunito', sans-serif`;
+      ctx.font = `bold ${Math.round(H * 0.065)}px 'Fredoka', 'Nunito', sans-serif`;
       ctx.shadowColor = "rgba(0,0,0,0.15)";
       ctx.shadowBlur = 10;
-      ctx.fillText(studentName, W / 2, H * 0.44, W * 0.65);
+      ctx.fillText(studentName, W / 2, H * 0.485, W * 0.65);
       ctx.restore();
 
       // 5. Draw description text
@@ -222,9 +223,9 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
               {/* Dynamic Content */}
               <div className="relative z-10 w-full px-20 flex flex-col items-center justify-center h-full">
                 
-                {/* Student Name (Positioned over the purple line) */}
-                <div className="absolute top-[42.5%] left-1/2 -translate-x-1/2 w-[80%] text-center">
-                  <h2 className="font-['Fredoka'] font-bold text-5xl text-[#1b3d82] drop-shadow-md capitalize truncate">
+                {/* Student Name (Positioned in the empty space below "Diberikan Kepada:") */}
+                <div className="absolute top-[48.5%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] text-center">
+                  <h2 className="font-['Fredoka'] font-bold text-4xl text-[#1b3d82] drop-shadow-md capitalize truncate">
                     {studentName}
                   </h2>
                 </div>
