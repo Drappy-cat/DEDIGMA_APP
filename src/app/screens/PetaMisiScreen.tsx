@@ -53,19 +53,34 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
   const [shakingId, setShakingId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const triggerShake = (id: number) => {
+  const checkTeacherLock = (missionId: number) => {
+    try {
+      const saved = localStorage.getItem("dedigma_mission_locks");
+      if (saved) {
+        const locks = JSON.parse(saved);
+        return Boolean(locks[`Semua-${missionId}`] || locks[`5A-${missionId}`]);
+      }
+    } catch {}
+    return false;
+  };
+
+  const triggerShake = (id: number, customMessage?: string) => {
     try {
       playSFX("fail");
     } catch {
       playSFX("click");
     }
     setShakingId(id);
-    setToastMessage("Misi masih terkunci, selesaikan misi sebelumnya!");
+    setToastMessage(customMessage || "Misi masih terkunci, selesaikan misi sebelumnya!");
     setTimeout(() => setShakingId(null), 450);
     setTimeout(() => setToastMessage(null), 3000);
   };
 
   const handleSelect = (id: number) => {
+    if (checkTeacherLock(id)) {
+      triggerShake(id, "🔒 Misi ini sedang dikunci oleh Guru!");
+      return;
+    }
     playSFX("click");
     onMission(id);
   };
@@ -209,7 +224,8 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
             {MISSIONS.map((mission, idx) => {
               const isActive = idx === selectedIdx;
               const isCompleted = completedMissions.has(mission.id);
-              const isLocked = mission.id > 1 && !completedMissions.has(mission.id - 1);
+              const isTeacherLocked = checkTeacherLock(mission.id);
+              const isLocked = (mission.id > 1 && !completedMissions.has(mission.id - 1)) || isTeacherLocked;
               const progress = getProgress(mission.id);
 
               return (
@@ -232,7 +248,10 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
                   }}
                   onTap={() => {
                     playSFX("click");
-                    if (isLocked) {
+                    if (isTeacherLocked) {
+                      setSelectedIdx(idx);
+                      triggerShake(mission.id, "🔒 Misi ini sedang dikunci oleh Guru!");
+                    } else if (isLocked) {
                       setSelectedIdx(idx);
                       triggerShake(mission.id);
                     } else if (isActive) {

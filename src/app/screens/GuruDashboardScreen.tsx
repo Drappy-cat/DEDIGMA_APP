@@ -14,7 +14,15 @@ export const GuruDashboardScreen: React.FC = () => {
   const classes = ["Semua", "5A", "5B", "5C"];
 
   // Lock state: key is `${kelas}-${missionId}`, value is boolean (true = locked, false = open)
-  const [locks, setLocks] = useState<Record<string, boolean>>({});
+  const [locks, setLocks] = useState<Record<string, boolean>>(() => {
+    try {
+      const saved = localStorage.getItem("dedigma_mission_locks");
+      if (saved) return JSON.parse(saved);
+    } catch (e) {
+      console.error("Error reading locks from localStorage:", e);
+    }
+    return {};
+  });
 
   // Merge real student data from localStorage if available
   const allStudents = React.useMemo(() => {
@@ -57,7 +65,13 @@ export const GuruDashboardScreen: React.FC = () => {
     playSFX("click");
     setLocks((prev) => {
       const key = `${kelas}-${missionId}`;
-      return { ...prev, [key]: !prev[key] };
+      const updated = { ...prev, [key]: !prev[key] };
+      try {
+        localStorage.setItem("dedigma_mission_locks", JSON.stringify(updated));
+      } catch (e) {
+        console.error("Error saving locks to localStorage:", e);
+      }
+      return updated;
     });
   };
 
