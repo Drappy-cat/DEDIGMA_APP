@@ -70,7 +70,7 @@ function DemoPanel({
     return isLoggedIn && screen === targetScreen;
   };
 
-  const handleSwitch = (target: "siswa-peta" | "guru-dashboard" | "login" | "splash" | "posttest" | "lencana" | "petunjuk" | "tujuan" | "tantangan" | "misi-1" | "misi-2" | "misi-3" | "sertifikat") => {
+  const handleSwitch = (target: "siswa-peta" | "guru-dashboard" | "login" | "splash" | "pretest" | "posttest" | "lencana" | "petunjuk" | "tujuan" | "tantangan" | "misi-1" | "misi-2" | "misi-3" | "sertifikat") => {
     if (target === "login") {
       logout();
       setScreen("login");
@@ -106,7 +106,7 @@ function DemoPanel({
       } else if (target === "posttest") {
         setCompletedMissions(new Set([1, 2, 3]));
         setPretestScore(null);
-      setPosttestScore(null);
+        setPosttestScore(null);
         setScreen("posttest");
       } else if (target === "lencana") {
         setCompletedMissions(new Set([1, 2, 3]));
