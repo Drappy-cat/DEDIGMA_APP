@@ -99,26 +99,26 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
 
       // 3D Depth Layer (extrusion shadow)
       const depth = Math.round(3 * (SCALE / 2.946));
-      ctx.fillStyle = "#09142b";
+      ctx.fillStyle = "#661400";
       for (let i = depth; i > 0; i--) {
         ctx.fillText(studentName, W / 2, nameY + i, W * 0.65);
       }
 
-      // Linear Gradient Fill (Glossy metallic gradient)
+      // Linear Gradient Fill (Bright Glossy Orange Gradient)
       const textGrad = ctx.createLinearGradient(0, nameY - fontSp / 2, 0, nameY + fontSp / 2);
-      textGrad.addColorStop(0, "#4d82f3");
-      textGrad.addColorStop(0.35, "#2b59c3");
-      textGrad.addColorStop(0.7, "#1b3d82");
-      textGrad.addColorStop(1, "#0f234e");
+      textGrad.addColorStop(0, "#ffe066");
+      textGrad.addColorStop(0.3, "#ff9900");
+      textGrad.addColorStop(0.7, "#e64a00");
+      textGrad.addColorStop(1, "#801a00");
 
       ctx.fillStyle = textGrad;
-      ctx.shadowColor = "rgba(0,0,0,0.35)";
+      ctx.shadowColor = "rgba(102, 20, 0, 0.4)";
       ctx.shadowBlur = Math.round(6 * SCALE);
       ctx.shadowOffsetY = Math.round(3 * SCALE);
       ctx.fillText(studentName, W / 2, nameY, W * 0.65);
 
       // Glossy highlight stroke
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+      ctx.strokeStyle = "rgba(255, 245, 204, 0.6)";
       ctx.lineWidth = Math.round(1.5 * SCALE);
       ctx.strokeText(studentName, W / 2, nameY - 1, W * 0.65);
 
@@ -261,10 +261,10 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
                   <h2 
                     className="font-['Fredoka'] font-black text-4xl capitalize truncate tracking-wide py-1"
                     style={{
-                      background: "linear-gradient(180deg, #4d82f3 0%, #2b59c3 35%, #1b3d82 70%, #0f234e 100%)",
+                      background: "linear-gradient(180deg, #ffe066 0%, #ff9900 35%, #e64a00 70%, #801a00 100%)",
                       WebkitBackgroundClip: "text",
                       WebkitTextFillColor: "transparent",
-                      filter: "drop-shadow(0 2px 0px #0a1633) drop-shadow(0 4px 8px rgba(0,0,0,0.35))"
+                      filter: "drop-shadow(0 2px 0px #661400) drop-shadow(0 4px 8px rgba(102, 20, 0, 0.4))"
                     }}
                   >
                     {studentName}
