@@ -196,8 +196,8 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
         ctx.restore();
       };
 
-      drawMedal(pretestCX, "Pretest", pretestScore, "#1b3d82", "#3a65c0");
-      drawMedal(posttestCX, "Posttest", posttestScore, "#1d5c1d", "#368a36");
+      drawMedal(pretestCX, "Pretest", pretestScore ?? 0, "#1b3d82", "#3a65c0");
+      drawMedal(posttestCX, "Posttest", posttestScore ?? 0, "#1d5c1d", "#368a36");
 
       // 8. Convert canvas to PDF
       const imgData = canvas.toDataURL("image/png", 1.0);

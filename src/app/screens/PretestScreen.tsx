@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Btn } from "../components/Btn";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useAudio } from "../contexts/AudioContext";
 import { fireConfetti } from "../utils/confetti";
@@ -19,7 +18,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
 
   useEffect(() => {
     playNarrator(
-      "Selamat datang di Pretest Interaktif DEDIGMA. Jawab pertanyaan awal ini dengan teliti untuk mendapatkan memulai petualanganmu."
+      "Selamat datang di Pretest Interaktif DEDIGMA. Jawab pertanyaan awal ini dengan teliti untuk memulai petualanganmu."
     );
     return () => {
       stopNarrator();

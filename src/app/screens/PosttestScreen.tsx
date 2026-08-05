@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { BookOpen } from "lucide-react";
 import { Btn } from "../components/Btn";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useAudio } from "../contexts/AudioContext";

@@ -233,7 +233,7 @@ export const MISSIONS: Mission[] = [
     ],
     cekFakta: [
       { text: "Ledhug Suro adalah perayaan Tahun Baru Masehi.", benar: false },
-      { text: "Ledhug Suro merayakan 1 Suro or Tahun Baru Jawa.", benar: true },
+      { text: "Ledhug Suro merayakan 1 Suro atau Tahun Baru Jawa.", benar: true },
       { text: "Festival ini menampilkan berbagai kesenian tradisional.", benar: true },
       { text: "Ledhug Suro dilarang pemerintah karena dianggap kuno.", benar: false }
     ],
