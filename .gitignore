@@ -4,6 +4,12 @@ dist
 dist-ssr
 *.local
 
+# Environment Variables & Secrets (Never commit to Git)
+.env
+.env.*
+!.env.example
+supabase/.temp/
+
 # Logs
 logs
 *.log
@@ -24,6 +30,7 @@ pnpm-debug.log*
 !.vscode/extensions.json
 .idea
 .DS_Store
+._*
 *.suo
 *.ntvs*
 *.njsproj

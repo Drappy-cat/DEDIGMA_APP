@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { Shield, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { Check, X, Lightbulb } from "lucide-react";
 import { Mission } from "../../types";
-import { Btn } from "../../components/Btn";
 import { useAudio } from "../../contexts/AudioContext";
 
 interface CekFaktaScreenProps {
   mission: Mission;
   onNext: (score: number) => void;
+  onBack?: () => void;
 }
 
-export const CekFaktaScreen: React.FC<CekFaktaScreenProps> = ({ mission, onNext }) => {
+export const CekFaktaScreen: React.FC<CekFaktaScreenProps> = ({ mission, onNext, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [answers, setAnswers] = useState<Record<number, boolean | null>>(
     Object.fromEntries(mission.cekFakta.map((_, i) => [i, null]))
   );
   const [checked, setChecked] = useState(false);
+  const [showFunFact, setShowFunFact] = useState(false);
 
   useEffect(() => {
     playNarrator(
-      `Misi ketiga: Cek Fakta. Pilihlah benar atau keliru untuk beberapa informasi budaya yang ditampilkan di layar.`
+      `Misi ketiga: Cek Fakta Budaya. Saring informasi digital dengan menentukan BENAR atau KELIRU pada tiap pernyataan!`
     );
     return () => {
       stopNarrator();
@@ -39,7 +40,7 @@ export const CekFaktaScreen: React.FC<CekFaktaScreenProps> = ({ mission, onNext 
 
     if (finalScore >= 75) {
       playSFX("success");
-      playNarrator(`Hebat! Skor kamu ${finalScore}. Kamu sangat teliti dalam menyaring informasi budaya!`);
+      playNarrator(`Hebat! Skor verifikasi fakta kamu ${finalScore}. Kamu sangat teliti dalam menyaring informasi budaya!`);
     } else {
       playSFX("fail");
       playNarrator(`Skor kamu ${finalScore}. Terus asah ketelitianmu ya.`);
@@ -53,126 +54,251 @@ export const CekFaktaScreen: React.FC<CekFaktaScreenProps> = ({ mission, onNext 
   };
 
   const allAnswered = Object.values(answers).every((a) => a !== null);
+  const answeredCount = Object.values(answers).filter((a) => a !== null).length;
+  const totalQuestions = mission.cekFakta.length;
   const score = checked
-    ? Math.round((mission.cekFakta.filter((f, i) => answers[i] === f.benar).length / mission.cekFakta.length) * 100)
+    ? Math.round((mission.cekFakta.filter((f, i) => answers[i] === f.benar).length / totalQuestions) * 100)
     : 0;
 
   return (
-    <div className="flex flex-col h-full font-['Nunito']">
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {/* Banner info */}
-        <div className="bg-gradient-to-r from-indigo-600 to-blue-500 text-white rounded-2xl p-4 shadow-md select-none">
-          <h2 className="font-['Fredoka'] font-bold text-lg flex items-center gap-2">
-            <Shield size={22} className="filter drop-shadow-sm" /> Cek Fakta Budaya
-          </h2>
-          <p className="text-blue-100 text-xs mt-1 leading-relaxed">
-            Saring informasi digital! Tentukan apakah pernyataan berikut tentang {mission.name} bernilai BENAR atau KELIRU.
-          </p>
+    <div className="flex flex-col h-full font-['Nunito'] justify-between overflow-hidden max-h-full min-h-0 relative p-1 sm:p-2 select-none">
+      
+      {/* Top Header Section */}
+      <div className="flex flex-col items-center relative mb-2 flex-shrink-0">
+        {/* Top Right Progress Capsule Badge */}
+        <div className="absolute top-0 right-0 hidden sm:flex items-center gap-1 bg-[#256c3a] border border-[#184826] text-white rounded-full px-3 py-1 font-['Fredoka'] font-extrabold text-xs shadow-xs">
+          <span>{answeredCount} / {totalQuestions}</span>
         </div>
 
-        {/* Legend */}
-        <div className="grid grid-cols-2 gap-3 text-center text-xs font-bold select-none">
-          <div className="bg-green-50 rounded-2xl p-2.5 border-2 border-green-200 text-green-700">
-            ✅ INFORMASI BENAR
-          </div>
-          <div className="bg-red-50 rounded-2xl p-2.5 border-2 border-red-200 text-red-600">
-            ❌ INFORMASI KELIRU
-          </div>
+        {/* Centered Wooden Header Signboard Banner */}
+        <div className="bg-[#6b3c1b] border-2 border-[#4a270f] rounded-2xl px-6 sm:px-8 py-1.5 text-[#fff5ce] font-['Fredoka'] font-extrabold text-sm sm:text-base md:text-lg uppercase tracking-wider shadow-md border-b-4 flex items-center justify-center gap-2 relative z-10">
+          <span className="text-base select-none">🌿</span>
+          <span>CEK FAKTA BUDAYA</span>
+          <span className="text-base select-none transform scale-x-[-1]">🌿</span>
         </div>
 
-        {/* Statements */}
+        {/* Sub-instruction Text Paragraph */}
+        <p className="text-center text-xs sm:text-sm text-[#4a3728] font-semibold leading-relaxed max-w-xl mx-auto mt-2">
+          Saring informasi digital! Tentukan apakah pernyataan berikut tentang <strong className="text-[#1c5c32] font-extrabold">{mission.name}</strong> bernilai <strong className="text-[#256c3a] font-extrabold">BENAR</strong> atau <strong className="text-[#d44333] font-extrabold">KELIRU</strong>.
+        </p>
+      </div>
+
+      {/* Main Content Area: Question Cards Scrollable List */}
+      <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden space-y-3 sm:space-y-4 pr-1 pb-16">
         {mission.cekFakta.map((item, i) => {
           const userAnswer = answers[i];
           const isCorrect = checked ? userAnswer === item.benar : null;
 
           return (
-            <div
+            <motion.div
               key={i}
-              className={`bg-white rounded-2xl shadow-md p-4 border-2 transition-all
-                ${
-                  checked
-                    ? isCorrect
-                      ? "border-green-400 bg-green-50/20"
-                      : "border-red-400 bg-red-50/20"
-                    : userAnswer !== null
-                    ? "border-blue-300"
-                    : "border-gray-100"
-                }`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08 }}
+              className={`bg-[#fdfcf7] border rounded-2xl p-4 sm:p-5 shadow-xs relative space-y-3 transition-all ${
+                checked
+                  ? isCorrect
+                    ? "border-[#256c3a] bg-[#f0f7f2]"
+                    : "border-[#d44333] bg-[#fdf2f0]"
+                  : userAnswer !== null
+                  ? "border-[#256c3a]/50"
+                  : "border-[#e8dcb8]"
+              }`}
             >
-              <p className="text-gray-700 text-sm mb-3 font-semibold leading-relaxed">{item.text}</p>
-              <div className="flex gap-2">
+              {/* Top Right Leaf Sprig Accent */}
+              <div className="absolute top-2.5 right-3 text-base select-none opacity-80">🌿</div>
+
+              {/* Question Statement Text */}
+              <p className="text-[#3a2718] font-['Nunito'] font-extrabold text-xs sm:text-sm md:text-base leading-snug pr-5">
+                {item.text}
+              </p>
+
+              {/* 2 Big Option Buttons: BENAR vs KELIRU */}
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                {/* BENAR Button */}
                 <button
                   type="button"
                   onClick={() => handleSelect(i, true)}
                   disabled={checked}
-                  className={`flex-1 py-2.5 rounded-xl font-['Fredoka'] font-bold text-xs border-2 transition-all cursor-pointer select-none
-                    ${
-                      userAnswer === true
-                        ? "bg-green-500 border-green-500 text-white shadow-md shadow-green-200"
-                        : "border-green-300 bg-white text-green-600 hover:bg-green-50"
-                    }`}
+                  className={`py-2.5 px-4 rounded-xl font-['Fredoka'] font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer border-b-4 select-none ${
+                    userAnswer === true
+                      ? "bg-gradient-to-b from-[#3a854a] to-[#256c3a] text-white border-[#164724] shadow-md ring-2 ring-[#256c3a] opacity-100 scale-[1.02]"
+                      : "bg-[#256c3a]/50 hover:bg-[#256c3a]/75 text-white/90 border-[#1c4d29]/40 opacity-65 hover:opacity-90 shadow-xs"
+                  } ${checked && !item.benar && userAnswer !== true ? "opacity-35" : ""}`}
                 >
-                  ✅ Benar
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    userAnswer === true ? "bg-white/30" : "bg-white/20"
+                  }`}>
+                    <Check size={14} strokeWidth={3} className="text-white" />
+                  </div>
+                  <span>BENAR</span>
                 </button>
+
+                {/* KELIRU Button */}
                 <button
                   type="button"
                   onClick={() => handleSelect(i, false)}
                   disabled={checked}
-                  className={`flex-1 py-2.5 rounded-xl font-['Fredoka'] font-bold text-xs border-2 transition-all cursor-pointer select-none
-                    ${
-                      userAnswer === false
-                        ? "bg-red-500 border-red-500 text-white shadow-md shadow-red-200"
-                        : "border-red-300 bg-white text-red-500 hover:bg-red-50"
-                    }`}
+                  className={`py-2.5 px-4 rounded-xl font-['Fredoka'] font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer border-b-4 select-none ${
+                    userAnswer === false
+                      ? "bg-gradient-to-b from-[#d44333] to-[#b83223] text-white border-[#7a1c12] shadow-md ring-2 ring-[#b83223] opacity-100 scale-[1.02]"
+                      : "bg-[#d44333]/50 hover:bg-[#d44333]/75 text-white/90 border-[#8c2419]/40 opacity-65 hover:opacity-90 shadow-xs"
+                  } ${checked && item.benar && userAnswer !== false ? "opacity-35" : ""}`}
                 >
-                  ❌ Keliru
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    userAnswer === false ? "bg-white/30" : "bg-white/20"
+                  }`}>
+                    <X size={14} strokeWidth={3} className="text-white" />
+                  </div>
+                  <span>KELIRU</span>
                 </button>
               </div>
+
+              {/* Feedback text after checking */}
               {checked && (
-                <p
-                  className={`text-xs mt-2.5 font-bold select-none ${
-                    isCorrect ? "text-green-600" : "text-red-600"
+                <div
+                  className={`text-xs font-bold pt-1 flex items-center gap-1.5 select-none ${
+                    isCorrect ? "text-[#256c3a]" : "text-[#d44333]"
                   }`}
                 >
-                  {isCorrect
-                    ? "✓ Bagus! Verifikasi kamu tepat."
-                    : `✗ Kurang tepat. Pernyataan ini sebenarnya bernilai ${item.benar ? "BENAR" : "KELIRU"}.`}
-                </p>
+                  <span>{isCorrect ? "✓ Bagus! Verifikasi fakta kamu tepat." : `✕ Kurang tepat. Informasi ini bernilai ${item.benar ? "BENAR" : "KELIRU"}.`}</span>
+                </div>
               )}
-            </div>
+            </motion.div>
           );
         })}
 
-        {/* Feedback results panel */}
+        {/* Feedback Results Panel */}
         {checked && (
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             className={`rounded-2xl p-4 text-center border-2 select-none shadow-md ${
-              score >= 75 ? "bg-green-100 border-green-400 text-green-950" : "bg-amber-100 border-amber-400 text-amber-950"
+              score >= 75
+                ? "bg-[#eaf4ed] border-[#256c3a] text-[#1c4827]"
+                : "bg-[#fdf4e7] border-[#e69824] text-[#6e4307]"
             }`}
           >
-            <p className="font-['Fredoka'] font-bold text-2xl">{score >= 75 ? "🎉 Luar Biasa!" : "💪 Tetap Semangat!"}</p>
-            <p className="text-sm mt-0.5">
-              Skor verifikasi fakta: <strong>{score} / 100</strong>
+            <p className="font-['Fredoka'] font-extrabold text-xl sm:text-2xl">
+              {score >= 75 ? "Luar Biasa! 🎉" : "Tetap Semangat! 💪"}
+            </p>
+            <p className="text-xs sm:text-sm mt-1 font-semibold">
+              Skor verifikasi fakta: <strong className="font-extrabold">{score} / 100</strong>
             </p>
           </motion.div>
         )}
       </div>
 
-      {/* Sticky action button */}
-      <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
-        {!checked ? (
-          <Btn
-            onClick={handleCheck}
-            variant="periksa"
-            disabled={!allAnswered}
-          />
+      {/* Bottom Action / Navigation Bar */}
+      <div className="flex justify-between items-center px-2 py-1 flex-shrink-0 z-30 relative mt-1">
+        {onBack ? (
+          <button
+            onClick={() => { playSFX("click"); onBack(); }}
+            className="bg-gradient-to-b from-[#874119] via-[#753412] to-[#632c0f] hover:from-[#9c4c1e] hover:to-[#733311] border-2 border-[#d98b48] text-white rounded-full px-5 py-1.5 sm:py-2 flex items-center gap-2 font-['Fredoka'] font-extrabold text-xs sm:text-sm shadow-md transition-transform active:scale-95 cursor-pointer focus:outline-none"
+            aria-label="Kembali"
+          >
+            <span>←</span>
+            <span>Kembali</span>
+          </button>
         ) : (
-          <Btn onClick={handleNext} variant="lanjut" />
+          <div className="w-20" />
         )}
+
+        {!checked ? (
+          <button
+            onClick={handleCheck}
+            disabled={!allAnswered}
+            className={`rounded-full px-7 py-2 font-['Fredoka'] font-extrabold text-sm sm:text-base shadow-lg transition-all border-2 ${
+              allAnswered
+                ? "bg-gradient-to-b from-[#2a6838] via-[#1c5c32] to-[#144826] text-white border-[#52ad69] cursor-pointer hover:scale-105 active:scale-95"
+                : "bg-[#ccc3b1] text-[#787163] border-[#a89f8f] cursor-not-allowed opacity-70"
+            }`}
+          >
+            PERIKSA JAWABAN
+          </button>
+        ) : (
+          <button
+            onClick={() => { playSFX("click"); handleNext(); }}
+            className="bg-gradient-to-b from-[#fdb813] via-[#f59e0b] to-[#e68a00] hover:from-[#ffc125] hover:to-[#f09300] border-2 border-[#fff5ce] text-white rounded-full px-6 py-2 flex items-center gap-2 font-['Fredoka'] font-extrabold text-sm shadow-md transition-transform active:scale-95 cursor-pointer focus:outline-none"
+            aria-label="Lanjut"
+          >
+            <span>Lanjut</span>
+            <span>→</span>
+          </button>
+        )}
+      </div>
+
+      {/* Fixed Top-Layer Dimas Mascot & Dialogue Speech Bubble (Bottom Right Mirrored) */}
+      <div className="absolute bottom-14 sm:bottom-16 right-2 sm:right-4 z-50 pointer-events-auto flex flex-row-reverse items-end gap-2.5 sm:gap-3.5 max-w-[92%] sm:max-w-[88%] select-none">
+        {/* Interactive Dimas Mascot */}
+        <motion.div
+          animate={{ y: [0, -5, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          whileHover={{ scale: 1.06, rotate: -2 }}
+          whileTap={{ scale: 0.94 }}
+          onClick={() => {
+            playSFX("click");
+            setShowFunFact((prev) => !prev);
+          }}
+          className="w-28 sm:w-36 cursor-pointer relative group flex-shrink-0 flex flex-col items-center"
+          title="Klik Dimas untuk petunjuk!"
+        >
+          <img
+            src="/assets/mascot/Dimas-Petunjuk.svg"
+            alt="Dimas Mascot"
+            className="w-full h-auto object-contain filter drop-shadow-2xl transform scale-x-[-1]"
+          />
+
+          {/* Bottom Coverage Badge: Klik Dimas! */}
+          <div className="bg-[#fcf5e3] border-2 border-[#e5cca0] text-[#7a5316] text-[10px] sm:text-[11px] font-['Fredoka'] font-extrabold rounded-full px-2.5 py-0.5 shadow-md absolute -bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-1 z-20 whitespace-nowrap group-hover:bg-[#f5e3b8] transition-colors">
+            <span className="text-xs">💡</span>
+            <span>Klik Dimas!</span>
+          </div>
+        </motion.div>
+
+        {/* Dimas Speech Dialogue Bubble Popup */}
+        <AnimatePresence>
+          {showFunFact && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 10, x: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 10, x: 10 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="bg-[#fdfcf7] border-2 border-[#e8dcb8] rounded-2xl p-3 sm:p-4 shadow-xl relative z-50 max-w-[260px] sm:max-w-[320px] mb-3"
+            >
+              {/* Right Pointer Tail pointing to Dimas */}
+              <div className="absolute bottom-4 -right-2.5 w-0 h-0 border-t-8 border-t-transparent border-l-[10px] border-l-[#e8dcb8] border-b-8 border-b-transparent" />
+              <div className="absolute bottom-4 -right-2 w-0 h-0 border-t-7 border-t-transparent border-l-[9px] border-l-[#fdfcf7] border-b-7 border-b-transparent" />
+
+              {/* Speech Dialogue Header */}
+              <div className="flex items-center justify-between pb-1 mb-1.5 border-b border-[#e8dcb8]">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-5 h-5 rounded-full bg-[#f3c233] text-[#1c4d29] flex items-center justify-center text-xs">
+                    💡
+                  </div>
+                  <h4 className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-xs uppercase">
+                    PETUNJUK DETEKTIF
+                  </h4>
+                </div>
+                <button
+                  onClick={() => setShowFunFact(false)}
+                  className="text-[#5c4733] hover:text-[#1c5c32] hover:bg-[#f2e6cb] p-0.5 rounded-full cursor-pointer transition-colors"
+                  aria-label="Tutup"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+
+              {/* Speech Dialogue Text */}
+              <p className="text-[#4a3728] text-xs font-['Nunito'] font-bold leading-relaxed">
+                Teliti kembali setiap berita! Informasi hoax biasanya provokatif dan tidak sesuai adat budaya setempat.
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
 };
+
 export default CekFaktaScreen;

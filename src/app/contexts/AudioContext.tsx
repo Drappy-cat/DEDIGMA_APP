@@ -1,15 +1,26 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 
+interface VoiceOptions {
+  pitch?: number;
+  rate?: number;
+}
+
 interface AudioContextType {
   audioEnabled: boolean;
   bgmEnabled: boolean;
+  sfxEnabled: boolean;
   narratorEnabled: boolean;
+  bgmVolume: number;
+  sfxVolume: number;
   toggleAudio: () => void;
   toggleBGM: () => void;
+  toggleSFX: () => void;
   toggleNarrator: () => void;
-  playNarrator: (text: string, mp3Path?: string) => void;
+  setBgmVolume: (val: number) => void;
+  setSfxVolume: (val: number) => void;
+  playNarrator: (text: string, mp3Path?: string, options?: VoiceOptions) => void;
   stopNarrator: () => void;
-  playSFX: (type: "success" | "fail" | "click" | "badge") => void;
+  playSFX: (type: "success" | "fail" | "click" | "badge" | "wrong") => void;
   playBGM: (path?: string) => void;
   stopBGM: () => void;
 }
@@ -17,35 +28,62 @@ interface AudioContextType {
 const AudioContext = createContext<AudioContextType | undefined>(undefined);
 
 export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [audioEnabled, setAudioEnabled] = useState<boolean>(true);
-  const [bgmEnabled, setBgmEnabled] = useState<boolean>(true);
-  const [narratorEnabled, setNarratorEnabled] = useState<boolean>(true);
+  const [audioEnabled, setAudioEnabled] = useState<boolean>(() => {
+    const saved = localStorage.getItem("dedigma_audio_enabled");
+    return saved !== null ? saved === "true" : true;
+  });
+  const [bgmEnabled, setBgmEnabled] = useState<boolean>(() => {
+    const saved = localStorage.getItem("dedigma_bgm_enabled");
+    return saved !== null ? saved === "true" : true;
+  });
+  const [sfxEnabled, setSfxEnabled] = useState<boolean>(() => {
+    const saved = localStorage.getItem("dedigma_sfx_enabled");
+    return saved !== null ? saved === "true" : true;
+  });
+  const [narratorEnabled, setNarratorEnabled] = useState<boolean>(() => {
+    const saved = localStorage.getItem("dedigma_narrator_enabled");
+    return saved !== null ? saved === "true" : true;
+  });
+  const [bgmVolume, setBgmVolumeState] = useState<number>(() => {
+    const saved = localStorage.getItem("dedigma_bgm_volume");
+    return saved !== null ? parseFloat(saved) : 0.3;
+  });
+  const [sfxVolume, setSfxVolumeState] = useState<number>(() => {
+    const saved = localStorage.getItem("dedigma_sfx_volume");
+    return saved !== null ? parseFloat(saved) : 0.5;
+  });
+
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const bgmRef = useRef<HTMLAudioElement | null>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
-  // Initialize SpeechSynthesis and saved audio preferences
+  // Initialize SpeechSynthesis
   useEffect(() => {
     if (typeof window !== "undefined" && window.speechSynthesis) {
       synthRef.current = window.speechSynthesis;
     }
-
-    const savedAudio = localStorage.getItem("dedigma_audio_enabled");
-    if (savedAudio !== null) {
-      setAudioEnabled(savedAudio === "true");
-    }
-
-    const savedBgm = localStorage.getItem("dedigma_bgm_enabled");
-    if (savedBgm !== null) {
-      setBgmEnabled(savedBgm === "true");
-    }
-
-    const savedNarrator = localStorage.getItem("dedigma_narrator_enabled");
-    if (savedNarrator !== null) {
-      setNarratorEnabled(savedNarrator === "true");
-    }
   }, []);
+
+  // Reactive Effect: Continuously synchronize active BGM element with audio/BGM state and volume
+  useEffect(() => {
+    if (!bgmRef.current) return;
+
+    if (!audioEnabled || !bgmEnabled) {
+      bgmRef.current.pause();
+    } else {
+      bgmRef.current.volume = bgmVolume;
+      if (bgmRef.current.paused) {
+        bgmRef.current.play().catch(() => {});
+      }
+    }
+
+    return () => {
+      if (bgmRef.current) {
+        bgmRef.current.pause();
+      }
+    };
+  }, [audioEnabled, bgmEnabled, bgmVolume]);
 
   const toggleAudio = () => {
     setAudioEnabled((prev) => {
@@ -56,6 +94,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         stopBGM();
       } else {
         if (bgmEnabled && bgmRef.current) {
+          bgmRef.current.volume = bgmVolume;
           bgmRef.current.play().catch(() => {});
         }
       }
@@ -76,6 +115,14 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   };
 
+  const toggleSFX = () => {
+    setSfxEnabled((prev) => {
+      const next = !prev;
+      localStorage.setItem("dedigma_sfx_enabled", String(next));
+      return next;
+    });
+  };
+
   const toggleNarrator = () => {
     setNarratorEnabled((prev) => {
       const next = !prev;
@@ -87,23 +134,33 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     });
   };
 
+  const setBgmVolume = (val: number) => {
+    setBgmVolumeState(val);
+    localStorage.setItem("dedigma_bgm_volume", String(val));
+    if (bgmRef.current) {
+      bgmRef.current.volume = val;
+    }
+  };
+
+  const setSfxVolume = (val: number) => {
+    setSfxVolumeState(val);
+    localStorage.setItem("dedigma_sfx_volume", String(val));
+  };
+
   const stopNarrator = () => {
-    // Stop MP3 if playing
     if (currentAudioRef.current) {
       currentAudioRef.current.pause();
       currentAudioRef.current.currentTime = 0;
     }
-    // Stop SpeechSynthesis if talking
     if (synthRef.current) {
       synthRef.current.cancel();
     }
   };
 
-  const playNarrator = (text: string, mp3Path?: string) => {
+  const playNarrator = (text: string, mp3Path?: string, options?: VoiceOptions) => {
     stopNarrator();
     if (!audioEnabled || !narratorEnabled) return;
 
-    // Convert the first 20 characters of text to a safe filename slug
     const cleanSlug = text
       .toLowerCase()
       .slice(0, 20)
@@ -117,21 +174,18 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     currentAudioRef.current = audio;
     
     audio.play().catch(() => {
-      // If the MP3 file is not found or fails to load, gracefully fall back to Indonesian TTS
-      playTTS(text);
+      playTTS(text, options);
     });
   };
 
-  const playTTS = (text: string) => {
+  const playTTS = (text: string, options?: VoiceOptions) => {
     if (!synthRef.current || !narratorEnabled || !audioEnabled) return;
 
-    // SpeechSynthesisUtterance setup for Indonesian language
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "id-ID";
-    utterance.rate = 1.0; // natural speed
-    utterance.pitch = 1.1; // slightly friendly tone for kids
+    utterance.rate = options?.rate ?? 1.0;
+    utterance.pitch = options?.pitch ?? 1.1;
 
-    // Get Indonesian voice if available
     const voices = synthRef.current.getVoices();
     const idVoice = voices.find((voice) => voice.lang.includes("id"));
     if (idVoice) {
@@ -142,52 +196,54 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     synthRef.current.speak(utterance);
   };
 
-  const playSFX = (type: "success" | "fail" | "click" | "badge") => {
-    if (!audioEnabled) return;
+  const playSFX = (type: "success" | "fail" | "click" | "badge" | "wrong") => {
+    if (!audioEnabled || !sfxEnabled) return;
 
-    const sfxPaths = {
-      click: "/audio/sfx-click.mp3",
-      success: "/audio/sfx-success.mp3",
-      fail: "/audio/sfx-fail.mp3",
-      badge: "/audio/sfx-badge.mp3"
+    const sfxPaths: Record<string, { primary: string; fallback?: string }> = {
+      click: { primary: "/audio/pop click.MP3" },
+      badge: { primary: "/audio/misi-complate.MP3" },
+      success: { primary: "/audio/sfx-success.mp3", fallback: "/audio/misi-complate.MP3" },
+      fail: { primary: "/audio/sfx-fail.mp3", fallback: "/audio/pop click.MP3" },
+      wrong: { primary: "/audio/sfx-fail.mp3", fallback: "/audio/pop click.MP3" }
     };
 
-    const path = sfxPaths[type];
-    const audio = new Audio(path);
-    audio.volume = 0.5;
+    const config = sfxPaths[type] || sfxPaths.click;
+    const audio = new Audio(config.primary);
+    audio.volume = sfxVolume;
     audio.play().catch(() => {
-      // Fallback: Silent failure or soft console log if assets don't exist yet
-      console.log(`SFX played: ${type}`);
+      if (config.fallback) {
+        const fallbackAudio = new Audio(config.fallback);
+        fallbackAudio.volume = sfxVolume;
+        fallbackAudio.play().catch(() => {});
+      }
     });
   };
 
   const playBGM = (path: string = "/audio/backsound.mp3") => {
-    if (!audioEnabled || !bgmEnabled) return;
+    if (!audioEnabled || !bgmEnabled) {
+      if (bgmRef.current) {
+        bgmRef.current.pause();
+      }
+      return;
+    }
     
     if (bgmRef.current) {
-      // Ambil path dari sumber yang sedang diputar (menghindari absolute URL)
       const currentSrc = new URL(bgmRef.current.src, window.location.href).pathname;
-      
-      // Jika lagu yang sama sudah ada, pastikan saja dia dimainkan (tidak dari awal)
       if (currentSrc === path) {
+        bgmRef.current.volume = bgmVolume;
         if (bgmRef.current.paused) {
           bgmRef.current.play().catch(() => {});
         }
         return;
       }
-      
-      // Jika lagunya berbeda, berhentikan lagu sebelumnya
       bgmRef.current.pause();
     }
     
-    // Mulai lagu baru dari awal
     const bgm = new Audio(path);
     bgm.loop = true;
-    bgm.volume = 0.3; // Default volume for BGM, lower than SFX
+    bgm.volume = bgmVolume;
     bgmRef.current = bgm;
-    bgm.play().catch(() => {
-      console.log(`BGM failed to play. Browsers usually require user interaction first.`);
-    });
+    bgm.play().catch(() => {});
   };
 
   const stopBGM = () => {
@@ -202,10 +258,16 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       value={{
         audioEnabled,
         bgmEnabled,
+        sfxEnabled,
         narratorEnabled,
+        bgmVolume,
+        sfxVolume,
         toggleAudio,
         toggleBGM,
+        toggleSFX,
         toggleNarrator,
+        setBgmVolume,
+        setSfxVolume,
         playNarrator,
         stopNarrator,
         playSFX,
@@ -225,3 +287,4 @@ export const useAudio = () => {
   }
   return context;
 };
+

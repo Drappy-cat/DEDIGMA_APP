@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { LogOut, X } from "lucide-react";
+import { X, Settings } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { MascotDimas, MascotGita } from "../components/Mascot";
+import { AudioSettingsModal } from "../components/AudioSettingsModal";
 
 interface SplashScreenProps {
   onMulai: () => void;
@@ -13,11 +14,11 @@ interface SplashScreenProps {
 
 export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk, onProfil }) => {
   const { userName, logout } = useAuth();
-  const { playSFX, playBGM, toggleAudio, toggleBGM, toggleNarrator, audioEnabled, bgmEnabled, narratorEnabled } = useAudio();
+  const { playSFX, playBGM, toggleAudio, toggleBGM, audioEnabled, bgmEnabled } = useAudio();
   const [showPustaka, setShowPustaka] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   React.useEffect(() => {
-    // Coba putar musik latar secara otomatis saat SplashScreen dimuat
     playBGM();
   }, [playBGM]);
 
@@ -28,13 +29,8 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
 
   const handleAction = (callback: () => void) => {
     playSFX("click");
-    playBGM(); // Pastikan musik bermain jika autoplay browser diblokir sebelumnya
+    playBGM();
     callback();
-  };
-
-  const handlePustakaOpen = () => {
-    playSFX("click");
-    setShowPustaka(true);
   };
 
   const handleVolumeToggle = () => {
@@ -47,17 +43,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
     toggleBGM();
   };
 
-  const handleNarratorToggle = () => {
-    playSFX("click");
-    toggleNarrator();
-  };
-
   // Generate random glitters / falling stars
   const glitters = React.useMemo(() => {
-    return Array.from({ length: 30 }).map((_, i) => ({
+    return Array.from({ length: 25 }).map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
-      top: `${Math.random() * 50}%`, // Mostly in the sky area
+      top: `${Math.random() * 50}%`,
       size: Math.random() * 3 + 1.5,
       duration: Math.random() * 2 + 2,
       delay: Math.random() * 3,
@@ -65,15 +56,15 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
   }, []);
 
   return (
-    <div className="h-full flex flex-col overflow-hidden relative select-none">
-      {/* Latar Belakang diletakkan sebagai elemen <img> agar SVG dapat dirender dengan baik */}
+    <div className="h-full flex flex-col overflow-hidden relative select-none font-['Nunito']">
+      {/* Background Image */}
       <img
         src="/assets/bg-lobby.svg"
         alt="Background"
         className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
       />
 
-      {/* Efek Bintang / Glitter */}
+      {/* Glitter / Star Effects */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         {glitters.map((g) => (
           <motion.div
@@ -82,14 +73,14 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
             style={{
               left: g.left,
               top: g.top,
-              width: g.size * 3, // Perbesar sedikit untuk bentuk bintang
+              width: g.size * 3,
               height: g.size * 3,
             }}
             animate={{
               opacity: [0, 1, 0],
               scale: [0, 1.2, 0],
               y: [0, Math.random() * 30 + 20],
-              rotate: [0, 180], // Tambahkan efek memutar
+              rotate: [0, 180],
             }}
             transition={{
               duration: g.duration,
@@ -98,48 +89,49 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
               ease: "easeInOut",
             }}
           >
-            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
               <path d="M12 0C12 0 12 9.5 17 12C12 14.5 12 24 12 24C12 24 12 14.5 7 12C12 9.5 12 0 12 0Z" />
             </svg>
           </motion.div>
         ))}
       </div>
 
-      {/* Top bar header */}
-      <div className="flex justify-between items-center px-4 pt-3 relative z-20 flex-shrink-0">
-        <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-3 py-1 shadow border border-white/10">
-          <span className="font-['Nunito'] font-bold text-white text-xs">👋 Halo, {userName}!</span>
+      {/* Top Header Bar */}
+      <div className="flex justify-between items-center px-4 pt-3 relative z-30 flex-shrink-0">
+        <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-3.5 py-1.5 shadow border border-white/20">
+          <span className="font-['Nunito'] font-bold text-white text-xs sm:text-sm drop-shadow-xs">
+            👋 Halo, {userName || "Siswa Demo"}!
+          </span>
         </div>
-        <div className="flex items-center gap-3 landscape:gap-4">
-          {/* BGM Toggle */}
+
+        <div className="flex items-center gap-2.5">
+          {/* BGM Toggle Button */}
           <button
             onClick={handleBgmToggle}
-            className={`px-2.5 py-1 rounded-2xl transition-all cursor-pointer flex items-center gap-1 border text-xs font-bold shadow backdrop-blur-sm ${
+            className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1.5 border text-xs font-['Fredoka'] font-bold shadow-lg backdrop-blur-md active:scale-95 ${
               bgmEnabled && audioEnabled
-                ? "bg-amber-500/30 border-amber-300/50 text-amber-200"
-                : "bg-white/10 border-white/10 text-white/40 grayscale"
+                ? "bg-amber-500/40 border-amber-300/60 text-amber-200 ring-2 ring-amber-400/30"
+                : "bg-slate-900/60 border-slate-600/60 text-slate-300/70 grayscale"
             }`}
             title={bgmEnabled ? "Matikan Musik Latar (BGM)" : "Nyalakan Musik Latar (BGM)"}
           >
             <span>🎵</span>
-            <span className="hidden sm:inline">{bgmEnabled ? "BGM" : "BGM Off"}</span>
+            <span>{bgmEnabled && audioEnabled ? "BGM On" : "BGM Off"}</span>
           </button>
 
-          {/* Narrator Toggle */}
+          {/* Settings Button */}
           <button
-            onClick={handleNarratorToggle}
-            className={`px-2.5 py-1 rounded-2xl transition-all cursor-pointer flex items-center gap-1 border text-xs font-bold shadow backdrop-blur-sm ${
-              narratorEnabled && audioEnabled
-                ? "bg-blue-500/30 border-blue-300/50 text-blue-100"
-                : "bg-white/10 border-white/10 text-white/40 grayscale"
-            }`}
-            title={narratorEnabled ? "Matikan Suara Narator / TTS" : "Nyalakan Suara Narator / TTS"}
+            onClick={() => {
+              playSFX("click");
+              setIsSettingsOpen(true);
+            }}
+            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/60 hover:bg-slate-900/80 border-2 border-amber-400/50 flex items-center justify-center text-amber-300 shadow-lg cursor-pointer transition-transform hover:scale-105 active:scale-95"
+            title="Pengaturan Audio & Volume"
           >
-            <span>🗣️</span>
-            <span className="hidden sm:inline">{narratorEnabled ? "Suara" : "Suara Off"}</span>
+            <Settings size={18} />
           </button>
 
-          {/* Master Speaker volume toggle */}
+          {/* Speaker Volume Toggle Button */}
           <button
             onClick={handleVolumeToggle}
             className="transition-transform cursor-pointer focus:outline-none hover:scale-110 active:scale-95 flex items-center justify-center"
@@ -148,11 +140,11 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
             <img
               src={audioEnabled ? "/assets/button/sound-on.svg" : "/assets/button/sound-off.svg"}
               alt={audioEnabled ? "Suara Nyala" : "Suara Mati"}
-              className="w-10 h-10 landscape:w-12 landscape:h-12 object-contain drop-shadow-sm"
+              className="w-9 h-9 sm:w-11 sm:h-11 object-contain drop-shadow-sm"
             />
           </button>
 
-          {/* Home / Keluar toggle */}
+          {/* Home / Logout Button */}
           <button
             onClick={handleLogout}
             className="transition-transform cursor-pointer focus:outline-none hover:scale-110 active:scale-95 flex items-center justify-center"
@@ -161,51 +153,48 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
             <img
               src="/assets/button/home.svg"
               alt="Home / Keluar"
-              className="w-10 h-10 landscape:w-12 landscape:h-12 object-contain drop-shadow-sm"
+              className="w-9 h-9 sm:w-11 sm:h-11 object-contain drop-shadow-sm"
             />
           </button>
         </div>
       </div>
 
-      {/* Content wrapper: Central UI with floating mascots */}
+      <AudioSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        onOpenProfil={() => onProfil()}
+      />
+
+      {/* Main Content Area */}
       <div className="flex-1 w-full relative z-10 flex flex-col items-center justify-center px-4 overflow-hidden">
-        
+
         {/* Logo Title (Center Top) */}
         <motion.div
           initial={{ y: -15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="mb-6 flex flex-col items-center z-20 pointer-events-auto"
+          className="mb-3 flex flex-col items-center z-20 pointer-events-auto select-none"
         >
           <img
-            src="/assets/logo.png"
-            alt="DEDIGMA Logo"
-            className="w-16 h-16 object-contain filter drop-shadow-md mb-2 animate-pulse"
+            src="/assets/title-dedigma.png"
+            alt="DEDIGMA Title Logo"
+            className="w-[300px] sm:w-[420px] md:w-[500px] h-auto object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
           />
-          <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-1 mb-1 border border-white/10 text-center">
-            <h1 className="font-['Fredoka'] font-bold text-2xl md:text-4xl text-white drop-shadow-md leading-none">DEDIGMA</h1>
-            <p className="font-['Fredoka'] font-semibold text-yellow-100 text-[8px] md:text-[10px] tracking-wider mt-0.5">
-              DETEKTIF DIGITAL BUDAYA MAGETAN
-            </p>
-          </div>
-          <p className="font-['Nunito'] text-white text-[11px] md:text-xs font-bold drop-shadow text-center max-w-xs leading-relaxed">
-            🔍 Jelajahi Budaya, Temukan Fakta, Lestarikan Warisan!
-          </p>
         </motion.div>
 
-        {/* Center Game Buttons */}
+        {/* Center Game Action Buttons */}
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="flex flex-col items-center gap-3 w-full max-w-[250px] z-20 pointer-events-auto"
+          className="flex flex-col items-center gap-3 w-full max-w-[250px] sm:max-w-[270px] z-50 relative pointer-events-auto"
         >
-          {/* Mulai Button */}
+          {/* MULAI Button */}
           <motion.button
             onClick={() => handleAction(onMulai)}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
-            className="w-full flex justify-center cursor-pointer focus:outline-none"
+            className="w-full flex justify-center cursor-pointer focus:outline-none z-50 relative"
           >
             <img
               src="/assets/button/mulai.svg"
@@ -215,12 +204,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           </motion.button>
 
           {/* Sub buttons row: Petunjuk and Profil */}
-          <div className="grid grid-cols-2 gap-3 mt-1 w-full">
+          <div className="grid grid-cols-2 gap-3.5 mt-1 w-full relative z-50">
             <motion.button
               onClick={() => handleAction(onPetunjuk)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="cursor-pointer focus:outline-none flex justify-center"
+              className="cursor-pointer focus:outline-none flex justify-center z-50 relative"
             >
               <img
                 src="/assets/button/petunjuk.svg"
@@ -233,7 +222,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
               onClick={() => handleAction(onProfil)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="cursor-pointer focus:outline-none flex justify-center"
+              className="cursor-pointer focus:outline-none flex justify-center z-50 relative"
             >
               <img
                 src="/assets/button/profil.svg"
@@ -244,28 +233,52 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           </div>
         </motion.div>
 
-        {/* Mascots positioned left and right */}
+        {/* Mascots positioned left and right with name badges */}
         <motion.div 
-          initial={{ opacity: 0, x: -50 }}
+          initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -left-4 sm:-left-2 landscape:left-10 -bottom-4 sm:-bottom-2 landscape:bottom-0 z-10 pointer-events-none"
+          className="absolute -left-10 xs:-left-6 sm:-left-4 md:left-0 lg:left-4 -bottom-4 sm:-bottom-8 landscape:bottom-0 z-10 pointer-events-none flex flex-col items-center"
         >
-          <MascotDimas size="3xl" animate={true} isLobby={true} />
+          <div className="relative flex flex-col items-center">
+            <div className="pointer-events-auto">
+              <MascotDimas size="lobby" animate={true} isLobby={true} />
+            </div>
+            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#2a5bb5] via-[#1c4899] to-[#143778] border-2 border-[#6095f5] rounded-2xl px-2.5 sm:px-6 py-0.5 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[95px] sm:min-w-[155px] pointer-events-auto">
+              <h3 className="font-['Fredoka'] font-extrabold text-[10px] sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
+                DIMAS
+              </h3>
+              <p className="font-['Nunito'] font-bold text-[8px] sm:text-[11px] text-blue-100 leading-none mt-0.5 drop-shadow-xs">
+                Detektif Digital
+              </p>
+            </div>
+          </div>
         </motion.div>
 
         <motion.div 
-          initial={{ opacity: 0, x: 50 }}
+          initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -right-4 sm:-right-2 landscape:right-10 -bottom-4 sm:-bottom-2 landscape:bottom-0 z-10 pointer-events-none"
+          className="absolute -right-10 xs:-right-6 sm:-right-4 md:right-0 lg:right-4 -bottom-4 sm:-bottom-8 landscape:bottom-0 z-10 pointer-events-none flex flex-col items-center"
         >
-          <MascotGita size="3xl" animate={true} isLobby={true} />
+          <div className="relative flex flex-col items-center">
+            <div className="pointer-events-auto">
+              <MascotGita size="lobby" animate={true} isLobby={true} />
+            </div>
+            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#8f4121] via-[#7e371b] to-[#592410] border-2 border-[#bd6d46] rounded-2xl px-2.5 sm:px-6 py-0.5 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[95px] sm:min-w-[155px] pointer-events-auto">
+              <h3 className="font-['Fredoka'] font-extrabold text-[10px] sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
+                GITA
+              </h3>
+              <p className="font-['Nunito'] font-bold text-[8px] sm:text-[11px] text-amber-100 leading-none mt-0.5 drop-shadow-xs">
+                Penjaga Budaya
+              </p>
+            </div>
+          </div>
         </motion.div>
 
       </div>
 
-      {/* Pustaka (Bibliography) Modal Overlay */}
+      {/* Pustaka Modal */}
       {showPustaka && (
         <div
           className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 animate-fadeIn"
@@ -314,4 +327,5 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
     </div>
   );
 };
+
 export default SplashScreen;

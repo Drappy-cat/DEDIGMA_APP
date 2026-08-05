@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { AlertTriangle, ChevronRight, Check, X, ArrowDown } from "lucide-react";
+import { Check, X, ArrowDown } from "lucide-react";
 import { Mission } from "../../types";
 import { Btn } from "../../components/Btn";
 import { useAudio } from "../../contexts/AudioContext";
@@ -8,9 +8,10 @@ import { useAudio } from "../../contexts/AudioContext";
 interface DetektifBeritaScreenProps {
   mission: Mission;
   onNext: (score: number) => void;
+  onBack?: () => void;
 }
 
-export const DetektifBeritaScreen: React.FC<DetektifBeritaScreenProps> = ({ mission, onNext }) => {
+export const DetektifBeritaScreen: React.FC<DetektifBeritaScreenProps> = ({ mission, onNext, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [answers, setAnswers] = useState<Record<number, boolean | null>>(
     Object.fromEntries(mission.beritaItems.map((_, i) => [i, null]))
@@ -131,8 +132,9 @@ export const DetektifBeritaScreen: React.FC<DetektifBeritaScreenProps> = ({ miss
             <motion.div
               draggable
               onDragStart={(e) => handleDragStart(e, activeCardIndex)}
-              className="bg-white border-2 border-amber-200 hover:border-amber-400 rounded-2xl p-4 shadow-lg w-full max-w-sm cursor-grab active:cursor-grabbing relative overflow-hidden group select-none"
-              whileHover={{ scale: 1.01 }}
+              className="bg-white border-2 border-amber-200 hover:border-amber-400 rounded-2xl p-4 shadow-lg w-full max-w-sm cursor-grab active:cursor-grabbing relative overflow-hidden group select-none will-change-transform transform-gpu"
+              whileHover={{ scale: 1.02 }}
+              whileDrag={{ scale: 1.05, rotate: 4 }}
               layout
             >
               <p className="font-bold text-gray-800 text-sm leading-relaxed mb-4">
@@ -144,14 +146,14 @@ export const DetektifBeritaScreen: React.FC<DetektifBeritaScreenProps> = ({ miss
                 <button
                   type="button"
                   onClick={() => moveCard(activeCardIndex, true)}
-                  className="flex-1 bg-green-500 hover:bg-green-600 text-white rounded-xl py-2 font-['Fredoka'] font-bold text-xs shadow transition-all cursor-pointer"
+                  className="flex-1 bg-green-500 hover:bg-green-600 active:scale-95 text-white rounded-xl py-2 font-['Fredoka'] font-bold text-xs shadow transition-all cursor-pointer"
                 >
                   Pindahkan ke Fakta
                 </button>
                 <button
                   type="button"
                   onClick={() => moveCard(activeCardIndex, false)}
-                  className="flex-1 bg-red-500 hover:bg-red-600 text-white rounded-xl py-2 font-['Fredoka'] font-bold text-xs shadow transition-all cursor-pointer"
+                  className="flex-1 bg-red-500 hover:bg-red-600 active:scale-95 text-white rounded-xl py-2 font-['Fredoka'] font-bold text-xs shadow transition-all cursor-pointer"
                 >
                   Pindahkan ke Hoaks
                 </button>
@@ -170,12 +172,12 @@ export const DetektifBeritaScreen: React.FC<DetektifBeritaScreenProps> = ({ miss
             className={`rounded-3xl p-3 border-2 transition-all flex flex-col min-h-[160px] gap-2.5 shadow-sm
               ${
                 dragOverColumn === "fakta"
-                  ? "bg-green-100 border-green-500 scale-105"
+                  ? "bg-green-100 border-green-500 scale-105 ring-4 ring-green-300/60 shadow-xl"
                   : "bg-green-50/50 border-green-200"
               }`}
           >
             <h3 className="font-['Fredoka'] font-bold text-green-700 text-xs text-center border-b border-green-200/50 pb-1.5 select-none">
-              📰 KOLOM FAKTA
+              KOLOM FAKTA
             </h3>
 
             <div className="flex-1 space-y-2 overflow-y-auto max-h-[220px]">
@@ -228,12 +230,12 @@ export const DetektifBeritaScreen: React.FC<DetektifBeritaScreenProps> = ({ miss
             className={`rounded-3xl p-3 border-2 transition-all flex flex-col min-h-[160px] gap-2.5 shadow-sm
               ${
                 dragOverColumn === "hoaks"
-                  ? "bg-red-100 border-red-500 scale-105"
+                  ? "bg-red-100 border-red-500 scale-105 ring-4 ring-red-300/60 shadow-xl"
                   : "bg-red-50/50 border-red-200"
               }`}
           >
             <h3 className="font-['Fredoka'] font-bold text-red-600 text-xs text-center border-b border-red-200/50 pb-1.5 select-none">
-              🚫 KOLOM HOAKS
+              KOLOM HOAKS
             </h3>
 
             <div className="flex-1 space-y-2 overflow-y-auto max-h-[220px]">
@@ -298,16 +300,30 @@ export const DetektifBeritaScreen: React.FC<DetektifBeritaScreenProps> = ({ miss
         )}
       </div>
 
-      {/* Sticky action footer */}
-      <div className="p-4 bg-transparent flex-shrink-0 flex justify-center">
-        {!checked ? (
-          <Btn
-            onClick={handleCheck}
-            variant="periksa"
-            disabled={!allAnswered}
-          />
+      {/* Bottom Navigation */}
+      <div className="flex justify-between items-center px-3 py-2 flex-shrink-0 z-30 relative bg-transparent">
+        {onBack ? (
+          <button
+            onClick={() => { playSFX("click"); onBack(); }}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+            aria-label="Kembali"
+          >
+            <img src="/assets/button/back.svg" alt="Kembali" className="w-12 sm:w-16 h-auto object-contain drop-shadow-md" />
+          </button>
         ) : (
-          <Btn onClick={handleNext} variant="lanjut" />
+          <div className="w-12 sm:w-16" />
+        )}
+
+        {!checked ? (
+          <Btn onClick={handleCheck} variant="periksa" disabled={!allAnswered} />
+        ) : (
+          <button
+            onClick={() => { playSFX("click"); handleNext(); }}
+            className="transition-transform cursor-pointer hover:scale-105 active:scale-95 focus:outline-none"
+            aria-label="Lanjut"
+          >
+            <img src="/assets/button/next.svg" alt="Lanjut" className="w-12 sm:w-16 h-auto object-contain drop-shadow-md" />
+          </button>
         )}
       </div>
     </div>

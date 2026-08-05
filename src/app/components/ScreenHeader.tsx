@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { Settings } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
+import { AudioSettingsModal } from "./AudioSettingsModal";
 
 interface ScreenHeaderProps {
   title: string;
@@ -9,7 +11,8 @@ interface ScreenHeaderProps {
 }
 
 export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHome, step }) => {
-  const { audioEnabled, bgmEnabled, narratorEnabled, toggleAudio, toggleBGM, toggleNarrator, playSFX } = useAudio();
+  const { playSFX, bgmEnabled, toggleBGM, audioEnabled } = useAudio();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleBack = () => {
     playSFX("click");
@@ -26,95 +29,77 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
     toggleBGM();
   };
 
-  const handleNarratorToggle = () => {
-    playSFX("click");
-    toggleNarrator();
-  };
-
-  const handleVolumeToggle = () => {
-    playSFX("click");
-    toggleAudio();
-  };
-
   return (
-    <div className="bg-gradient-to-r from-blue-800 to-blue-700 text-white px-3 sm:px-4 py-2 sm:py-2.5 flex items-center gap-2 sm:gap-3 shadow-md select-none border-b border-white/10 relative z-30 flex-shrink-0">
-      {onBack && (
-        <button
-          onClick={handleBack}
-          className="p-1 hover:bg-white/10 rounded-xl transition-all cursor-pointer flex items-center justify-center focus:outline-none"
-          aria-label="Kembali"
-        >
-          <img
-            src="/assets/btn/exit.png"
-            alt="Kembali"
-            className="w-6 h-6 sm:w-7 sm:h-7 object-contain active:scale-90 transition-transform"
-          />
-        </button>
-      )}
-
-      <div className="flex-1 min-w-0">
-        <h2 className="font-['Fredoka'] font-bold text-sm sm:text-base leading-tight drop-shadow-sm truncate">{title}</h2>
-        {step && <p className="text-blue-200 text-[10px] font-['Nunito'] font-semibold leading-none mt-0.5 truncate">{step}</p>}
-      </div>
-
-      <div className="flex items-center gap-1.5 sm:gap-2">
-        {/* BGM Toggle */}
-        <button
-          onClick={handleBgmToggle}
-          className={`px-2.5 py-1 rounded-xl transition-all cursor-pointer flex items-center gap-1 border text-[11px] font-bold backdrop-blur-sm hover:scale-105 active:scale-95 ${
-            bgmEnabled && audioEnabled
-              ? "bg-amber-500/30 border-amber-300/50 text-amber-200 shadow"
-              : "bg-white/10 border-white/10 text-white/40 grayscale"
-          }`}
-          title={bgmEnabled ? "Matikan Musik Latar (BGM)" : "Nyalakan Musik Latar (BGM)"}
-        >
-          <span>🎵</span>
-          <span className="hidden sm:inline">{bgmEnabled ? "BGM On" : "BGM Off"}</span>
-        </button>
-
-        {/* Narrator / TTS Toggle */}
-        <button
-          onClick={handleNarratorToggle}
-          className={`px-2.5 py-1 rounded-xl transition-all cursor-pointer flex items-center gap-1 border text-[11px] font-bold backdrop-blur-sm hover:scale-105 active:scale-95 ${
-            narratorEnabled && audioEnabled
-              ? "bg-blue-400/30 border-blue-300/50 text-blue-100 shadow"
-              : "bg-white/10 border-white/10 text-white/40 grayscale"
-          }`}
-          title={narratorEnabled ? "Matikan Suara Narator / TTS" : "Nyalakan Suara Narator / TTS"}
-        >
-          <span>🗣️</span>
-          <span className="hidden sm:inline">{narratorEnabled ? "Suara On" : "Suara Off"}</span>
-        </button>
-
-        {/* Master Speaker volume toggle */}
-        <button
-          onClick={handleVolumeToggle}
-          className="p-1 hover:bg-white/10 rounded-xl transition-all cursor-pointer flex items-center justify-center focus:outline-none"
-          title={audioEnabled ? "Matikan Seluruh Suara" : "Nyalakan Seluruh Suara"}
-          aria-label={audioEnabled ? "Matikan Suara" : "Nyalakan Suara"}
-        >
-          <img
-            src={audioEnabled ? "/assets/button/sound-on.svg" : "/assets/button/sound-off.svg"}
-            alt="Suara"
-            className="w-7 h-7 object-contain active:scale-90 transition-all drop-shadow-sm"
-          />
-        </button>
-
-        {onHome && (
+    <>
+      <div className="bg-[#361a07] text-white px-3 sm:px-4 py-1.5 flex items-center gap-2 sm:gap-3 shadow-md select-none border-b-2 border-[#542d10] relative z-30 flex-shrink-0">
+        {onBack && (
           <button
-            onClick={handleHome}
-            className="p-1 hover:bg-white/10 rounded-xl transition-all cursor-pointer flex items-center justify-center focus:outline-none"
-            aria-label="Beranda"
+            onClick={handleBack}
+            className="w-9 h-9 sm:w-10 sm:h-10 bg-gradient-to-b from-[#f5a32b] via-[#e58e1d] to-[#d87c14] hover:from-[#f7ad3d] hover:to-[#e2861a] border-2 border-[#fff5ce] rounded-full flex items-center justify-center text-white font-extrabold text-lg sm:text-xl transition-transform active:scale-90 shadow-md cursor-pointer focus:outline-none flex-shrink-0"
+            aria-label="Kembali"
+            title="Kembali"
           >
-            <img
-              src="/assets/button/home.svg"
-              alt="Beranda"
-              className="w-7 h-7 object-contain active:scale-90 transition-transform drop-shadow-sm"
-            />
+            ←
           </button>
         )}
+
+        <div className="flex-1 min-w-0">
+          <h2 className="font-['Fredoka'] font-extrabold text-sm sm:text-base leading-tight text-[#fff5ce] drop-shadow-sm truncate">{title}</h2>
+          {step && <p className="text-[#fad86b] text-[11px] font-['Nunito'] font-bold leading-none mt-0.5 truncate">{step}</p>}
+        </div>
+
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Touch BGM Shortcut Button */}
+          <button
+            onClick={handleBgmToggle}
+            className={`px-3 py-1 rounded-full transition-all cursor-pointer flex items-center gap-1.5 border text-xs font-['Fredoka'] font-extrabold shadow-sm active:scale-95 ${
+              bgmEnabled && audioEnabled
+                ? "bg-[#291307] border-[#f3cc69]/70 text-[#fff5ce]"
+                : "bg-black/50 border-white/20 text-white/50 grayscale"
+            }`}
+            title={bgmEnabled ? "Matikan Musik Latar (BGM)" : "Nyalakan Musik Latar (BGM)"}
+          >
+            <span>🎵</span>
+            <span>BGM</span>
+            <span className={`px-1.5 py-0.2 rounded-md text-[10px] uppercase tracking-wider font-extrabold ${
+              bgmEnabled && audioEnabled ? "bg-[#386533] text-white" : "bg-gray-600 text-white/70"
+            }`}>
+              {bgmEnabled && audioEnabled ? "ON »" : "OFF"}
+            </span>
+          </button>
+
+          {/* Audio Settings Button */}
+          <button
+            onClick={() => {
+              playSFX("click");
+              setIsSettingsOpen(true);
+            }}
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-[#6b2e15] hover:bg-[#54210d] border border-[#f3cc69]/60 rounded-full transition-all cursor-pointer flex items-center justify-center text-[#fff5ce] active:scale-90 shadow-sm"
+            title="Pengaturan Audio & Informasi Game"
+          >
+            <Settings size={17} />
+          </button>
+
+          {onHome && (
+            <button
+              onClick={handleHome}
+              className="w-8 h-8 sm:w-9 sm:h-9 bg-[#6b2e15] hover:bg-[#54210d] border border-[#f3cc69]/60 rounded-full transition-all cursor-pointer flex items-center justify-center text-[#fff5ce] active:scale-90 shadow-sm"
+              aria-label="Beranda"
+              title="Beranda"
+            >
+              <img
+                src="/assets/button/home.svg"
+                alt="Beranda"
+                className="w-5 h-5 object-contain"
+              />
+            </button>
+          )}
+        </div>
       </div>
-    </div>
+
+      <AudioSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+    </>
   );
 };
+
 export default ScreenHeader;

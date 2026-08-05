@@ -23,7 +23,7 @@ export const MISSIONS: Mission[] = [
         "Tradisi Larung Sesaji telah berlangsung selama ratusan tahun dan diwariskan secara turun-temurun oleh masyarakat Magetan. Kegiatan ini menjadi simbol harmoni antara manusia, alam, dan Sang Pencipta. Setiap tahun, ribuan masyarakat dan wisatawan menyaksikan ritual sakral ini.",
       tujuan:
         "Larung Sesaji dilaksanakan sebagai ungkapan rasa syukur atas berkah Tuhan Yang Maha Esa, memohon keselamatan bagi masyarakat, serta menjaga kelestarian alam dan kearifan lokal Magetan agar tetap lestari untuk generasi mendatang.",
-      nilaiBudaya: ["🙏 Syukur", "🤝 Gotong Royong", "🌿 Harmoni dengan Alam", "❤️ Kebersamaan"]
+      nilaiBudaya: ["Syukur", "Gotong Royong", "Harmoni Alam", "Kebersamaan"]
     },
     faktaItems: [
       "Larung Sesaji dilaksanakan di Telaga Sarangan, Kabupaten Magetan.",
@@ -119,7 +119,7 @@ export const MISSIONS: Mission[] = [
         "Nyadaran telah diwariskan secara turun-temurun dalam budaya Jawa sejak berabad-abad lalu. Tradisi ini biasanya dilakukan menjelang bulan Ramadan sebagai bagian dari persiapan spiritual masyarakat Magetan.",
       tujuan:
         "Menghormati dan mendoakan arwah leluhur, mempererat tali silaturahmi antar anggota keluarga besar, serta menjaga dan melestarikan nilai-nilai luhur budaya lokal Magetan.",
-      nilaiBudaya: ["🙏 Hormat kepada Leluhur", "🤝 Silaturahmi", "❤️ Kebersamaan", "⭐ Religiusitas"]
+      nilaiBudaya: ["Hormat Leluhur", "Silaturahmi", "Kebersamaan", "Religiusitas"]
     },
     faktaItems: [
       "Nyadaran adalah tradisi ziarah kubur untuk menghormati leluhur.",
@@ -215,7 +215,7 @@ export const MISSIONS: Mission[] = [
         "Perayaan Ledhug Suro telah menjadi festival budaya tahunan di Magetan yang menggabungkan tradisi Islam dan budaya Jawa dengan harmonis. Festival ini menarik ribuan pengunjung dari berbagai daerah dan menjadi kebanggaan masyarakat Magetan.",
       tujuan:
         "Merayakan Tahun Baru Jawa (1 Suro), melestarikan kesenian dan kebudayaan tradisional Jawa, serta mempererat persatuan dan kebersamaan masyarakat Magetan dalam nuansa penuh kegembiraan.",
-      nilaiBudaya: ["🤝 Persatuan", "🎭 Pelestarian Budaya", "🌈 Toleransi", "🎨 Kreativitas"]
+      nilaiBudaya: ["Persatuan", "Pelestarian Budaya", "Toleransi", "Kreativitas"]
     },
     faktaItems: [
       "Ledhug Suro merayakan Tahun Baru Jawa (1 Muharram/Suro).",
@@ -233,7 +233,7 @@ export const MISSIONS: Mission[] = [
     ],
     cekFakta: [
       { text: "Ledhug Suro adalah perayaan Tahun Baru Masehi.", benar: false },
-      { text: "Ledhug Suro merayakan 1 Suro or Tahun Baru Jawa.", benar: true },
+      { text: "Ledhug Suro merayakan 1 Suro atau Tahun Baru Jawa.", benar: true },
       { text: "Festival ini menampilkan berbagai kesenian tradisional.", benar: true },
       { text: "Ledhug Suro dilarang pemerintah karena dianggap kuno.", benar: false }
     ],
@@ -296,7 +296,7 @@ export const MISSIONS: Mission[] = [
 
 export const MOCK_STUDENTS: Student[] = [
   { id: 1, nama: "Budi Santoso", kelas: "5A", misi1: true, misi2: true, misi3: false, skor: 85, waktu: "45 menit", tanggal: "20 Jan 2025" },
-  { id: 2, nama: "Siti Rahayu", kelas: "5A", misi1: true, misi2: true, misi3: true, skor: 95, waktu: "52 menit", tanggal: "20 Jan 2025", activeMission: "Misi 3", activeStage: "Tantangan", loginTime: "10:15" },
+  { id: 2, nama: "Siti Rahayu", kelas: "5A", misi1: true, misi2: true, misi3: true, skor: 95, waktu: "52 menit", tanggal: "20 Jan 2025", activeMission: "Misi 3", activeStage: "Posttest", loginTime: "10:15" },
   { id: 3, nama: "Ahmad Fauzi", kelas: "5B", misi1: true, misi2: false, misi3: false, skor: 70, waktu: "28 menit", tanggal: "21 Jan 2025" },
   { id: 4, nama: "Dewi Kartika", kelas: "5B", misi1: true, misi2: true, misi3: true, skor: 92, waktu: "60 menit", tanggal: "21 Jan 2025" },
   { id: 5, nama: "Rizky Pratama", kelas: "5C", misi1: true, misi2: true, misi3: false, skor: 78, waktu: "40 menit", tanggal: "22 Jan 2025", activeMission: "Misi 2", activeStage: "Cek Fakta", loginTime: "10:42" },
@@ -330,18 +330,4 @@ export const ACTIVITY_LABELS: Record<string, string> = {
   "detektif-berita": "Detektif Berita"
 };
 
-// Combined challenge questions from all 3 missions for Scene 17
-export const TANTANGAN_QUESTIONS = [
-  // From Larung Sesaji
-  { soal: "Di mana tradisi Larung Sesaji dilaksanakan?", opsi: ["Pantai Selatan", "Telaga Sarangan", "Waduk Gajah Mungkur", "Sungai Bengawan Solo"], jawaban: 1, misiAsal: 1 },
-  { soal: "Apa makna utama dari tradisi Larung Sesaji?", opsi: ["Mencari ikan", "Mengusir roh jahat", "Wujud syukur kepada Tuhan", "Olahraga air"], jawaban: 2, misiAsal: 1 },
-  { soal: "Nilai budaya apa yang tercermin dalam Larung Sesaji?", opsi: ["Persaingan", "Gotong Royong", "Individualisme", "Keserakahan"], jawaban: 1, misiAsal: 1 },
-  // From Nyadaran
-  { soal: "Apa kegiatan utama dalam tradisi Nyadaran?", opsi: ["Larung sesaji ke danau", "Ziarah & bersihkan makam leluhur", "Pertunjukan wayang", "Lomba lari desa"], jawaban: 1, misiAsal: 2 },
-  { soal: "Kapan biasanya tradisi Nyadaran dilakukan?", opsi: ["Hari kemerdekaan", "Menjelang bulan Ramadan", "Hari raya Natal", "Tahun Baru Masehi"], jawaban: 1, misiAsal: 2 },
-  { soal: "Nilai utama yang paling menonjol dalam Nyadaran adalah...", opsi: ["Persaingan", "Keserakahan", "Hormat kepada leluhur", "Kemewahan"], jawaban: 2, misiAsal: 2 },
-  // From Ledhug Suro
-  { soal: "Apa arti kata 'Ledhug' dalam tradisi Ledhug Suro?", opsi: ["Nama makanan khas", "Bunyi bedug/gendang", "Tarian sakral", "Nama tokoh sejarah"], jawaban: 1, misiAsal: 3 },
-  { soal: "Kapan perayaan Ledhug Suro dilaksanakan?", opsi: ["Tahun Baru Masehi", "1 Muharram/Suro (Tahun Baru Jawa)", "Hari Kartini", "Bulan Ramadan"], jawaban: 1, misiAsal: 3 },
-  { soal: "Apa yang membuat Ledhug Suro menjadi unik di Magetan?", opsi: ["Hanya menampilkan tari modern", "Menggabungkan tradisi Islam dan budaya Jawa", "Hanya diikuti oleh pejabat", "Dilarang untuk umum"], jawaban: 1, misiAsal: 3 }
-];
+
