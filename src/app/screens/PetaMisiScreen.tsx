@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { Lock, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 

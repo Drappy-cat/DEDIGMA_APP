@@ -336,6 +336,32 @@ export const LencanaScreen: React.FC<LencanaScreenProps> = ({
             );
           })}
         </div>
+
+        {/* Bottom Action Navigation Bar */}
+        <div className="w-full max-w-4xl mx-auto flex justify-between items-center pt-2 pb-1 px-1 flex-shrink-0 z-30 select-none">
+          <button
+            type="button"
+            onClick={() => {
+              playSFX("click");
+              onBack();
+            }}
+            className="bg-gradient-to-b from-[#874119] via-[#753412] to-[#632c0f] hover:from-[#9c4c1e] hover:to-[#733311] border-2 border-[#d98b48] text-white rounded-full px-5 py-2 flex items-center gap-2 font-['Fredoka'] font-extrabold text-xs sm:text-sm shadow-md transition-transform active:scale-95 cursor-pointer"
+          >
+            <span>← Peta Misi</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              playSFX("click");
+              onNext();
+            }}
+            className="bg-gradient-to-b from-[#fdb813] via-[#f59e0b] to-[#e68a00] hover:from-[#ffc125] hover:to-[#f09300] border-2 border-[#fff5ce] text-white rounded-full px-6 py-2 flex items-center gap-2 font-['Fredoka'] font-extrabold text-xs sm:text-sm shadow-md transition-transform active:scale-95 cursor-pointer"
+          >
+            <span>Lihat Sertifikat Kelulusan 🎓</span>
+            <span>→</span>
+          </button>
+        </div>
       </div>
 
       {/* Badge Detail Modal Popup */}

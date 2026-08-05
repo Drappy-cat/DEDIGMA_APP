@@ -428,7 +428,7 @@ function AppContent() {
                   missionScores={missionScores}
                   pretestScore={pretestScore}
                   posttestScore={posttestScore}
-                  onBack={() => navigateTo("splash")}
+                  onBack={() => navigateTo("peta-misi")}
                 />
               )}
             </motion.div>
