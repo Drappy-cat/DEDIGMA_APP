@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { X, Settings } from "lucide-react";
+import { X, Settings, Volume2, VolumeX, Home } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { MascotDimas, MascotGita } from "../components/Mascot";
@@ -98,63 +98,61 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
 
       {/* Top Header Bar */}
       <div className="flex justify-between items-center px-4 pt-3 relative z-30 flex-shrink-0">
-        <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-3.5 py-1.5 shadow border border-white/20">
-          <span className="font-['Nunito'] font-bold text-white text-xs sm:text-sm drop-shadow-xs">
-            👋 Halo, {userName || "Siswa Demo"}!
+        <div className="bg-[#361a07]/90 backdrop-blur-md rounded-2xl px-3.5 py-1.5 shadow-md border-2 border-[#f3cc69]/70 flex items-center gap-1.5 select-none">
+          <span className="font-['Fredoka'] font-extrabold text-[#fff5ce] text-xs sm:text-sm tracking-wide drop-shadow-xs">
+            👋 Halo, <span className="text-[#fcd462]">{userName || "Siswa Demo"}</span>!
           </span>
         </div>
 
-        <div className="flex items-center gap-2.5">
-          {/* BGM Toggle Button */}
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Touch BGM Shortcut Button */}
           <button
             onClick={handleBgmToggle}
-            className={`px-3.5 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1.5 border text-xs font-['Fredoka'] font-bold shadow-lg backdrop-blur-md active:scale-95 ${
+            className={`px-3 py-1 rounded-full transition-all cursor-pointer flex items-center gap-1.5 border text-xs font-['Fredoka'] font-extrabold shadow-sm active:scale-95 ${
               bgmEnabled && audioEnabled
-                ? "bg-amber-500/40 border-amber-300/60 text-amber-200 ring-2 ring-amber-400/30"
-                : "bg-slate-900/60 border-slate-600/60 text-slate-300/70 grayscale"
+                ? "bg-[#291307] border-[#f3cc69]/70 text-[#fff5ce]"
+                : "bg-black/50 border-white/20 text-white/50 grayscale"
             }`}
             title={bgmEnabled ? "Matikan Musik Latar (BGM)" : "Nyalakan Musik Latar (BGM)"}
           >
             <span>🎵</span>
-            <span>{bgmEnabled && audioEnabled ? "BGM On" : "BGM Off"}</span>
+            <span>BGM</span>
+            <span className={`px-1.5 py-0.2 rounded-md text-[10px] uppercase tracking-wider font-extrabold ${
+              bgmEnabled && audioEnabled ? "bg-[#386533] text-white" : "bg-gray-600 text-white/70"
+            }`}>
+              {bgmEnabled && audioEnabled ? "ON »" : "OFF"}
+            </span>
           </button>
 
-          {/* Settings Button */}
+          {/* Audio Settings Button */}
           <button
             onClick={() => {
               playSFX("click");
               setIsSettingsOpen(true);
             }}
-            className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/60 hover:bg-slate-900/80 border-2 border-amber-400/50 flex items-center justify-center text-amber-300 shadow-lg cursor-pointer transition-transform hover:scale-105 active:scale-95"
-            title="Pengaturan Audio & Volume"
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-[#6b2e15] hover:bg-[#54210d] border border-[#f3cc69]/60 rounded-full transition-all cursor-pointer flex items-center justify-center text-[#fff5ce] active:scale-90 shadow-sm"
+            title="Pengaturan Audio & Informasi Game"
           >
-            <Settings size={18} />
+            <Settings size={17} />
           </button>
 
           {/* Speaker Volume Toggle Button */}
           <button
             onClick={handleVolumeToggle}
-            className="transition-transform cursor-pointer focus:outline-none hover:scale-110 active:scale-95 flex items-center justify-center"
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-[#6b2e15] hover:bg-[#54210d] border border-[#f3cc69]/60 rounded-full transition-all cursor-pointer flex items-center justify-center text-[#fff5ce] active:scale-90 shadow-sm"
             title={audioEnabled ? "Matikan Seluruh Suara" : "Nyalakan Seluruh Suara"}
           >
-            <img
-              src={audioEnabled ? "/assets/button/sound-on.svg" : "/assets/button/sound-off.svg"}
-              alt={audioEnabled ? "Suara Nyala" : "Suara Mati"}
-              className="w-9 h-9 sm:w-11 sm:h-11 object-contain drop-shadow-sm"
-            />
+            {audioEnabled ? <Volume2 size={17} /> : <VolumeX size={17} />}
           </button>
 
           {/* Home / Logout Button */}
           <button
             onClick={handleLogout}
-            className="transition-transform cursor-pointer focus:outline-none hover:scale-110 active:scale-95 flex items-center justify-center"
-            title="Keluar"
+            className="w-8 h-8 sm:w-9 sm:h-9 bg-[#6b2e15] hover:bg-[#54210d] border border-[#f3cc69]/60 rounded-full transition-all cursor-pointer flex items-center justify-center text-[#fff5ce] active:scale-90 shadow-sm"
+            aria-label="Beranda"
+            title="Beranda / Keluar"
           >
-            <img
-              src="/assets/button/home.svg"
-              alt="Home / Keluar"
-              className="w-9 h-9 sm:w-11 sm:h-11 object-contain drop-shadow-sm"
-            />
+            <Home size={17} />
           </button>
         </div>
       </div>

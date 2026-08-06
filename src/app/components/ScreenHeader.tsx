@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Settings } from "lucide-react";
+import { Settings, Home } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 import { AudioSettingsModal } from "./AudioSettingsModal";
 
@@ -87,11 +87,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
               aria-label="Beranda"
               title="Beranda"
             >
-              <img
-                src="/assets/button/home.svg"
-                alt="Beranda"
-                className="w-5 h-5 object-contain"
-              />
+              <Home size={17} />
             </button>
           )}
         </div>
