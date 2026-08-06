@@ -205,6 +205,7 @@ function AppContent() {
   const { role, userName, kelas, isLoggedIn } = useAuth();
   const { playSFX } = useAudio();
   const [screen, setScreen] = useState<Screen>("login");
+  const [screenHistory, setScreenHistory] = useState<Screen[]>([]);
   const [currentMissionId, setCurrentMissionId] = useState<number>(1);
   const [completedMissions, setCompletedMissions] = useState<Set<number>>(new Set());
   const [missionScores, setMissionScores] = useState<Record<number, number>>({});
@@ -241,6 +242,7 @@ function AppContent() {
   useEffect(() => {
     if (!isLoggedIn) {
       setScreen("login");
+      setScreenHistory([]);
       setCompletedMissions(new Set());
       setMissionScores({});
       setPosttestScore(null);
@@ -248,8 +250,10 @@ function AppContent() {
     } else {
       if (role === "guru") {
         setScreen("guru-dashboard");
+        setScreenHistory([]);
       } else {
         setScreen("splash");
+        setScreenHistory([]);
 
         // 1. Initial Load from LocalStorage (for immediate UI response/offline support)
         const loadLocal = () => {
@@ -341,8 +345,60 @@ function AppContent() {
 
   const navigateTo = (nextScreen: Screen) => {
     playSFX("click");
+    if (screen !== nextScreen) {
+      setScreenHistory((prev) => [...prev, screen]);
+    }
     setScreen(nextScreen);
   };
+
+  const handleGoBack = (): boolean => {
+    if (screenHistory.length > 0) {
+      const prevScreen = screenHistory[screenHistory.length - 1];
+      setScreenHistory((prev) => prev.slice(0, -1));
+      setScreen(prevScreen);
+      return true;
+    }
+
+    // Fallback logical back navigation
+    if (screen === "mission-flow" || screen === "posttest" || screen === "lencana" || screen === "sertifikat") {
+      setScreen("peta-misi");
+      return true;
+    }
+    if (screen === "petunjuk" || screen === "tujuan" || screen === "profil" || screen === "pretest" || screen === "peta-misi") {
+      setScreen("splash");
+      return true;
+    }
+
+    // At root screens (login / splash / guru-dashboard), return false to let app exit
+    return false;
+  };
+
+  // Capacitor Android Hardware Back Button listener
+  useEffect(() => {
+    let listenerHandler: any = null;
+
+    const setupBackListener = async () => {
+      try {
+        const { App: CapApp } = await import("@capacitor/app");
+        listenerHandler = await CapApp.addListener("backButton", () => {
+          const handled = handleGoBack();
+          if (!handled) {
+            CapApp.exitApp();
+          }
+        });
+      } catch (err) {
+        // Ignored in desktop browser environment
+      }
+    };
+
+    setupBackListener();
+
+    return () => {
+      if (listenerHandler && listenerHandler.remove) {
+        listenerHandler.remove();
+      }
+    };
+  }, [screen, screenHistory]);
 
   const completeMission = (id: number, score: number) => {
     setCompletedMissions((prev) => {

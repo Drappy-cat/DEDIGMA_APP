@@ -44,3 +44,9 @@ pnpm-debug.log*
 *.mkv
 src/imports/SEMUA ASET/Video/
 public/assets/Video/
+
+# Capacitor & Android Native Build Files
+android/
+*.apk
+capacitor.config.json.user
+
