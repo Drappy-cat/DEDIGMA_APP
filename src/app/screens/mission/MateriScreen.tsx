@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Volume2, X, Info, Clock, Target, Heart, Image, Play, Lightbulb, ChevronRight, Sparkles } from "lucide-react";
+import { Volume2, X, Info, Clock, Target, Heart, Image, Play, Lightbulb, ChevronRight, ChevronDown, Sparkles } from "lucide-react";
 import { Mission, MateriTab } from "../../types";
 import { useAudio } from "../../contexts/AudioContext";
 
@@ -229,13 +229,21 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
           transition={{ duration: 0.25 }}
           className="md:col-span-8 lg:col-span-9 flex flex-col justify-between h-full min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-1 pb-16 sm:pb-20 space-y-3"
         >
-          {/* Header Title with Leaf Sprigs 🌿 */}
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-2xl text-[#1c5c32] select-none">🌿</span>
-            <h2 className="font-['Fredoka'] font-extrabold text-2xl sm:text-3xl text-[#1c5c32] uppercase tracking-wider leading-none">
-              {tab === "nilai-budaya" ? "NILAI BUDAYA" : tab}
-            </h2>
-            <span className="text-2xl text-[#1c5c32] select-none transform scale-x-[-1]">🌿</span>
+          {/* Header Title with Leaf Sprigs 🌿 & Scroll Notice */}
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl text-[#1c5c32] select-none">🌿</span>
+              <h2 className="font-['Fredoka'] font-extrabold text-2xl sm:text-3xl text-[#1c5c32] uppercase tracking-wider leading-none">
+                {tab === "nilai-budaya" ? "NILAI BUDAYA" : tab}
+              </h2>
+              <span className="text-2xl text-[#1c5c32] select-none transform scale-x-[-1]">🌿</span>
+            </div>
+
+            {/* Scroll Notice */}
+            <div className="flex items-center gap-1.5 bg-[#f5ebd6]/90 border border-[#e8d9bd] text-[#7a5316] px-3 py-1 rounded-full text-xs font-['Nunito'] font-bold shadow-xs">
+              <ChevronDown size={14} className="animate-bounce text-[#1c5c32] flex-shrink-0" />
+              <span>gulir kebawah untuk informasi lebih lanjut</span>
+            </div>
           </div>
 
           {/* Tab Content Display */}
