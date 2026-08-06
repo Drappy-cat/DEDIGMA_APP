@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useAudio } from "../contexts/AudioContext";
+import { useAuth } from "../contexts/AuthContext";
 import { fireConfetti } from "../utils/confetti";
 import { PRETEST_QUESTIONS } from "../data/pretestQuestions";
 
@@ -12,9 +13,34 @@ interface PretestScreenProps {
 
 export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
-  const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState<(number | null)[]>(PRETEST_QUESTIONS.map(() => null));
+  const { userName } = useAuth();
+  const currentKey = `dedigma_pretest_current_${userName}`;
+  const answersKey = `dedigma_pretest_answers_${userName}`;
+
+  const [current, setCurrent] = useState(() => {
+    try {
+      const saved = localStorage.getItem(currentKey);
+      return saved ? parseInt(saved, 10) : 0;
+    } catch {
+      return 0;
+    }
+  });
+
+  const [answers, setAnswers] = useState<(number | null)[]>(() => {
+    try {
+      const saved = localStorage.getItem(answersKey);
+      return saved ? JSON.parse(saved) : PRETEST_QUESTIONS.map(() => null);
+    } catch {
+      return PRETEST_QUESTIONS.map(() => null);
+    }
+  });
+
   const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem(currentKey, current.toString());
+    localStorage.setItem(answersKey, JSON.stringify(answers));
+  }, [current, answers, currentKey, answersKey]);
 
   useEffect(() => {
     playNarrator(
@@ -51,6 +77,9 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
       setDone(true);
       const correctCount = answers.filter((a, i) => a === PRETEST_QUESTIONS[i].jawaban).length;
       const finalScore = Math.round((correctCount / PRETEST_QUESTIONS.length) * 100);
+
+      localStorage.removeItem(currentKey);
+      localStorage.removeItem(answersKey);
 
       fireConfetti();
       playSFX("badge");

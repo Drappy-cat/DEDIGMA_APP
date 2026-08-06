@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, FileText } from "lucide-react";
+import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, FileText, RefreshCw } from "lucide-react";
 import jsPDF from "jspdf";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
-import { MOCK_STUDENTS, MISSIONS } from "../data/missions";
+import { MISSIONS } from "../data/missions";
 
 import { fetchGuruRekapFromSupabase, fetchSupabaseClassLocks, subscribeToClassLocks, toggleSupabaseClassLock, SupabaseClassLock } from "../services/supabase";
 
@@ -26,9 +26,11 @@ export const GuruDashboardScreen: React.FC = () => {
   });
 
   const [realData, setRealData] = useState<any[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  React.useEffect(() => {
-    const loadData = async () => {
+  const loadData = async () => {
+    setIsRefreshing(true);
+    try {
       // Fetch Locks
       const supabaseLocks = await fetchSupabaseClassLocks();
       if (supabaseLocks) {
@@ -91,7 +93,12 @@ export const GuruDashboardScreen: React.FC = () => {
 
         setRealData(Array.from(studentMap.values()));
       }
-    };
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
+  React.useEffect(() => {
     loadData();
 
     const unsubscribe = subscribeToClassLocks((updatedKelas, missionId, isLocked) => {
@@ -107,9 +114,7 @@ export const GuruDashboardScreen: React.FC = () => {
     };
   }, []);
 
-  const allStudents = React.useMemo(() => {
-    return [...realData, ...MOCK_STUDENTS.filter(ms => !realData.find(rs => rs.nama === ms.nama))];
-  }, [realData]);
+  const allStudents = realData;
 
   const toggleLock = (kelas: string, missionId: number) => {
     playSFX("click");
@@ -283,16 +288,23 @@ export const GuruDashboardScreen: React.FC = () => {
 
         <div className="flex items-center gap-2">
           <button
+            onClick={loadData}
+            disabled={isRefreshing}
+            className={`flex items-center gap-1.5 bg-[#3B82F6] hover:bg-[#2563EB] transition-colors rounded-full px-3.5 py-1.5 text-xs font-bold cursor-pointer text-white shadow ${isRefreshing ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <RefreshCw size={14} className={isRefreshing ? "animate-spin" : ""} /> Segarkan
+          </button>
+          <button
             onClick={exportCSV}
             className="flex items-center gap-1.5 bg-[#F59E0B] hover:bg-[#D97706] transition-colors rounded-full px-3.5 py-1.5 text-xs font-bold cursor-pointer text-[#183655] shadow"
           >
-            <Download size={14} /> Excel (CSV)
+            <Download size={14} /> Excel
           </button>
           <button
             onClick={exportPDF}
             className="flex items-center gap-1.5 bg-rose-600 hover:bg-rose-700 text-white transition-colors rounded-full px-3.5 py-1.5 text-xs font-bold cursor-pointer shadow"
           >
-            <FileText size={14} /> Export PDF
+            <FileText size={14} /> PDF
           </button>
           <button
             onClick={handleLogout}

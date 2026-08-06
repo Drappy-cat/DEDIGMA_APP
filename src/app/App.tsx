@@ -5,7 +5,7 @@ import { AudioProvider, useAudio } from "./contexts/AudioContext";
 import { Screen, Role, GameState, createDefaultGameState, calculateBadges } from "./types";
 import { Btn } from "./components/Btn";
 import { Toaster, toast } from "sonner";
-import { syncProgressToSupabase, syncPretestToSupabase, syncPosttestToSupabase } from "./services/supabase";
+import { syncProgressToSupabase, syncPretestToSupabase, syncPosttestToSupabase, fetchStudentDataFromSupabase } from "./services/supabase";
 
 // Lazy loaded screens for code-splitting & performance optimization
 const LoginScreen = lazy(() => import("./screens/LoginScreen").then((m) => ({ default: m.LoginScreen })));
@@ -251,26 +251,89 @@ function AppContent() {
       } else {
         setScreen("splash");
 
-        // Load student progress from GameState
-        const loaded = loadGameState();
-        setGameState(loaded);
+        // 1. Initial Load from LocalStorage (for immediate UI response/offline support)
+        const loadLocal = () => {
+          const loaded = loadGameState();
+          setGameState(loaded);
 
-        const completed = new Set<number>();
-        const scores: Record<number, number> = {};
-        for (const [idStr, progress] of Object.entries(loaded.missions)) {
-          const id = Number(idStr);
-          if (progress.completed) {
-            completed.add(id);
-            scores[id] = progress.activityScore;
+          const completed = new Set<number>();
+          const scores: Record<number, number> = {};
+          for (const [idStr, progress] of Object.entries(loaded.missions)) {
+            const id = Number(idStr);
+            if (progress.completed) {
+              completed.add(id);
+              scores[id] = progress.activityScore;
+            }
           }
-        }
-        setCompletedMissions(completed);
-        setMissionScores(scores);
-        if (loaded.pretest && loaded.pretest.score !== null) {
-          setPretestScore(loaded.pretest.score);
-        }
-        if (loaded.posttest.score !== null) {
-          setPosttestScore(loaded.posttest.score);
+          setCompletedMissions(completed);
+          setMissionScores(scores);
+          if (loaded.pretest && loaded.pretest.score !== null) {
+            setPretestScore(loaded.pretest.score);
+          }
+          if (loaded.posttest.score !== null) {
+            setPosttestScore(loaded.posttest.score);
+          }
+        };
+
+        loadLocal();
+
+        // 2. Fetch from Supabase to sync DOWN
+        if (navigator.onLine) {
+          fetchStudentDataFromSupabase(userName).then((data) => {
+            if (data) {
+              setGameState((prev) => {
+                const updated = JSON.parse(JSON.stringify(prev)); // Deep copy
+                let stateChanged = false;
+
+                if (data.pretest) {
+                  updated.pretest.score = data.pretest.pretest_score;
+                  setPretestScore(data.pretest.pretest_score);
+                  stateChanged = true;
+                }
+
+                if (data.posttest) {
+                  updated.posttest.score = data.posttest.posttest_score;
+                  setPosttestScore(data.posttest.posttest_score);
+                  stateChanged = true;
+                }
+
+                if (data.progress && data.progress.length > 0) {
+                  const completed = new Set<number>();
+                  const scores: Record<number, number> = {};
+                  data.progress.forEach(p => {
+                    if (p.completed) {
+                      updated.missions[p.mission_id] = {
+                        activityScore: p.activity_score,
+                        completed: true
+                      };
+                      completed.add(p.mission_id);
+                      scores[p.mission_id] = p.activity_score;
+                    }
+                  });
+                  setCompletedMissions(completed);
+                  setMissionScores(scores);
+                  stateChanged = true;
+                }
+
+                if (stateChanged) {
+                  // Recalculate totals
+                  const allScores: Record<number, number> = {};
+                  for (const [key, m] of Object.entries(updated.missions)) {
+                    if (m.completed) allScores[Number(key)] = (m as any).activityScore;
+                  }
+                  updated.badges = calculateBadges(allScores);
+                  updated.totalScore = Object.values(allScores).length > 0
+                    ? Math.round(Object.values(allScores).reduce((a, b) => a + b, 0) / Object.values(allScores).length)
+                    : 0;
+
+                  saveGameState(updated);
+                  toast.success("Misi berhasil disinkronkan dari server! 🔄✅");
+                }
+
+                return stateChanged ? updated : prev;
+              });
+            }
+          });
         }
       }
     }

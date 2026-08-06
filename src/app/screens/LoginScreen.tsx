@@ -40,11 +40,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSiswa, onLoginG
       loginSiswa(name.trim(), kelas);
       onLoginSiswa();
     } else if (role === "guru") {
-      if (!name.trim()) {
-        setError("Masukkan nama Guru!");
-        playSFX("fail");
-        return;
-      }
       if (!email.trim()) {
         setError("Masukkan alamat email!");
         playSFX("fail");
@@ -66,7 +61,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSiswa, onLoginG
         return;
       }
 
-      loginGuru(name.trim(), email.trim());
+      loginGuru("Guru", email.trim());
       onLoginGuru();
     }
   };
@@ -227,16 +222,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSiswa, onLoginG
 
                   {role === "guru" && (
                     <div className="space-y-2">
-                      <div className="space-y-1">
-                        <label className="font-['Nunito'] font-bold text-xs text-[#4a3728] block">Nama Guru</label>
-                        <input
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          placeholder="Masukkan nama lengkap..."
-                          autoFocus
-                          className="w-full border-2 border-[#b59e7a] rounded-xl px-3 py-2 font-['Nunito'] text-sm text-gray-800 focus:outline-none focus:border-[#7e371b] bg-white/90"
-                        />
-                      </div>
                       <div className="space-y-1">
                         <label className="font-['Nunito'] font-bold text-xs text-[#4a3728] block">Alamat Email</label>
                         <input

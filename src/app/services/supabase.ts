@@ -227,6 +227,30 @@ export async function syncPosttestToSupabase(data: {
 }
 
 /**
+ * Service Helper: Fetch Student Data (Pretest, Posttest, Missions) from Supabase
+ */
+export async function fetchStudentDataFromSupabase(userName: string) {
+  if (!supabase || !isSupabaseConfigured()) return null;
+
+  try {
+    const [progressRes, pretestRes, posttestRes] = await Promise.all([
+      supabase.from("progress_misi").select("*").eq("user_name", userName),
+      supabase.from("pretest_results").select("*").eq("user_name", userName).single(),
+      supabase.from("posttest_results").select("*").eq("user_name", userName).single()
+    ]);
+
+    return {
+      progress: (progressRes.data || []) as SupabaseProgress[],
+      pretest: pretestRes.data ? (pretestRes.data as SupabasePretest) : null,
+      posttest: posttestRes.data ? (posttestRes.data as SupabasePosttest) : null
+    };
+  } catch (err) {
+    console.error("Failed to fetch student data from Supabase:", err);
+    return null;
+  }
+}
+
+/**
  * Service Helper: Fetch Combined Rekap Data for Guru Dashboard
  */
 export async function fetchGuruRekapFromSupabase() {
