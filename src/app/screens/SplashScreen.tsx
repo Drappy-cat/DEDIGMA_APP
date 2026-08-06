@@ -202,7 +202,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           </motion.button>
 
           {/* Sub buttons row: Petunjuk and Profil */}
-          <div className="grid grid-cols-2 gap-3.5 mt-1 w-full relative z-50">
+          <div className="grid grid-cols-2 gap-3.5 mt-1 w-full relative z-50 items-end">
             <motion.button
               onClick={() => handleAction(onPetunjuk)}
               whileHover={{ scale: 1.05 }}
@@ -220,7 +220,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
               onClick={() => handleAction(onProfil)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="cursor-pointer focus:outline-none flex justify-center z-50 relative"
+              className="cursor-pointer focus:outline-none flex justify-center z-50 relative -translate-y-[2.5px]"
             >
               <img
                 src="/assets/button/profil.svg"

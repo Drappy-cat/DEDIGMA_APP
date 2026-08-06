@@ -30,10 +30,11 @@ const ScreenLoader = () => (
   </div>
 );
 
-// Helper: Load/Save GameState from localStorage
-function loadGameState(): GameState {
+// Helper: Load/Save GameState from localStorage (scoped per user)
+function loadGameState(userName?: string): GameState {
   try {
-    const saved = localStorage.getItem("dedigma_game_state");
+    const key = userName ? `dedigma_game_state_${userName}` : "dedigma_game_state";
+    const saved = localStorage.getItem(key);
     if (saved) return JSON.parse(saved);
   } catch (e) {
     console.error("Failed to parse game state", e);
@@ -41,8 +42,9 @@ function loadGameState(): GameState {
   return createDefaultGameState();
 }
 
-function saveGameState(state: GameState) {
-  localStorage.setItem("dedigma_game_state", JSON.stringify(state));
+function saveGameState(state: GameState, userName?: string) {
+  const key = userName ? `dedigma_game_state_${userName}` : "dedigma_game_state";
+  localStorage.setItem(key, JSON.stringify(state));
 }
 
 function DemoPanel({
@@ -255,9 +257,9 @@ function AppContent() {
         setScreen("splash");
         setScreenHistory([]);
 
-        // 1. Initial Load from LocalStorage (for immediate UI response/offline support)
+        // 1. Initial Load from LocalStorage (scoped per user)
         const loadLocal = () => {
-          const loaded = loadGameState();
+          const loaded = loadGameState(userName);
           setGameState(loaded);
 
           const completed = new Set<number>();
@@ -271,12 +273,8 @@ function AppContent() {
           }
           setCompletedMissions(completed);
           setMissionScores(scores);
-          if (loaded.pretest && loaded.pretest.score !== null) {
-            setPretestScore(loaded.pretest.score);
-          }
-          if (loaded.posttest.score !== null) {
-            setPosttestScore(loaded.posttest.score);
-          }
+          setPretestScore(loaded.pretest?.score ?? null);
+          setPosttestScore(loaded.posttest?.score ?? null);
         };
 
         loadLocal();
@@ -330,7 +328,7 @@ function AppContent() {
                     ? Math.round(Object.values(allScores).reduce((a, b) => a + b, 0) / Object.values(allScores).length)
                     : 0;
 
-                  saveGameState(updated);
+                  saveGameState(updated, userName);
                   toast.success("Misi berhasil disinkronkan dari server! 🔄✅");
                 }
 
@@ -433,7 +431,7 @@ function AppContent() {
       updated.totalScore = Object.values(allScores).length > 0
         ? Math.round(Object.values(allScores).reduce((a, b) => a + b, 0) / Object.values(allScores).length)
         : 0;
-      saveGameState(updated);
+      saveGameState(updated, userName);
       return updated;
     });
 
@@ -544,7 +542,7 @@ function AppContent() {
                         ...prev,
                         pretest: { score }
                       };
-                      saveGameState(updated);
+                      saveGameState(updated, userName);
                       return updated;
                     });
                     syncPretestToSupabase({ userName, kelas, score });
@@ -563,7 +561,7 @@ function AppContent() {
                         ...prev,
                         posttest: { ...prev.posttest, score }
                       };
-                      saveGameState(updated);
+                      saveGameState(updated, userName);
                       return updated;
                     });
                     syncPosttestToSupabase({ userName, kelas, score });
