@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useAudio } from "../contexts/AudioContext";
+import { usePerformance } from "../hooks/usePerformance";
 
 interface ProfilScreenProps {
   onBack: () => void;
@@ -9,6 +10,7 @@ interface ProfilScreenProps {
 
 export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
+  const perf = usePerformance();
   const [activeTab, setActiveTab] = useState<
     "tentang" | "tim" | "tujuan" | "fitur" | "petunjuk" | "privasi"
   >("tentang");
@@ -283,8 +285,8 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
                   <div className="grid grid-cols-1 gap-4">
                     {/* MAHASISWA */}
                     <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-4 shadow-sm relative overflow-hidden flex flex-col items-center text-center justify-center space-y-3">
-                      <div className="absolute top-0 right-0 w-24 h-24 bg-blue-200/40 rounded-full blur-2xl -mr-10 -mt-10"></div>
-                      <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-200/40 rounded-full blur-2xl -ml-10 -mb-10"></div>
+                      {perf.showBlurEffects && <div className="absolute top-0 right-0 w-24 h-24 bg-blue-200/40 rounded-full blur-2xl -mr-10 -mt-10"></div>}
+                      {perf.showBlurEffects && <div className="absolute bottom-0 left-0 w-24 h-24 bg-amber-200/40 rounded-full blur-2xl -ml-10 -mb-10"></div>}
                       
                       <div className="relative z-10 w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center text-4xl shadow-inner border-4 border-blue-300 overflow-hidden group">
                         <img 
@@ -315,7 +317,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
 
                     {/* DOSEN PEMBIMBING */}
                     <div className="bg-[#f6eed9] border border-[#d8c7a5] rounded-2xl p-4 shadow-sm relative overflow-hidden flex flex-col justify-center">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-amber-200/40 rounded-full blur-2xl -mr-16 -mt-16"></div>
+                      {perf.showBlurEffects && <div className="absolute top-0 right-0 w-32 h-32 bg-amber-200/40 rounded-full blur-2xl -mr-16 -mt-16"></div>}
                       
                       <div className="flex items-center gap-3 mb-4 relative z-10">
                         <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-xl shadow-inner border border-amber-200 shrink-0">

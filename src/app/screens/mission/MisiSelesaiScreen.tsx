@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { Mission } from "../../types";
 import { useAudio } from "../../contexts/AudioContext";
 import { fireContinuousConfetti } from "../../utils/confetti";
+import { usePerformance } from "../../hooks/usePerformance";
 
 interface MisiSelesaiScreenProps {
   mission: Mission;
@@ -16,6 +17,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
   onContinue
 }) => {
   const { playSFX, playNarrator } = useAudio();
+  const perf = usePerformance();
 
   useEffect(() => {
     fireContinuousConfetti();
@@ -34,7 +36,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
           
           {/* Top Gold Star Ribbon Medal 🎖️ (Overhanging Top Center) */}
           <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-b from-[#fcd34d] via-[#f59e0b] to-[#d97706] border-2 border-[#fff5ce] shadow-lg flex items-center justify-center text-2xl sm:text-3xl z-20 -mb-5 relative">
-            <div className="absolute inset-0 rounded-full bg-yellow-400 blur-md opacity-40 animate-pulse" />
+            {perf.showContinuousAnimations && <div className="absolute inset-0 rounded-full bg-yellow-400 blur-md opacity-40 animate-pulse" />}
             <span className="relative z-10">⭐</span>
           </div>
 
