@@ -6,14 +6,15 @@ import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { MOCK_STUDENTS, MISSIONS } from "../data/missions";
 
+import { fetchGuruRekapFromSupabase, fetchSupabaseClassLocks, subscribeToClassLocks, toggleSupabaseClassLock, SupabaseClassLock } from "../services/supabase";
+
 export const GuruDashboardScreen: React.FC = () => {
   const { userName, logout } = useAuth();
   const { playSFX } = useAudio();
   const [filter, setFilter] = useState("Semua");
   const [searchQuery, setSearchQuery] = useState("");
-  const classes = ["Semua", "5A", "5B", "5C"];
+  const classes = ["Semua", "4", "5", "6"];
 
-  // Lock state: key is `${kelas}-${missionId}`, value is boolean (true = locked, false = open)
   const [locks, setLocks] = useState<Record<string, boolean>>(() => {
     try {
       const saved = localStorage.getItem("dedigma_mission_locks");
@@ -24,54 +25,108 @@ export const GuruDashboardScreen: React.FC = () => {
     return {};
   });
 
-  // Merge real student data from localStorage if available
-  const allStudents = React.useMemo(() => {
-    try {
-      const savedState = localStorage.getItem("dedigma_game_state");
-      const savedUser = localStorage.getItem("dedigma_username") || "Siswa Terdaftar";
-      const savedKelas = localStorage.getItem("dedigma_kelas") || "5A";
-      if (savedState) {
-        const parsed = JSON.parse(savedState);
-        const m1 = Boolean(parsed.missions?.[1]?.completed);
-        const m2 = Boolean(parsed.missions?.[2]?.completed);
-        const m3 = Boolean(parsed.missions?.[3]?.completed);
-        const totalScore = parsed.totalScore || 0;
-        const posttestScore = parsed.posttest?.score !== null && parsed.posttest?.score !== undefined ? parsed.posttest.score : "-";
+  const [realData, setRealData] = useState<any[]>([]);
 
-        const realStudent = {
-          id: 999,
-          nama: savedUser,
-          kelas: savedKelas,
-          misi1: m1,
-          misi2: m2,
-          misi3: m3,
-          skor: totalScore,
-          posttest: posttestScore,
-          waktu: "15 Menit",
-          tanggal: new Date().toISOString().split("T")[0]
-        };
-
-        // Filter out if duplicate or prepend as active student
-        return [realStudent, ...MOCK_STUDENTS.filter((s) => s.nama !== savedUser)];
+  React.useEffect(() => {
+    const loadData = async () => {
+      // Fetch Locks
+      const supabaseLocks = await fetchSupabaseClassLocks();
+      if (supabaseLocks) {
+        const locksMap: Record<string, boolean> = {};
+        supabaseLocks.forEach((l: SupabaseClassLock) => {
+          locksMap[`${l.kelas}-${l.mission_id}`] = l.is_locked;
+        });
+        setLocks(locksMap);
+        localStorage.setItem("dedigma_mission_locks", JSON.stringify(locksMap));
       }
-    } catch (e) {
-      console.error("Error reading student localStorage:", e);
-    }
-    return MOCK_STUDENTS;
+
+      // Fetch Student Data
+      const rekap = await fetchGuruRekapFromSupabase();
+      if (rekap) {
+        const studentMap = new Map();
+
+        // 1. Base from Profiles
+        rekap.profiles.filter(p => p.role === "siswa").forEach(p => {
+          studentMap.set(p.user_name, {
+            id: p.id || p.user_name,
+            nama: p.user_name,
+            kelas: p.kelas,
+            misi1: false, misi2: false, misi3: false,
+            skor1: 0, skor2: 0, skor3: 0,
+            skor: 0,
+            pretest: "-",
+            posttest: "-",
+            waktu: "-",
+            tanggal: p.created_at ? p.created_at.split("T")[0] : new Date().toISOString().split("T")[0]
+          });
+        });
+
+        // 2. Add Progress
+        rekap.progress.forEach(p => {
+          if (!studentMap.has(p.user_name)) {
+            studentMap.set(p.user_name, {
+              id: p.user_name, nama: p.user_name, kelas: p.kelas,
+              misi1: false, misi2: false, misi3: false,
+              skor1: 0, skor2: 0, skor3: 0, skor: 0, pretest: "-", posttest: "-", waktu: "-", tanggal: p.updated_at ? p.updated_at.split("T")[0] : "-"
+            });
+          }
+          const s = studentMap.get(p.user_name);
+          if (p.mission_id === 1 && p.completed) { s.misi1 = true; s.skor1 = p.activity_score; }
+          if (p.mission_id === 2 && p.completed) { s.misi2 = true; s.skor2 = p.activity_score; }
+          if (p.mission_id === 3 && p.completed) { s.misi3 = true; s.skor3 = p.activity_score; }
+          
+          let completedCount = (s.misi1?1:0) + (s.misi2?1:0) + (s.misi3?1:0);
+          if(completedCount > 0) {
+            s.skor = Math.round((s.skor1 + s.skor2 + s.skor3) / completedCount);
+          }
+        });
+
+        // 3. Add Pretests & Posttests
+        rekap.pretests.forEach(p => {
+          if (studentMap.has(p.user_name)) studentMap.get(p.user_name).pretest = p.pretest_score;
+        });
+        rekap.posttests.forEach(p => {
+          if (studentMap.has(p.user_name)) studentMap.get(p.user_name).posttest = p.posttest_score;
+        });
+
+        setRealData(Array.from(studentMap.values()));
+      }
+    };
+    loadData();
+
+    const unsubscribe = subscribeToClassLocks((updatedKelas, missionId, isLocked) => {
+      setLocks((prev) => {
+        const next = { ...prev, [`${updatedKelas}-${missionId}`]: isLocked };
+        localStorage.setItem("dedigma_mission_locks", JSON.stringify(next));
+        return next;
+      });
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
+
+  const allStudents = React.useMemo(() => {
+    return [...realData, ...MOCK_STUDENTS.filter(ms => !realData.find(rs => rs.nama === ms.nama))];
+  }, [realData]);
 
   const toggleLock = (kelas: string, missionId: number) => {
     playSFX("click");
+    const key = `${kelas}-${missionId}`;
+    const newLockState = !locks[key];
+    
+    // Optimistic update locally
     setLocks((prev) => {
-      const key = `${kelas}-${missionId}`;
-      const updated = { ...prev, [key]: !prev[key] };
+      const updated = { ...prev, [key]: newLockState };
       try {
         localStorage.setItem("dedigma_mission_locks", JSON.stringify(updated));
-      } catch (e) {
-        console.error("Error saving locks to localStorage:", e);
-      }
+      } catch (e) {}
       return updated;
     });
+
+    // Sync to Supabase
+    toggleSupabaseClassLock(kelas, missionId, newLockState);
   };
 
   const handleLogout = () => {
@@ -109,9 +164,9 @@ export const GuruDashboardScreen: React.FC = () => {
       "Misi 2 (Nyadaran)",
       "Misi 3 (Ledhug Suro)",
       "Skor Rata-Rata Misi (%)",
+      "Skor Pretest",
       "Skor Posttest",
       "Status Kelulusan",
-      "Durasi Belajar",
       "Tanggal Akses"
     ];
 
@@ -126,9 +181,9 @@ export const GuruDashboardScreen: React.FC = () => {
         s.misi2 ? "Selesai" : "Belum",
         s.misi3 ? "Selesai" : "Belum",
         s.skor > 0 ? `${s.skor}%` : "0%",
+        s.pretest ?? "-",
         s.posttest ?? "-",
         status,
-        s.waktu || "-",
         s.tanggal || new Date().toISOString().split("T")[0]
       ];
     });
@@ -176,7 +231,8 @@ export const GuruDashboardScreen: React.FC = () => {
       doc.text("Misi 2", 115, y);
       doc.text("Misi 3", 135, y);
       doc.text("Skor Rata", 155, y);
-      doc.text("Posttest", 175, y);
+      doc.text("Pretest", 170, y);
+      doc.text("Posttest", 185, y);
 
       y += 3;
       doc.line(14, y, 196, y);
@@ -196,7 +252,8 @@ export const GuruDashboardScreen: React.FC = () => {
         doc.text(s.misi2 ? "Selesai" : "-", 115, y);
         doc.text(s.misi3 ? "Selesai" : "-", 135, y);
         doc.text(s.skor > 0 ? `${s.skor}%` : "-", 155, y);
-        doc.text(String(s.posttest ?? "-"), 175, y);
+        doc.text(String(s.pretest ?? "-"), 170, y);
+        doc.text(String(s.posttest ?? "-"), 185, y);
         y += 6.5;
       });
 
@@ -404,6 +461,7 @@ export const GuruDashboardScreen: React.FC = () => {
                   <th className="py-3 px-4 text-center">Misi 2</th>
                   <th className="py-3 px-4 text-center">Misi 3</th>
                   <th className="py-3 px-4 text-center">Skor Rata-Rata</th>
+                  <th className="py-3 px-4 text-center">Pretest</th>
                   <th className="py-3 px-4 text-center">Posttest</th>
                   <th className="py-3 px-4 text-center">Status</th>
                 </tr>
@@ -446,6 +504,9 @@ export const GuruDashboardScreen: React.FC = () => {
                       </td>
                       <td className="py-3 px-4 text-center font-bold text-blue-700">
                         {s.skor > 0 ? `${s.skor}%` : "-"}
+                      </td>
+                      <td className="py-3 px-4 text-center font-bold text-slate-500">
+                        {s.pretest ?? "-"}
                       </td>
                       <td className="py-3 px-4 text-center font-bold text-purple-600">
                         {s.posttest ?? "-"}

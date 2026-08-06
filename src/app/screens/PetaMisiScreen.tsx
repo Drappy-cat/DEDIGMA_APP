@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Lock, ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
+import { fetchSupabaseClassLocks, subscribeToClassLocks, SupabaseClassLock } from "../services/supabase";
 
 interface PetaMisiScreenProps {
   completedMissions: Set<number>;
@@ -48,25 +50,48 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
   onMission,
   onBack,
 }) => {
+  const { kelas } = useAuth();
   const { playSFX } = useAudio();
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [shakingId, setShakingId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  const checkTeacherLock = (missionId: number) => {
+  const [locks, setLocks] = useState<Record<string, boolean>>(() => {
     try {
       const saved = localStorage.getItem("dedigma_mission_locks");
-      if (saved) {
-        const locks = JSON.parse(saved);
-        return Boolean(
-          locks[`Semua-${missionId}`] ||
-          locks[`5A-${missionId}`] ||
-          locks[`5B-${missionId}`] ||
-          locks[`5C-${missionId}`]
-        );
-      }
+      if (saved) return JSON.parse(saved);
     } catch {}
-    return false;
+    return {};
+  });
+
+  React.useEffect(() => {
+    const fetchLocks = async () => {
+      const supabaseLocks = await fetchSupabaseClassLocks();
+      if (supabaseLocks) {
+        const locksMap: Record<string, boolean> = {};
+        supabaseLocks.forEach((l: SupabaseClassLock) => {
+          locksMap[`${l.kelas}-${l.mission_id}`] = l.is_locked;
+        });
+        setLocks(locksMap);
+        localStorage.setItem("dedigma_mission_locks", JSON.stringify(locksMap));
+      }
+    };
+    fetchLocks();
+
+    const unsubscribe = subscribeToClassLocks((updatedKelas, missionId, isLocked) => {
+      setLocks((prev) => {
+        const next = { ...prev, [`${updatedKelas}-${missionId}`]: isLocked };
+        localStorage.setItem("dedigma_mission_locks", JSON.stringify(next));
+        return next;
+      });
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, []);
+
+  const checkTeacherLock = (missionId: number) => {
+    return Boolean(locks[`Semua-${missionId}`] || locks[`${kelas}-${missionId}`]);
   };
 
   const triggerShake = (id: number, customMessage?: string) => {

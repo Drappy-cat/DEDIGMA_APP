@@ -1,13 +1,15 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Role } from "../types";
+import { registerProfileToSupabase } from "../services/supabase";
 
 interface AuthContextType {
   role: Role | null;
   userName: string;
   userEmail: string;
+  kelas: string;
   isLoggedIn: boolean;
-  loginSiswa: (name: string) => void;
-  loginGuru: (name: string, email: string) => void;
+  loginSiswa: (name: string, kelas: string) => void;
+  loginGuru: (name: string, email: string, kelas?: string) => void;
   logout: () => void;
 }
 
@@ -17,45 +19,71 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [role, setRole] = useState<Role | null>(null);
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [kelas, setKelas] = useState("5");
 
   // Load auth state from localStorage on init
   useEffect(() => {
     const savedRole = localStorage.getItem("dedigma_role") as Role | null;
     const savedName = localStorage.getItem("dedigma_username") || "";
     const savedEmail = localStorage.getItem("dedigma_email") || "";
+    const savedKelas = localStorage.getItem("dedigma_kelas") || "5";
 
     if (savedRole) {
       setRole(savedRole);
       setUserName(savedName);
       setUserEmail(savedEmail);
+      setKelas(savedKelas);
     }
   }, []);
 
-  const loginSiswa = (name: string) => {
+  const loginSiswa = (name: string, selectedKelas: string = "5") => {
     setRole("siswa");
     setUserName(name);
     setUserEmail("");
+    setKelas(selectedKelas);
+
     localStorage.setItem("dedigma_role", "siswa");
     localStorage.setItem("dedigma_username", name);
+    localStorage.setItem("dedigma_kelas", selectedKelas);
     localStorage.removeItem("dedigma_email");
+
+    // Sync profile to Supabase
+    registerProfileToSupabase({
+      userName: name,
+      role: "siswa",
+      kelas: selectedKelas
+    });
   };
 
-  const loginGuru = (name: string, email: string) => {
+  const loginGuru = (name: string, email: string, selectedKelas: string = "5A") => {
     setRole("guru");
     setUserName(name);
     setUserEmail(email);
+    setKelas(selectedKelas);
+
     localStorage.setItem("dedigma_role", "guru");
     localStorage.setItem("dedigma_username", name);
     localStorage.setItem("dedigma_email", email);
+    localStorage.setItem("dedigma_kelas", selectedKelas);
+
+    // Sync profile to Supabase
+    registerProfileToSupabase({
+      userName: name,
+      role: "guru",
+      kelas: selectedKelas
+    });
   };
 
   const logout = () => {
     setRole(null);
     setUserName("");
     setUserEmail("");
+    setKelas("5");
+
     localStorage.removeItem("dedigma_role");
     localStorage.removeItem("dedigma_username");
     localStorage.removeItem("dedigma_email");
+    localStorage.removeItem("dedigma_kelas");
     // Clear student progress upon logout as well
     localStorage.removeItem("dedigma_completed_missions");
     localStorage.removeItem("dedigma_mission_scores");
@@ -70,6 +98,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         role,
         userName,
         userEmail,
+        kelas,
         isLoggedIn,
         loginSiswa,
         loginGuru,
@@ -88,3 +117,4 @@ export const useAuth = () => {
   }
   return context;
 };
+

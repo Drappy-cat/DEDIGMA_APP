@@ -3,18 +3,25 @@ import { motion, AnimatePresence } from "motion/react";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { Role } from "../types";
-import { MascotDimas, MascotGita } from "../components/Mascot";
+import { loginGuruWithSupabase } from "../services/supabase";
 
-export const LoginScreen: React.FC = () => {
+interface LoginScreenProps {
+  onLoginSiswa: () => void;
+  onLoginGuru: () => void;
+}
+
+export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSiswa, onLoginGuru }) => {
   const { loginSiswa, loginGuru } = useAuth();
   const { playSFX } = useAudio();
   const [role, setRole] = useState<Role | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [kelas, setKelas] = useState("5");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
@@ -30,7 +37,8 @@ export const LoginScreen: React.FC = () => {
         playSFX("fail");
         return;
       }
-      loginSiswa(name.trim());
+      loginSiswa(name.trim(), kelas);
+      onLoginSiswa();
     } else if (role === "guru") {
       if (!name.trim()) {
         setError("Masukkan nama Guru!");
@@ -42,23 +50,28 @@ export const LoginScreen: React.FC = () => {
         playSFX("fail");
         return;
       }
-      if (password !== "guru123") {
-        setError("Password salah! (Gunakan: guru123)");
+      if (!password) {
+        setError("Masukkan password!");
         playSFX("fail");
         return;
       }
+
+      setIsLoading(true);
+      const authResult = await loginGuruWithSupabase(email.trim(), password);
+      setIsLoading(false);
+
+      if (!authResult.success) {
+        setError(authResult.message || "Gagal masuk sebagai Guru!");
+        playSFX("fail");
+        return;
+      }
+
       loginGuru(name.trim(), email.trim());
+      onLoginGuru();
     }
   };
 
-  const handleGoogleLogin = () => {
-    setError("");
-    if (role === "guru") {
-      loginGuru("Guru Google Demo", "guru.google@dedigma.edu");
-    } else {
-      loginSiswa("Siswa Google Demo");
-    }
-  };
+  // Remove handleGoogleLogin
 
   const selectRole = (r: Role) => {
     playSFX("click");
@@ -76,17 +89,14 @@ export const LoginScreen: React.FC = () => {
         backgroundRepeat: "no-repeat"
       }}
     >
-      {/* Dark overlay for contrast */}
       <div className="absolute inset-0 bg-black/40 z-0" />
 
-      {/* Main Parchment Paper Board */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1, type: "spring", stiffness: 100 }}
         className="w-full max-w-2xl max-h-full overflow-y-auto bg-[#f4ecd5] border-4 border-[#c2aa84] rounded-3xl shadow-[0_12px_35px_rgba(0,0,0,0.5)] p-4 sm:p-6 relative z-10 my-auto flex flex-col justify-center"
       >
-        {/* Top Header Card */}
         <div className="border-2 border-dashed border-[#bda682] rounded-2xl bg-[#eee4c5]/60 p-3 text-center mb-5">
           <h1 className="font-['Fredoka'] font-extrabold text-2xl sm:text-3xl text-[#2f5632] tracking-wide drop-shadow-xs">
             SELAMAT DATANG!
@@ -99,22 +109,16 @@ export const LoginScreen: React.FC = () => {
           </p>
         </div>
 
-        {/* Selection Cards (Siswa vs Guru) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          
-          {/* SISWA CARD */}
           <motion.div
             whileHover={{ scale: 1.02 }}
             className={`bg-[#e5f2d9] border-2 border-[#97c584] rounded-2xl p-4 pt-8 flex flex-col items-center justify-between relative shadow-md transition-all ${
               role === "siswa" ? "ring-4 ring-[#366635]" : ""
             }`}
           >
-            {/* Top Ribbon */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] bg-[#366635] text-white font-['Fredoka'] font-extrabold text-sm sm:text-base py-1 text-center rounded-b-xl shadow-md border-b-2 border-x-2 border-[#244723]">
               SISWA
             </div>
-
-            {/* Illustration */}
             <div className="w-full bg-gradient-to-b from-[#d5ebd1] to-[#c2e4bb] rounded-xl p-2 flex justify-center items-center my-2 shadow-inner h-36 sm:h-40 overflow-hidden">
               <img
                 src="/assets/dimas-login.png"
@@ -122,13 +126,9 @@ export const LoginScreen: React.FC = () => {
                 className="w-32 h-32 sm:w-36 sm:h-36 object-contain filter drop-shadow-md"
               />
             </div>
-
-            {/* Description */}
             <p className="font-['Nunito'] text-xs font-bold text-[#2a4725] text-center my-2 leading-snug px-1">
               Belajar, selesaikan misi, dan raih pencapaian seru!
             </p>
-
-            {/* Button */}
             <button
               type="button"
               onClick={() => selectRole("siswa")}
@@ -138,19 +138,15 @@ export const LoginScreen: React.FC = () => {
             </button>
           </motion.div>
 
-          {/* GURU CARD */}
           <motion.div
             whileHover={{ scale: 1.02 }}
             className={`bg-[#f7ead7] border-2 border-[#d9b596] rounded-2xl p-4 pt-8 flex flex-col items-center justify-between relative shadow-md transition-all ${
               role === "guru" ? "ring-4 ring-[#7e371b]" : ""
             }`}
           >
-            {/* Top Ribbon */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[65%] bg-[#7e371b] text-white font-['Fredoka'] font-extrabold text-sm sm:text-base py-1 text-center rounded-b-xl shadow-md border-b-2 border-x-2 border-[#572410]">
               GURU
             </div>
-
-            {/* Illustration */}
             <div className="w-full bg-gradient-to-b from-[#f2dfc6] to-[#ebd2b2] rounded-xl p-2 flex justify-center items-center my-2 shadow-inner h-36 sm:h-40 overflow-hidden">
               <img
                 src="/assets/gita-login.png"
@@ -158,13 +154,9 @@ export const LoginScreen: React.FC = () => {
                 className="w-32 h-32 sm:w-36 sm:h-36 object-contain filter drop-shadow-md"
               />
             </div>
-
-            {/* Description */}
             <p className="font-['Nunito'] text-xs font-bold text-[#592f1a] text-center my-2 leading-snug px-1">
               Kelola pembelajaran, pantau perkembangan, dan bimbing siswa!
             </p>
-
-            {/* Button */}
             <button
               type="button"
               onClick={() => selectRole("guru")}
@@ -173,10 +165,8 @@ export const LoginScreen: React.FC = () => {
               MASUK SEBAGAI GURU
             </button>
           </motion.div>
-
         </div>
 
-        {/* Input Form Modal / Overlay when role is selected */}
         <AnimatePresence>
           {role && (
             <motion.div
@@ -209,15 +199,29 @@ export const LoginScreen: React.FC = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-3">
                   {role === "siswa" && (
-                    <div className="space-y-1">
-                      <label className="font-['Nunito'] font-bold text-xs text-[#4a3728] block">Nama Kamu</label>
-                      <input
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Tulis nama kamu di sini..."
-                        autoFocus
-                        className="w-full border-2 border-[#b59e7a] rounded-xl px-3 py-2 font-['Nunito'] text-sm text-gray-800 focus:outline-none focus:border-[#366635] bg-white/90"
-                      />
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <label className="font-['Nunito'] font-bold text-xs text-[#4a3728] block">Nama Kamu</label>
+                        <input
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                          placeholder="Tulis nama kamu di sini..."
+                          autoFocus
+                          className="w-full border-2 border-[#b59e7a] rounded-xl px-3 py-2 font-['Nunito'] text-sm text-gray-800 focus:outline-none focus:border-[#366635] bg-white/90"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <label className="font-['Nunito'] font-bold text-xs text-[#4a3728] block">Pilih Kelas</label>
+                        <select
+                          value={kelas}
+                          onChange={(e) => setKelas(e.target.value)}
+                          className="w-full border-2 border-[#b59e7a] rounded-xl px-3 py-2 font-['Nunito'] text-sm text-gray-800 focus:outline-none focus:border-[#366635] bg-white/90"
+                        >
+                          <option value="4">Kelas 4</option>
+                          <option value="5">Kelas 5</option>
+                          <option value="6">Kelas 6</option>
+                        </select>
+                      </div>
                     </div>
                   )}
 
@@ -252,7 +256,6 @@ export const LoginScreen: React.FC = () => {
                           placeholder="Masukkan password..."
                           className="w-full border-2 border-[#b59e7a] rounded-xl px-3 py-2 font-['Nunito'] text-sm text-gray-800 focus:outline-none focus:border-[#7e371b] bg-white/90"
                         />
-                        <p className="text-[10px] text-gray-500 font-['Nunito']">Password Demo: guru123</p>
                       </div>
                     </div>
                   )}
@@ -263,43 +266,29 @@ export const LoginScreen: React.FC = () => {
                     </p>
                   )}
 
-                  <div className="pt-1 flex gap-2">
+                  <div className="flex gap-3 pt-2">
                     <button
                       type="button"
-                      onClick={() => setRole(null)}
-                      className="w-1/3 bg-[#e3d8bd] hover:bg-[#d5c7a5] text-[#4a3728] font-['Fredoka'] font-bold py-2 rounded-xl text-xs cursor-pointer"
+                      onClick={() => {
+                        playSFX("click");
+                        setRole(null);
+                        setError("");
+                      }}
+                      disabled={isLoading}
+                      className="w-1/3 py-3 rounded-2xl font-['Fredoka'] font-bold text-sm transition-all bg-[#e6d5b8] text-[#7e371b] hover:bg-[#d4c3a3] cursor-pointer shadow-md disabled:opacity-50"
                     >
                       Batal
                     </button>
                     <button
                       type="submit"
-                      className={`w-2/3 ${
+                      disabled={isLoading}
+                      className={`w-2/3 py-3 rounded-2xl font-['Fredoka'] font-bold text-lg transition-all text-white shadow-lg flex items-center justify-center gap-2 cursor-pointer active:scale-95 disabled:opacity-50 ${
                         role === "siswa" ? "bg-[#366635] hover:bg-[#284d27]" : "bg-[#7e371b] hover:bg-[#5e2712]"
-                      } text-white font-['Fredoka'] font-bold py-2 rounded-xl text-xs sm:text-sm shadow-md cursor-pointer transition-all`}
+                      }`}
                     >
-                      Masuk 🚀
+                      {isLoading ? "Memuat..." : "Masuk 🚀"}
                     </button>
                   </div>
-
-                  <div className="relative flex py-1 items-center select-none">
-                    <div className="flex-grow border-t border-[#d4c3a3]"></div>
-                    <span className="flex-shrink mx-2 text-gray-500 text-[10px] font-semibold">atau</span>
-                    <div className="flex-grow border-t border-[#d4c3a3]"></div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={handleGoogleLogin}
-                    className="w-full border-2 border-[#b59e7a] hover:border-[#7e371b] font-['Fredoka'] font-semibold rounded-xl px-4 py-2 transition-all text-gray-700 hover:bg-amber-50 text-xs flex items-center justify-center gap-2 cursor-pointer shadow-xs bg-white"
-                  >
-                    <svg className="w-4 h-4 select-none" viewBox="0 0 24 24">
-                      <path
-                        fill="#EA4335"
-                        d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-5.136 4.114A5.767 5.767 0 0 1 8.2 12.75a5.767 5.767 0 0 1 5.79-5.765c1.498 0 2.861.56 3.9 1.484l3.182-3.183a10.05 10.05 0 0 0-7.082-2.7C6.183 2.585 2 6.768 2 11.916 2 17.062 6.183 21.246 11.99 21.246c5.787 0 9.77-3.96 9.77-9.743 0-.616-.065-1.2-.178-1.764l-9.342.046Z"
-                      />
-                    </svg>
-                    Google Account
-                  </button>
                 </form>
               </motion.div>
             </motion.div>

@@ -4,6 +4,8 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { AudioProvider, useAudio } from "./contexts/AudioContext";
 import { Screen, Role, GameState, createDefaultGameState, calculateBadges } from "./types";
 import { Btn } from "./components/Btn";
+import { Toaster, toast } from "sonner";
+import { syncProgressToSupabase, syncPretestToSupabase, syncPosttestToSupabase } from "./services/supabase";
 
 // Lazy loaded screens for code-splitting & performance optimization
 const LoginScreen = lazy(() => import("./screens/LoginScreen").then((m) => ({ default: m.LoginScreen })));
@@ -200,7 +202,7 @@ function DemoPanel({
 }
 
 function AppContent() {
-  const { role, userName, isLoggedIn } = useAuth();
+  const { role, userName, kelas, isLoggedIn } = useAuth();
   const { playSFX } = useAudio();
   const [screen, setScreen] = useState<Screen>("login");
   const [currentMissionId, setCurrentMissionId] = useState<number>(1);
@@ -209,6 +211,31 @@ function AppContent() {
   const [pretestScore, setPretestScore] = useState<number | null>(null);
   const [posttestScore, setPosttestScore] = useState<number | null>(null);
   const [gameState, setGameState] = useState<GameState>(loadGameState());
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      toast.success("Terhubung kembali ke internet 🌐✅", {
+        description: "Data akan disinkronkan ke server secara otomatis.",
+      });
+    };
+    const handleOffline = () => {
+      setIsOnline(false);
+      toast.error("Koneksi terputus. Mode Offline Aktif 📶❌", {
+        description: "Data tetap aman dan akan disinkronkan saat online.",
+        duration: 5000,
+      });
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   // Sync screen with auth state
   useEffect(() => {
@@ -288,6 +315,16 @@ function AppContent() {
         : 0;
       saveGameState(updated);
       return updated;
+    });
+
+    // Sync to Supabase
+    syncProgressToSupabase({
+      userName,
+      kelas,
+      missionId: id,
+      missionName: id === 1 ? "Larung Sesaji" : id === 2 ? "Nyadran" : "Ledhug Suro",
+      score,
+      completed: true
     });
   };
 
@@ -389,6 +426,7 @@ function AppContent() {
                       saveGameState(updated);
                       return updated;
                     });
+                    syncPretestToSupabase({ userName, kelas, score });
                     navigateTo("peta-misi");
                   }}
                   onBack={() => navigateTo("splash")}
@@ -407,6 +445,7 @@ function AppContent() {
                       saveGameState(updated);
                       return updated;
                     });
+                    syncPosttestToSupabase({ userName, kelas, score });
                     navigateTo("lencana");
                   }}
                   onBack={() => navigateTo("peta-misi")}
@@ -454,6 +493,7 @@ export function App() {
     <AuthProvider>
       <AudioProvider>
         <AppContent />
+        <Toaster position="top-center" richColors />
       </AudioProvider>
     </AuthProvider>
   );

@@ -25,8 +25,8 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured()
  * Interface definitions for Supabase Database Tables
  */
 export interface SupabaseProfile {
-  id: string;
-  nama: string;
+  id?: string;
+  user_name: string;
   role: "siswa" | "guru";
   kelas: string;
   created_at?: string;
@@ -43,6 +43,22 @@ export interface SupabaseProgress {
   updated_at?: string;
 }
 
+export interface SupabasePretest {
+  id?: string;
+  user_name: string;
+  kelas: string;
+  pretest_score: number;
+  completed_at?: string;
+}
+
+export interface SupabasePosttest {
+  id?: string;
+  user_name: string;
+  kelas: string;
+  posttest_score: number;
+  completed_at?: string;
+}
+
 export interface SupabaseClassLock {
   id?: string;
   kelas: string;
@@ -52,7 +68,61 @@ export interface SupabaseClassLock {
 }
 
 /**
- * Service Helper: Sync Student Progress to Supabase
+ * Service Helper: Register/Upsert User Profile in Supabase
+ */
+export async function registerProfileToSupabase(data: {
+  userName: string;
+  role: "siswa" | "guru";
+  kelas: string;
+}) {
+  if (!supabase || !isSupabaseConfigured()) return false;
+
+  try {
+    const { error } = await supabase.from("profiles").upsert(
+      {
+        user_name: data.userName,
+        role: data.role,
+        kelas: data.kelas
+      },
+      { onConflict: "user_name" }
+    );
+
+    if (error) {
+      console.error("Supabase register profile error:", error.message);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Failed to register profile to Supabase:", err);
+    return false;
+  }
+}
+
+/**
+ * Service Helper: Authenticate Guru using Supabase Auth
+ */
+export async function loginGuruWithSupabase(email: string, password: string) {
+  if (!supabase || !isSupabaseConfigured()) {
+    return { success: false, message: "Koneksi Supabase belum dikonfigurasi." };
+  }
+
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      return { success: false, message: error.message };
+    }
+    return { success: true, data };
+  } catch (err: any) {
+    return { success: false, message: err.message || "Gagal menghubungi server." };
+  }
+}
+
+/**
+ * Service Helper: Sync Student Mission Progress to Supabase
  */
 export async function syncProgressToSupabase(data: {
   userName: string;
@@ -93,25 +163,94 @@ export async function syncProgressToSupabase(data: {
 }
 
 /**
- * Service Helper: Fetch Student Rekap Data for Guru Dashboard
+ * Service Helper: Sync Pretest Results to Supabase
  */
-export async function fetchGuruRekapFromSupabase() {
-  if (!supabase || !isSupabaseConfigured()) {
-    return null;
-  }
+export async function syncPretestToSupabase(data: {
+  userName: string;
+  kelas: string;
+  score: number;
+}) {
+  if (!supabase || !isSupabaseConfigured()) return false;
 
   try {
-    const { data, error } = await supabase
-      .from("progress_misi")
-      .select("*")
-      .order("updated_at", { ascending: false });
+    const { error } = await supabase.from("pretest_results").upsert(
+      {
+        user_name: data.userName,
+        kelas: data.kelas,
+        pretest_score: data.score,
+        completed_at: new Date().toISOString()
+      },
+      { onConflict: "user_name" }
+    );
 
     if (error) {
-      console.error("Error fetching progress from Supabase:", error.message);
+      console.error("Supabase sync pretest error:", error.message);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Failed to sync pretest to Supabase:", err);
+    return false;
+  }
+}
+
+/**
+ * Service Helper: Sync Posttest Results to Supabase
+ */
+export async function syncPosttestToSupabase(data: {
+  userName: string;
+  kelas: string;
+  score: number;
+}) {
+  if (!supabase || !isSupabaseConfigured()) return false;
+
+  try {
+    const { error } = await supabase.from("posttest_results").upsert(
+      {
+        user_name: data.userName,
+        kelas: data.kelas,
+        posttest_score: data.score,
+        completed_at: new Date().toISOString()
+      },
+      { onConflict: "user_name" }
+    );
+
+    if (error) {
+      console.error("Supabase sync posttest error:", error.message);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Failed to sync posttest to Supabase:", err);
+    return false;
+  }
+}
+
+/**
+ * Service Helper: Fetch Combined Rekap Data for Guru Dashboard
+ */
+export async function fetchGuruRekapFromSupabase() {
+  if (!supabase || !isSupabaseConfigured()) return null;
+
+  try {
+    const [profilesRes, progressRes, pretestRes, posttestRes] = await Promise.all([
+      supabase.from("profiles").select("*"),
+      supabase.from("progress_misi").select("*"),
+      supabase.from("pretest_results").select("*"),
+      supabase.from("posttest_results").select("*")
+    ]);
+
+    if (profilesRes.error || progressRes.error) {
+      console.error("Error fetching guru rekap from Supabase");
       return null;
     }
 
-    return data as SupabaseProgress[];
+    return {
+      profiles: (profilesRes.data || []) as SupabaseProfile[],
+      progress: (progressRes.data || []) as SupabaseProgress[],
+      pretests: (pretestRes.data || []) as SupabasePretest[],
+      posttests: (posttestRes.data || []) as SupabasePosttest[]
+    };
   } catch (err) {
     console.error("Failed to fetch guru rekap from Supabase:", err);
     return null;
@@ -122,9 +261,7 @@ export async function fetchGuruRekapFromSupabase() {
  * Service Helper: Toggle Mission Lock State per Class
  */
 export async function toggleSupabaseClassLock(kelas: string, missionId: number, isLocked: boolean) {
-  if (!supabase || !isSupabaseConfigured()) {
-    return false;
-  }
+  if (!supabase || !isSupabaseConfigured()) return false;
 
   try {
     const { error } = await supabase.from("class_locks").upsert(
@@ -149,12 +286,29 @@ export async function toggleSupabaseClassLock(kelas: string, missionId: number, 
 }
 
 /**
+ * Service Helper: Fetch All Class Locks
+ */
+export async function fetchSupabaseClassLocks() {
+  if (!supabase || !isSupabaseConfigured()) return null;
+
+  try {
+    const { data, error } = await supabase.from("class_locks").select("*");
+    if (error) {
+      console.error("Error fetching class locks from Supabase:", error.message);
+      return null;
+    }
+    return data as SupabaseClassLock[];
+  } catch (err) {
+    console.error("Failed to fetch class locks from Supabase:", err);
+    return null;
+  }
+}
+
+/**
  * Realtime Listener: Subscribe to Class Locks changes
  */
 export function subscribeToClassLocks(onLockChange: (kelas: string, missionId: number, isLocked: boolean) => void) {
-  if (!supabase || !isSupabaseConfigured()) {
-    return null;
-  }
+  if (!supabase || !isSupabaseConfigured()) return null;
 
   const channel = supabase
     .channel("public:class_locks")
@@ -174,3 +328,4 @@ export function subscribeToClassLocks(onLockChange: (kelas: string, missionId: n
     supabase.removeChannel(channel);
   };
 }
+
