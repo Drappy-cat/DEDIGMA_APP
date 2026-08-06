@@ -400,7 +400,7 @@ function AppContent() {
     };
   }, [screen, screenHistory]);
 
-  const completeMission = (id: number, score: number) => {
+  const completeMission = (id: number, score: number, reflectionText?: string) => {
     setCompletedMissions((prev) => {
       const next = new Set([...prev, id]);
       return next;
@@ -419,6 +419,7 @@ function AppContent() {
           [id]: {
             ...prev.missions[id],
             activityScore: score,
+            reflectionText: reflectionText || prev.missions[id]?.reflectionText || "",
             completed: true
           }
         }
@@ -443,6 +444,7 @@ function AppContent() {
       missionId: id,
       missionName: id === 1 ? "Larung Sesaji" : id === 2 ? "Nyadran" : "Ledhug Suro",
       score,
+      reflectionText,
       completed: true
     });
   };

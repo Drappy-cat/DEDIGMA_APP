@@ -20,10 +20,13 @@ CREATE TABLE IF NOT EXISTS public.progress_misi (
   mission_id INT NOT NULL CHECK (mission_id IN (1, 2, 3)),
   mission_name TEXT NOT NULL,
   activity_score INT NOT NULL DEFAULT 0,
+  reflection_text TEXT DEFAULT '',
   completed BOOLEAN NOT NULL DEFAULT false,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
   CONSTRAINT unique_user_mission UNIQUE (user_name, mission_id)
 );
+ALTER TABLE public.progress_misi ADD COLUMN IF NOT EXISTS reflection_text TEXT DEFAULT '';
+
 
 -- 3. TABEL HASIL PRETEST KUIS
 CREATE TABLE IF NOT EXISTS public.pretest_results (

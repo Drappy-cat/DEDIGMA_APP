@@ -6,6 +6,8 @@ import { useAudio } from "../contexts/AudioContext";
 import { useAuth } from "../contexts/AuthContext";
 import { fireConfetti } from "../utils/confetti";
 import { POSTTEST_QUESTIONS } from "../data/posttestQuestions";
+import { syncPosttestToSupabase } from "../services/supabase";
+
 interface PosttestScreenProps {
   onComplete: (score: number) => void;
   onBack: () => void;
@@ -13,7 +15,7 @@ interface PosttestScreenProps {
 
 export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
-  const { userName } = useAuth();
+  const { userName, kelas } = useAuth();
   const currentKey = `dedigma_posttest_current_${userName}`;
   const answersKey = `dedigma_posttest_answers_${userName}`;
 
@@ -77,6 +79,9 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
       setDone(true);
       const correctCount = answers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
       const finalScore = Math.round((correctCount / POSTTEST_QUESTIONS.length) * 100);
+
+      // Sync posttest score immediately to Supabase database
+      syncPosttestToSupabase({ userName, kelas, score: finalScore });
 
       localStorage.removeItem(currentKey);
       localStorage.removeItem(answersKey);

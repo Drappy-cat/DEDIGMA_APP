@@ -16,7 +16,7 @@ import { MisiSelesaiScreen } from "./MisiSelesaiScreen";
 
 interface MissionFlowProps {
   missionId: number;
-  onComplete: (id: number, score: number) => void;
+  onComplete: (id: number, score: number, reflectionText?: string) => void;
   onHome: () => void;
 }
 
@@ -32,11 +32,15 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
   const mission = MISSIONS.find((m) => m.id === missionId) || MISSIONS[0];
   const [stage, setStage] = useState<MissionStage>("orientasi");
   const [activityScore, setActivityScore] = useState<number>(0);
+  const [reflectionText, setReflectionText] = useState<string>("");
   const [unlockedIndex, setUnlockedIndex] = useState<number>(0);
 
-  const advance = (score?: number) => {
+  const advance = (score?: number, text?: string) => {
     if (score !== undefined) {
       setActivityScore(score);
+    }
+    if (text !== undefined) {
+      setReflectionText(text);
     }
     const idx = STAGE_ORDER.indexOf(stage);
     if (idx !== -1 && idx < STAGE_ORDER.length - 1) {
@@ -88,7 +92,7 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
           mission={mission}
           totalScore={activityScore}
           onContinue={() => {
-            onComplete(missionId, activityScore);
+            onComplete(missionId, activityScore, reflectionText);
             onHome();
           }}
         />
@@ -190,7 +194,7 @@ export const MissionFlow: React.FC<MissionFlowProps> = ({ missionId, onComplete,
               {stage === "orientasi" && <OrientasiScreen mission={mission} onNext={() => advance()} onBack={onHome} />}
               {stage === "materi" && <MateriScreen mission={mission} onNext={() => advance()} onBack={() => setStage("orientasi")} />}
               {stage === "aktivitas" && renderActivity()}
-              {stage === "refleksi" && <RuangRefleksiScreen mission={mission} onNext={() => advance()} onBack={() => setStage("aktivitas")} />}
+              {stage === "refleksi" && <RuangRefleksiScreen mission={mission} onNext={(refText) => advance(undefined, refText)} onBack={() => setStage("aktivitas")} />}
             </motion.div>
           </AnimatePresence>
         </div>

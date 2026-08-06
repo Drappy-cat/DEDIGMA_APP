@@ -39,6 +39,7 @@ export interface SupabaseProgress {
   mission_id: number;
   mission_name: string;
   activity_score: number;
+  reflection_text?: string;
   completed: boolean;
   updated_at?: string;
 }
@@ -122,7 +123,7 @@ export async function loginGuruWithSupabase(email: string, password: string) {
 }
 
 /**
- * Service Helper: Sync Student Mission Progress to Supabase
+ * Service Helper: Sync Student Mission Progress & Reflection to Supabase
  */
 export async function syncProgressToSupabase(data: {
   userName: string;
@@ -130,6 +131,7 @@ export async function syncProgressToSupabase(data: {
   missionId: number;
   missionName: string;
   score: number;
+  reflectionText?: string;
   completed: boolean;
 }) {
   if (!supabase || !isSupabaseConfigured()) {
@@ -138,21 +140,35 @@ export async function syncProgressToSupabase(data: {
   }
 
   try {
+    const payload: Record<string, any> = {
+      user_name: data.userName,
+      kelas: data.kelas,
+      mission_id: data.missionId,
+      mission_name: data.missionName,
+      activity_score: data.score,
+      completed: data.completed,
+      updated_at: new Date().toISOString()
+    };
+    if (data.reflectionText !== undefined && data.reflectionText !== null) {
+      payload.reflection_text = data.reflectionText;
+    }
+
     const { error } = await supabase.from("progress_misi").upsert(
-      {
-        user_name: data.userName,
-        kelas: data.kelas,
-        mission_id: data.missionId,
-        mission_name: data.missionName,
-        activity_score: data.score,
-        completed: data.completed,
-        updated_at: new Date().toISOString()
-      },
+      payload,
       { onConflict: "user_name,mission_id" }
     );
 
     if (error) {
-      console.error("Supabase sync progress error:", error.message);
+      if (error.message.includes("reflection_text")) {
+        delete payload.reflection_text;
+        const { error: fallbackErr } = await supabase.from("progress_misi").upsert(
+          payload,
+          { onConflict: "user_name,mission_id" }
+        );
+        if (fallbackErr) console.error("Supabase sync progress fallback error:", fallbackErr.message);
+      } else {
+        console.error("Supabase sync progress error:", error.message);
+      }
       return false;
     }
     return true;

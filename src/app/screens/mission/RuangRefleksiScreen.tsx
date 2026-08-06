@@ -6,7 +6,7 @@ import { useAudio } from "../../contexts/AudioContext";
 
 interface RuangRefleksiScreenProps {
   mission: Mission;
-  onNext: () => void;
+  onNext: (reflectionText?: string) => void;
   onBack?: () => void;
 }
 
@@ -25,7 +25,8 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
 
   const handleNext = () => {
     playSFX("click");
-    onNext();
+    const formattedReflection = answers.map((ans, idx) => `Q${idx + 1}: ${ans.trim()}`).join(" | ");
+    onNext(formattedReflection);
   };
 
   const canContinue = answers.every((a) => a.trim().length >= 5);
