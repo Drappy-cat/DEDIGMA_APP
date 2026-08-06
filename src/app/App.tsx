@@ -5,7 +5,7 @@ import { AudioProvider, useAudio } from "./contexts/AudioContext";
 import { Screen, Role, GameState, createDefaultGameState, calculateBadges } from "./types";
 import { Btn } from "./components/Btn";
 import { Toaster, toast } from "sonner";
-import { syncProgressToSupabase, syncPretestToSupabase, syncPosttestToSupabase, fetchStudentDataFromSupabase } from "./services/supabase";
+import { syncProgressToSupabase, syncPretestToSupabase, syncPosttestToSupabase, fetchStudentDataFromSupabase, subscribeToStudentProgress } from "./services/supabase";
 
 // Lazy loaded screens for code-splitting & performance optimization
 const LoginScreen = lazy(() => import("./screens/LoginScreen").then((m) => ({ default: m.LoginScreen })));
@@ -337,9 +337,74 @@ function AppContent() {
             }
           });
         }
+        
+        // 3. Realtime Subscription
+        let unsubscribe: (() => void) | null = null;
+        if (navigator.onLine) {
+          unsubscribe = subscribeToStudentProgress(userName, () => {
+            fetchStudentDataFromSupabase(userName).then((data) => {
+              if (data) {
+                setGameState((prev) => {
+                  const updated = JSON.parse(JSON.stringify(prev)); // Deep copy
+                  let stateChanged = false;
+
+                  if (data.pretest) {
+                    updated.pretest.score = data.pretest.pretest_score;
+                    setPretestScore(data.pretest.pretest_score);
+                    stateChanged = true;
+                  }
+
+                  if (data.posttest) {
+                    updated.posttest.score = data.posttest.posttest_score;
+                    setPosttestScore(data.posttest.posttest_score);
+                    stateChanged = true;
+                  }
+
+                  if (data.progress && data.progress.length > 0) {
+                    const completed = new Set<number>();
+                    const scores: Record<number, number> = {};
+                    data.progress.forEach(p => {
+                      if (p.completed) {
+                        updated.missions[p.mission_id] = {
+                          activityScore: p.activity_score,
+                          completed: true
+                        };
+                        completed.add(p.mission_id);
+                        scores[p.mission_id] = p.activity_score;
+                      }
+                    });
+                    setCompletedMissions(completed);
+                    setMissionScores(scores);
+                    stateChanged = true;
+                  }
+
+                  if (stateChanged) {
+                    const allScores: Record<number, number> = {};
+                    for (const [key, m] of Object.entries(updated.missions)) {
+                      if (m.completed) allScores[Number(key)] = (m as any).activityScore;
+                    }
+                    updated.badges = calculateBadges(allScores);
+                    updated.totalScore = Object.values(allScores).length > 0
+                      ? Math.round(Object.values(allScores).reduce((a, b) => a + b, 0) / Object.values(allScores).length)
+                      : 0;
+
+                    saveGameState(updated, userName);
+                    toast.success("Misi berhasil disinkronkan dari server secara realtime! 🔄✅");
+                  }
+
+                  return stateChanged ? updated : prev;
+                });
+              }
+            });
+          });
+        }
+
+        return () => {
+          if (unsubscribe) unsubscribe();
+        };
       }
     }
-  }, [isLoggedIn, role]);
+  }, [isLoggedIn, role, userName]);
 
   const navigateTo = (nextScreen: Screen) => {
     playSFX("click");

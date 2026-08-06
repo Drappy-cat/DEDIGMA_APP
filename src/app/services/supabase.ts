@@ -369,3 +369,41 @@ export function subscribeToClassLocks(onLockChange: (kelas: string, missionId: n
   };
 }
 
+/**
+ * Realtime Listener: Subscribe to a specific student's progress changes
+ */
+export function subscribeToStudentProgress(userName: string, onUpdate: () => void) {
+  if (!supabase || !isSupabaseConfigured()) return null;
+
+  // Since we can't easily filter by user_name on the client without complex setup in some cases,
+  // we listen to all inserts/updates on these tables and filter locally.
+  const channel = supabase
+    .channel(`student_progress_${userName}`)
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "progress_misi" },
+      (payload) => {
+        if (payload.new && (payload.new as any).user_name === userName) onUpdate();
+      }
+    )
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "pretest_results" },
+      (payload) => {
+        if (payload.new && (payload.new as any).user_name === userName) onUpdate();
+      }
+    )
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "posttest_results" },
+      (payload) => {
+        if (payload.new && (payload.new as any).user_name === userName) onUpdate();
+      }
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+}
+
