@@ -6,6 +6,7 @@ import { Screen, Role, GameState, createDefaultGameState, calculateBadges } from
 import { Btn } from "./components/Btn";
 import { Toaster, toast } from "sonner";
 import { syncProgressToSupabase, syncPretestToSupabase, syncPosttestToSupabase, fetchStudentDataFromSupabase, subscribeToStudentProgress } from "./services/supabase";
+import { usePerformance } from "./hooks/usePerformance";
 
 // Lazy loaded screens for code-splitting & performance optimization
 const LoginScreen = lazy(() => import("./screens/LoginScreen").then((m) => ({ default: m.LoginScreen })));
@@ -213,6 +214,7 @@ function AppContent() {
   const [missionScores, setMissionScores] = useState<Record<number, number>>({});
   const [pretestScore, setPretestScore] = useState<number | null>(null);
   const [posttestScore, setPosttestScore] = useState<number | null>(null);
+  const perf = usePerformance();
   const [gameState, setGameState] = useState<GameState>(loadGameState());
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
@@ -521,10 +523,10 @@ function AppContent() {
           <AnimatePresence mode="wait">
             <motion.div
               key={screen}
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.02 }}
-              transition={{ duration: 0.25, ease: "easeInOut" }}
+              initial={{ opacity: 0, ...(perf.isLowEnd ? {} : { scale: 0.98 }) }}
+              animate={{ opacity: 1, ...(perf.isLowEnd ? {} : { scale: 1 }) }}
+              exit={{ opacity: 0, ...(perf.isLowEnd ? {} : { scale: 1.02 }) }}
+              transition={{ duration: perf.transitionDuration(0.25), ease: "easeInOut" }}
               className="w-full h-full flex flex-col overflow-hidden relative"
             >
               {!isLoggedIn && (

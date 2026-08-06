@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { MascotDimas, MascotGita } from "../components/Mascot";
 import { AudioSettingsModal } from "../components/AudioSettingsModal";
+import { usePerformance } from "../hooks/usePerformance";
 
 interface SplashScreenProps {
   onMulai: () => void;
@@ -17,6 +18,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
   const { playSFX, playBGM, toggleAudio, toggleBGM, audioEnabled, bgmEnabled } = useAudio();
   const [showPustaka, setShowPustaka] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const perf = usePerformance();
 
   React.useEffect(() => {
     playBGM();
@@ -45,7 +47,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
 
   // Generate random glitters / falling stars
   const glitters = React.useMemo(() => {
-    return Array.from({ length: 25 }).map((_, i) => ({
+    return Array.from({ length: perf.particleCount(25) }).map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
       top: `${Math.random() * 50}%`,

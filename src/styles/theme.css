@@ -179,3 +179,30 @@
     line-height: 1.5;
   }
 }
+
+/* GPU acceleration helper — opt-in per element */
+.gpu-accelerate {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Reduce continuous animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse,
+  .animate-bounce {
+    animation: none !important;
+  }
+
+  .animate-spin {
+    animation-duration: 3s !important;
+  }
+
+  /* Disable backdrop-blur on reduced-motion (expensive on low-end GPUs) */
+  .backdrop-blur-xs,
+  .backdrop-blur-sm,
+  .backdrop-blur-md,
+  .backdrop-blur-lg {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}

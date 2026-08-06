@@ -1,13 +1,17 @@
 import confetti from "canvas-confetti";
+import { getPerformanceConfig } from "../hooks/usePerformance";
 
 /**
  * Triggers a cheerful, GPU-optimized confetti celebration effect
  */
 export function fireConfetti() {
   try {
+    const perf = getPerformanceConfig();
+    const pc = (n: number) => perf.particleCount(n);
+
     // Center burst
     confetti({
-      particleCount: 70,
+      particleCount: pc(70),
       spread: 70,
       origin: { y: 0.6 },
       disableForReducedMotion: true
@@ -16,14 +20,14 @@ export function fireConfetti() {
     // Side cannons after 180ms
     setTimeout(() => {
       confetti({
-        particleCount: 40,
+        particleCount: pc(40),
         angle: 60,
         spread: 55,
         origin: { x: 0.1, y: 0.7 },
         disableForReducedMotion: true
       });
       confetti({
-        particleCount: 40,
+        particleCount: pc(40),
         angle: 120,
         spread: 55,
         origin: { x: 0.9, y: 0.7 },
@@ -37,10 +41,12 @@ export function fireConfetti() {
 
 export function fireContinuousConfetti() {
   try {
+    const perf = getPerformanceConfig();
+
     const fire = (particleRatio: number, opts: any) => {
       confetti({
         ...opts,
-        particleCount: Math.floor(100 * particleRatio),
+        particleCount: Math.floor(perf.particleCount(100) * particleRatio),
         zIndex: 9999,
         colors: ['#f59e0b', '#10b981', '#3b82f6', '#ef4444', '#8b5cf6'],
         disableForReducedMotion: true
@@ -56,12 +62,15 @@ export function fireContinuousConfetti() {
       fire(0.5, { angle: 120, spread: 55, origin: { x: 1, y: 0.7 } });
     }, 250);
 
-    // Burst 3: Massive Center (after 600ms)
-    setTimeout(() => {
-      fire(1, { spread: 120, origin: { y: 0.5 } });
-    }, 600);
+    // Burst 3: Massive Center (after 600ms) — skip on low-end
+    if (!perf.isLowEnd) {
+      setTimeout(() => {
+        fire(1, { spread: 120, origin: { y: 0.5 } });
+      }, 600);
+    }
 
   } catch (e) {
     console.log("Confetti trigger error:", e);
   }
 }
+

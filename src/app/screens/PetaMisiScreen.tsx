@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { fetchSupabaseClassLocks, subscribeToClassLocks, SupabaseClassLock } from "../services/supabase";
+import { usePerformance } from "../hooks/usePerformance";
 
 interface PetaMisiScreenProps {
   completedMissions: Set<number>;
@@ -52,9 +53,22 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 }) => {
   const { kelas } = useAuth();
   const { playSFX } = useAudio();
-  const [selectedIdx, setSelectedIdx] = useState(0);
+
+  const getInitialIndex = () => {
+    if (!completedMissions.has(1)) return 0;
+    if (!completedMissions.has(2)) return 1;
+    if (!completedMissions.has(3)) return 2;
+    return 2;
+  };
+
+  const [selectedIdx, setSelectedIdx] = useState(getInitialIndex);
   const [shakingId, setShakingId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const perf = usePerformance();
+
+  React.useEffect(() => {
+    setSelectedIdx(getInitialIndex());
+  }, [completedMissions]);
   const [locks, setLocks] = useState<Record<string, boolean>>(() => {
     try {
       const saved = localStorage.getItem("dedigma_mission_locks");
@@ -159,22 +173,26 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
 
       {/* Subtle atmosphere effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
-        {/* Drifting clouds */}
-        <motion.div
-          className="absolute top-[8%] left-[-20%] w-[30rem] h-28 bg-white/8 blur-[50px] rounded-full"
-          animate={{ x: ["0vw", "120vw"] }}
-          transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
-          className="absolute top-[30%] left-[-30%] w-[35rem] h-32 bg-white/5 blur-[60px] rounded-full"
-          animate={{ x: ["0vw", "130vw"] }}
-          transition={{ duration: 70, repeat: Infinity, ease: "linear", delay: 20 }}
-        />
-        {/* Fireflies */}
-        {[...Array(10)].map((_, i) => (
+        {/* Drifting clouds — hidden on low-end to save GPU */}
+        {perf.showBlurEffects && (
+          <>
+            <motion.div
+              className="absolute top-[8%] left-[-20%] w-[30rem] h-28 bg-white/8 blur-[50px] rounded-full gpu-accelerate"
+              animate={{ x: ["0vw", "120vw"] }}
+              transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
+            />
+            <motion.div
+              className="absolute top-[30%] left-[-30%] w-[35rem] h-32 bg-white/5 blur-[60px] rounded-full gpu-accelerate"
+              animate={{ x: ["0vw", "130vw"] }}
+              transition={{ duration: 70, repeat: Infinity, ease: "linear", delay: 20 }}
+            />
+          </>
+        )}
+        {/* Fireflies — reduced count on low-end */}
+        {[...Array(perf.particleCount(10))].map((_, i) => (
           <motion.div
             key={`ff-${i}`}
-            className="absolute bg-amber-200 rounded-full shadow-[0_0_6px_2px_rgba(253,230,138,0.6)]"
+            className="absolute bg-amber-200 rounded-full shadow-[0_0_6px_2px_rgba(253,230,138,0.6)] gpu-accelerate"
             style={{
               top: `${15 + Math.random() * 70}%`,
               left: `${10 + Math.random() * 80}%`,
