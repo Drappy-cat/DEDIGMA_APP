@@ -7,6 +7,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { fireConfetti } from "../utils/confetti";
 import { POSTTEST_QUESTIONS } from "../data/posttestQuestions";
 import { syncPosttestToSupabase } from "../services/supabase";
+import { usePerformance } from "../hooks/usePerformance";
 
 interface PosttestScreenProps {
   onComplete: (score: number) => void;
@@ -16,6 +17,7 @@ interface PosttestScreenProps {
 export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const { userName, kelas } = useAuth();
+  const perf = usePerformance();
   const currentKey = `dedigma_posttest_current_${userName}`;
   const answersKey = `dedigma_posttest_answers_${userName}`;
 
@@ -110,7 +112,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
         }}
       >
         {/* Dark Tint Overlay */}
-        <div className="absolute inset-0 bg-black/30 backdrop-blur-xs z-0 pointer-events-none" />
+        <div className={`absolute inset-0 ${perf.showBlurEffects ? 'bg-black/30 backdrop-blur-xs' : 'bg-black/40'} z-0 pointer-events-none`} />
 
         {/* Content Container */}
         <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md space-y-4">
@@ -124,7 +126,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
               transition={{ type: "spring", stiffness: 200, damping: 15 }}
               className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-b from-[#fcd34d] via-[#f59e0b] to-[#d97706] border-2 border-[#fff5ce] shadow-2xl flex items-center justify-center text-3xl sm:text-4xl z-20 -mb-6 relative"
             >
-              <div className="absolute inset-0 rounded-full bg-yellow-400 blur-md opacity-50 animate-pulse" />
+              {perf.showContinuousAnimations && <div className="absolute inset-0 rounded-full bg-yellow-400 blur-md opacity-50 animate-pulse" />}
               <span className="relative z-10">🎓</span>
             </motion.div>
 
