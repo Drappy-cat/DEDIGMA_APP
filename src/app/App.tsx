@@ -661,15 +661,17 @@ function AppContent() {
         </Suspense>
       </div>
 
-      <DemoPanel
-        screen={screen}
-        setScreen={setScreen}
-        setCompletedMissions={setCompletedMissions}
-        setMissionScores={setMissionScores}
-        setPretestScore={setPretestScore}
-        setPosttestScore={setPosttestScore}
-        setCurrentMissionId={setCurrentMissionId}
-      />
+      {import.meta.env.DEV && (
+        <DemoPanel
+          screen={screen}
+          setScreen={setScreen}
+          setCompletedMissions={setCompletedMissions}
+          setMissionScores={setMissionScores}
+          setPretestScore={setPretestScore}
+          setPosttestScore={setPosttestScore}
+          setCurrentMissionId={setCurrentMissionId}
+        />
+      )}
     </div>
   );
 }
