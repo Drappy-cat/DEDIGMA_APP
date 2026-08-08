@@ -362,7 +362,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
                 : "bg-white/20 border-white/30 text-white/50 cursor-not-allowed opacity-60"
             }`}
           >
-            <span>Selanjutnya</span>
+            <span>{current < totalQ - 1 ? "Selanjutnya" : "Selesai 🎉"}</span>
             <div className="w-5 h-5 rounded-full bg-white/30 text-white flex items-center justify-center text-xs">
               →
             </div>
@@ -404,10 +404,13 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
               </div>
               
               <button
-                onClick={handleNextQuestion}
+                onClick={() => {
+                  playSFX("click");
+                  setIsAnswered(false);
+                }}
                 className="w-full bg-gradient-to-r from-[#2a6838] to-[#1c5c32] hover:from-[#358a4c] hover:to-[#226839] border-2 border-[#52ad69] text-white rounded-full py-3.5 text-base font-['Fredoka'] font-extrabold shadow-lg cursor-pointer transition-transform active:scale-95"
               >
-                {current < totalQ - 1 ? 'Okay' : 'Selesai Pretest 🎉'}
+                Okay
               </button>
             </motion.div>
           </div>
