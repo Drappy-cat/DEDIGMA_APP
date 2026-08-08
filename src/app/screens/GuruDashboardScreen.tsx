@@ -296,7 +296,11 @@ export const GuruDashboardScreen: React.FC = () => {
             </button>
 
             <button
-              onClick={() => { playSFX("click"); logout(); }}
+              onClick={() => { 
+                playSFX("click"); 
+                logout(); 
+                window.location.reload();
+              }}
               className="bg-rose-500/20 hover:bg-rose-500/40 text-rose-200 border border-rose-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ml-2"
             >
               <LogOut size={14} />
