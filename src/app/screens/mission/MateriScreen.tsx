@@ -4,9 +4,13 @@ import { Volume2, X, Info, Clock, Target, Heart, Image, Play, Lightbulb, Chevron
 import { Mission, MateriTab } from "../../types";
 import { useAudio } from "../../contexts/AudioContext";
 
-// Helper for photo URL
+// Helper for photo URL with local fallback support
 const unsplashUrl = (photoId: string, w = 600, h = 450) => {
   return `https://images.unsplash.com/photo-${photoId}?w=${w}&h=${h}&fit=crop&auto=format&q=80`;
+};
+
+const getPhotoUrl = (item: { photoId: string; imageSrc?: string }, w = 600, h = 450) => {
+  return item.imageSrc || unsplashUrl(item.photoId, w, h);
 };
 
 // Video Card sub-component
@@ -168,7 +172,7 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
     onNext();
   };
 
-  const heroPhoto = mission.galeri.length > 0 ? unsplashUrl(mission.galeri[0].photoId, 600, 450) : "/assets/materi-bg.jpg";
+  const heroPhoto = mission.galeri.length > 0 ? getPhotoUrl(mission.galeri[0], 600, 450) : "/assets/materi-bg.jpg";
 
   return (
     <div className="flex flex-col h-full font-['Nunito'] justify-between overflow-hidden max-h-full min-h-0 relative p-1 sm:p-2 select-none">
@@ -327,7 +331,7 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
                     >
                       <div className="aspect-[4/3] overflow-hidden bg-[#eedebe]">
                         <img
-                          src={unsplashUrl(item.photoId)}
+                          src={getPhotoUrl(item, 600, 450)}
                           alt={item.caption}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                         />
@@ -474,7 +478,7 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
               </button>
             </div>
             <img
-              src={unsplashUrl(mission.galeri[lightbox].photoId, 800, 520)}
+              src={getPhotoUrl(mission.galeri[lightbox], 800, 520)}
               alt={mission.galeri[lightbox].caption}
               className="w-full rounded-2xl object-cover shadow-2xl"
             />

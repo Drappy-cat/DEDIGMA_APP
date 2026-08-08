@@ -82,6 +82,7 @@ export interface Mission {
   }[];
   galeri: {
     photoId: string;
+    imageSrc?: string;
     caption: string;
   }[];
   video: {

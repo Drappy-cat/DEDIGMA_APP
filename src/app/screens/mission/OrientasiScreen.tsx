@@ -30,7 +30,9 @@ export const OrientasiScreen: React.FC<OrientasiScreenProps> = ({ mission, onNex
     onNext();
   };
 
-  const heroPhoto = mission.galeri.length > 0 ? unsplashUrl(mission.galeri[0].photoId, 600, 750) : "/assets/materi-bg.jpg";
+  const heroPhoto = mission.galeri.length > 0
+    ? (mission.galeri[0].imageSrc || unsplashUrl(mission.galeri[0].photoId, 600, 750))
+    : "/assets/materi-bg.jpg";
 
   return (
     <div className="flex flex-col h-full font-['Nunito'] justify-between overflow-y-auto max-h-full [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden min-h-0 relative p-1 sm:p-2 select-none">

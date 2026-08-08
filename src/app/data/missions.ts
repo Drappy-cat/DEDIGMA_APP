@@ -77,8 +77,8 @@ export const MISSIONS: Mission[] = [
       }
     ],
     galeri: [
-      { photoId: "1601058497548-f247dfe349d6", caption: "Keindahan alam Telaga Sarangan, Magetan" },
-      { photoId: "1529547078401-761086c0a19b", caption: "Perahu sesaji melayang di tengah danau" },
+      { photoId: "1601058497548-f247dfe349d6", imageSrc: "/assets/materi/misi2/Larungsesaji.jpeg", caption: "Ritual Larung Sesaji di Telaga Sarangan, Magetan" },
+      { photoId: "1529547078401-761086c0a19b", imageSrc: "/assets/materi/Larungsesaji.jpeg", caption: "Perahu sesaji melayang di tengah danau" },
       { photoId: "1589309736404-2e142a2acdf0", caption: "Panorama telaga saat senja tiba" },
       { photoId: "1710611229178-4d9015dd1ba0", caption: "Prosesi warga membawa sesaji bersama" }
     ],
@@ -173,8 +173,8 @@ export const MISSIONS: Mission[] = [
       }
     ],
     galeri: [
-      { photoId: "1772787429344-109fdb272441", caption: "Pelaksanaan ritual Nyadaran dengan api sesaji" },
-      { photoId: "1772787429356-5acf7e71fe40", caption: "Menuangkan air bunga pada makam leluhur" },
+      { photoId: "1772787429344-109fdb272441", imageSrc: "/assets/materi/misi1/bersihdesa.jpeg", caption: "Pelaksanaan upacara tradisi Bersih Desa / Nyadaran" },
+      { photoId: "1772787429356-5acf7e71fe40", imageSrc: "/assets/materi/bersihdesa.jpeg", caption: "Menuangkan air bunga pada makam leluhur" },
       { photoId: "1772787429407-807643d391de", caption: "Masyarakat berkumpul dalam upacara Nyadaran" },
       { photoId: "1587632467120-c79b296a5dda", caption: "Rangkaian bunga dan sesaji untuk leluhur" }
     ],
@@ -272,10 +272,10 @@ export const MISSIONS: Mission[] = [
       }
     ],
     galeri: [
-      { photoId: "1752760023111-aed0c41f11f9", caption: "Dua seniman memukul bedug dalam festival Ledhug Suro" },
-      { photoId: "1773562612529-7931f115516f", caption: "Penari tradisional tampil bersama gamelan" },
-      { photoId: "1631813991050-477dc7f7e2f6", caption: "Perempuan berkebaya dalam perayaan Tahun Baru Jawa" },
-      { photoId: "1698267703889-06c41f9acba5", caption: "Suasana meriah festival di tanah Magetan" }
+      { photoId: "1752760023111-aed0c41f11f9", imageSrc: "/assets/materi/misi3/slametanbersihdesa.jpeg", caption: "Upacara Slametan Bersih Desa & Festival Ledhug Suro" },
+      { photoId: "1773562612529-7931f115516f", imageSrc: "/assets/materi/misi4/wargabawaberkat.jpeg", caption: "Warga membawa berkat dalam festival kebudayaan" },
+      { photoId: "1631813991050-477dc7f7e2f6", imageSrc: "/assets/materi/slametanbersihdesa.jpeg", caption: "Perempuan berkebaya dalam perayaan Tahun Baru Jawa" },
+      { photoId: "1698267703889-06c41f9acba5", imageSrc: "/assets/materi/wargabawaberkat.jpeg", caption: "Suasana meriah festival di tanah Magetan" }
     ],
     video: [
       {
