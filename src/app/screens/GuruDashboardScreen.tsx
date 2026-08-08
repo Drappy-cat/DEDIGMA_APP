@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
-import { LogOut, BarChart2, Users, Download, Award, Search, Lock, Unlock, FileText, RefreshCw } from "lucide-react";
+import { LogOut, Download, Search, Lock, Unlock, FileText, RefreshCw } from "lucide-react";
 import jsPDF from "jspdf";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
@@ -27,6 +27,7 @@ export const GuruDashboardScreen: React.FC = () => {
 
   const [realData, setRealData] = useState<any[]>([]);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [selectedRefleksiStudent, setSelectedRefleksiStudent] = useState<any>(null);
 
   const loadData = async () => {
     setIsRefreshing(true);

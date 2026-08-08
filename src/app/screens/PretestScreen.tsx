@@ -146,7 +146,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
             className="bg-[#fdfcf7] border-2 border-[#e8dcb8] rounded-3xl p-5 sm:p-7 shadow-2xl text-center space-y-3 relative w-full"
           >
             {/* Section Label */}
-            <h4 className="text-[#7a6450] font-[#Fredoka'] font-extrabold text-xs sm:text-sm tracking-widest uppercase">
+            <h4 className="text-[#7a6450] font-['Fredoka'] font-extrabold text-xs sm:text-sm tracking-widest uppercase">
               SKOR AKHIR EVALUASI
             </h4>
 
@@ -171,7 +171,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
                 {score >= 85
                   ? "Luar biasa! Pengetahuan awal budayamu sangat cemerlang."
                   : score >= 70
-                  ? "Hebat sekali! Siap untuk memulai petualangan mising di DEDIGMA."
+                  ? "Hebat sekali! Siap untuk memulai petualangan misi di DEDIGMA."
                   : "Semangat! Petualangan belajar di DEDIGMA baru saja dimulai."}
               </p>
             </div>

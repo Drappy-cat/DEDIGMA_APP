@@ -20,7 +20,7 @@ export const CekFaktaScreen: React.FC<CekFaktaScreenProps> = ({ mission, onNext,
 
   useEffect(() => {
     playNarrator(
-      `Misi ketiga: Cek Fakta Budaya. Saring informasi digital dengan menentukan BENAR atau KELIRU pada tiap pernyataan!`
+      `Aktivitas Cek Fakta Budaya ${mission.name}. Saring informasi digital dengan menentukan BENAR atau KELIRU pada tiap pernyataan!`
     );
     return () => {
       stopNarrator();

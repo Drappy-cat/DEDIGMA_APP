@@ -366,7 +366,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
                     </h3>
                     <ul className="list-disc list-inside space-y-1.5 font-['Nunito'] font-semibold text-xs leading-relaxed text-[#5c4a3a]">
                       <li>Mengenalkan 3 tradisi utama Kabupaten Magetan (Larung Sesaji, Nyadaran, Ledhug Suro).</li>
-                      <li>Mengembangkan keterampilan berpikit kritis dan verifikasi berita hoaks.</li>
+                      <li>Mengembangkan keterampilan berpikir kritis dan verifikasi berita hoaks.</li>
                       <li>Menanamkan sikap apresiasi dan rasa bangga terhadap kebudayaan daerah.</li>
                       <li>Memberikan pengalaman belajar interaktif berbasis edutainment gamifikasi.</li>
                     </ul>

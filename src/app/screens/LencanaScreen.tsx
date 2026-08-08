@@ -143,7 +143,7 @@ export const LencanaScreen: React.FC<LencanaScreenProps> = ({
               Kamu telah mengumpulkan <span className="text-[#256c3a] font-black">{unlockedCount}</span> lencana!
             </p>
             <p className="text-[11px] text-[#7a6450] font-['Nunito'] font-bold mt-0.5">
-              Ketik kartu lencana untuk melihat detail pencapaian
+              Ketuk kartu lencana untuk melihat detail pencapaian
             </p>
           </div>
 
