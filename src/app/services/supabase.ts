@@ -189,15 +189,28 @@ export async function syncPretestToSupabase(data: {
   if (!supabase || !isSupabaseConfigured()) return false;
 
   try {
-    const { error } = await supabase.from("pretest_results").upsert(
-      {
+    const { data: existing } = await supabase
+      .from("pretest_results")
+      .select("id")
+      .eq("user_name", data.userName)
+      .maybeSingle();
+
+    let error;
+    if (existing) {
+      const res = await supabase.from("pretest_results").update({
+        pretest_score: data.score,
+        completed_at: new Date().toISOString()
+      }).eq("user_name", data.userName);
+      error = res.error;
+    } else {
+      const res = await supabase.from("pretest_results").insert({
         user_name: data.userName,
         kelas: data.kelas,
         pretest_score: data.score,
         completed_at: new Date().toISOString()
-      },
-      { onConflict: "user_name" }
-    );
+      });
+      error = res.error;
+    }
 
     if (error) {
       console.error("Supabase sync pretest error:", error.message);
@@ -221,15 +234,28 @@ export async function syncPosttestToSupabase(data: {
   if (!supabase || !isSupabaseConfigured()) return false;
 
   try {
-    const { error } = await supabase.from("posttest_results").upsert(
-      {
+    const { data: existing } = await supabase
+      .from("posttest_results")
+      .select("id")
+      .eq("user_name", data.userName)
+      .maybeSingle();
+
+    let error;
+    if (existing) {
+      const res = await supabase.from("posttest_results").update({
+        posttest_score: data.score,
+        completed_at: new Date().toISOString()
+      }).eq("user_name", data.userName);
+      error = res.error;
+    } else {
+      const res = await supabase.from("posttest_results").insert({
         user_name: data.userName,
         kelas: data.kelas,
         posttest_score: data.score,
         completed_at: new Date().toISOString()
-      },
-      { onConflict: "user_name" }
-    );
+      });
+      error = res.error;
+    }
 
     if (error) {
       console.error("Supabase sync posttest error:", error.message);
