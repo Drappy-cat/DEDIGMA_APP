@@ -407,7 +407,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
                 onClick={handleNextQuestion}
                 className="w-full bg-gradient-to-r from-[#2a6838] to-[#1c5c32] hover:from-[#358a4c] hover:to-[#226839] border-2 border-[#52ad69] text-white rounded-full py-3.5 text-base font-['Fredoka'] font-extrabold shadow-lg cursor-pointer transition-transform active:scale-95"
               >
-                {current < totalQ - 1 ? 'Lanjut ke Soal Berikutnya →' : 'Selesai Pretest 🎉'}
+                {current < totalQ - 1 ? 'Okay' : 'Selesai Pretest 🎉'}
               </button>
             </motion.div>
           </div>
