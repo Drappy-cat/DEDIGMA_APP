@@ -13,7 +13,7 @@ export const GuruDashboardScreen: React.FC = () => {
   const { playSFX } = useAudio();
   const [filter, setFilter] = useState("Semua");
   const [searchQuery, setSearchQuery] = useState("");
-  const classes = ["Semua", "4", "5", "6"];
+  const classes = ["Semua", "4"];
 
   const [locks, setLocks] = useState<Record<string, boolean>>(() => {
     try {

@@ -17,7 +17,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSiswa, onLoginG
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [kelas, setKelas] = useState("5");
+  const [kelas, setKelas] = useState("4");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -213,8 +213,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSiswa, onLoginG
                           className="w-full border-2 border-[#b59e7a] rounded-xl px-3 py-2 font-['Nunito'] text-sm text-gray-800 focus:outline-none focus:border-[#366635] bg-white/90"
                         >
                           <option value="4">Kelas 4</option>
-                          <option value="5">Kelas 5</option>
-                          <option value="6">Kelas 6</option>
                         </select>
                       </div>
                     </div>
