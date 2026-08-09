@@ -209,12 +209,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
               onClick={() => handleAction(onPetunjuk)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="cursor-pointer focus:outline-none flex justify-center z-50 relative"
+              className="cursor-pointer focus:outline-none flex items-center justify-center z-50 relative overflow-hidden"
             >
               <img
                 src="/assets/button/petunjuk.svg"
                 alt="Petunjuk"
-                className="w-full h-auto object-contain filter drop-shadow-md"
+                className="w-full h-auto object-contain transform scale-[1.055] filter drop-shadow-md"
               />
             </motion.button>
 

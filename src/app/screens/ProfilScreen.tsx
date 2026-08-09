@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { Info, Users, Target, Puzzle, BookOpen, Shield } from "lucide-react";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { useAudio } from "../contexts/AudioContext";
 import { usePerformance } from "../hooks/usePerformance";
@@ -25,37 +26,37 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
   const menuItems = [
     {
       id: "tentang" as const,
-      icon: "ℹ️",
+      icon: Info,
       title: "Tentang",
       desc: "Tentang DEDIGMA"
     },
     {
       id: "tim" as const,
-      icon: "👥",
+      icon: Users,
       title: "Tim Pengembang",
       desc: "Kenali tim di balik DEDIGMA"
     },
     {
       id: "tujuan" as const,
-      icon: "🎯",
+      icon: Target,
       title: "Tujuan Pembelajaran",
       desc: "Capaian & manfaat"
     },
     {
       id: "fitur" as const,
-      icon: "🧩",
+      icon: Puzzle,
       title: "Fitur Game",
       desc: "Fitur menarik di DEDIGMA"
     },
     {
       id: "petunjuk" as const,
-      icon: "📖",
+      icon: BookOpen,
       title: "Petunjuk Penggunaan",
       desc: "Cara bermain DEDIGMA"
     },
     {
       id: "privasi" as const,
-      icon: "🛡️",
+      icon: Shield,
       title: "Kebijakan & Privasi",
       desc: "Kebijakan & privasi data"
     }
@@ -96,6 +97,7 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
         >
           {menuItems.map((item) => {
             const isActive = activeTab === item.id;
+            const IconComponent = item.icon;
             return (
               <button
                 key={item.id}
@@ -107,8 +109,8 @@ export const ProfilScreen: React.FC<ProfilScreenProps> = ({ onBack }) => {
                     : "bg-[#e6dbbf]/70 border-[#cbb293] text-[#5c4a3a] hover:bg-[#f4ecd5]/80"
                 }`}
               >
-                <div className="w-9 h-9 rounded-full bg-[#366635] text-white flex items-center justify-center text-base flex-shrink-0 border border-[#244723] shadow-xs">
-                  <span>{item.icon}</span>
+                <div className="w-9 h-9 rounded-full bg-[#366635] text-white flex items-center justify-center flex-shrink-0 border border-[#244723] shadow-xs">
+                  <IconComponent className="w-5 h-5 text-white stroke-[2.5]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-['Fredoka'] font-extrabold text-xs sm:text-sm leading-tight truncate">
