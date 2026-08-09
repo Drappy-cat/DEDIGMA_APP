@@ -151,16 +151,24 @@ export const DetektifBeritaScreen: React.FC<DetektifBeritaScreenProps> = ({ miss
             {/* Top Pill Badge */}
             <div className="bg-[#f8ebd7] border border-[#e2cca4] text-[#7a5a2b] text-xs font-['Fredoka'] font-extrabold px-4 py-1 rounded-full shadow-2xs flex items-center gap-1.5">
               <span>👆</span>
-              <span>Pindahkan kartu berita ini</span>
+              <span>Geser Kiri (Fakta) / Kanan (Hoaks) atau gunakan tombol bawah</span>
             </div>
 
             {/* Draggable Active News Card */}
             <motion.div
-              draggable
-              onDragStart={(e) => handleDragStart(e, activeCardIndex)}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.8}
+              onDragEnd={(e, info) => {
+                if (info.offset.x < -80) {
+                  moveCard(activeCardIndex, true); // Fakta
+                } else if (info.offset.x > 80) {
+                  moveCard(activeCardIndex, false); // Hoaks
+                }
+              }}
               className="bg-white border-2 border-[#e8dfcf] hover:border-[#a5d89d] rounded-2xl p-4 sm:p-5 shadow-lg w-full max-w-lg cursor-grab active:cursor-grabbing flex flex-col sm:flex-row items-center gap-3.5 sm:gap-4 select-none transform-gpu"
               whileHover={{ scale: 1.01 }}
-              whileDrag={{ scale: 1.03, rotate: 3 }}
+              whileTap={{ scale: 1.03 }}
               layout
             >
               {/* Document Blue Icon */}
@@ -229,7 +237,7 @@ export const DetektifBeritaScreen: React.FC<DetektifBeritaScreenProps> = ({ miss
 
               {/* Sub-text */}
               <p className="text-[11px] text-[#426b47] text-center font-medium leading-tight mb-2.5 select-none">
-                Tarik kartu berita yang menurutmu FAKTA ke sini.
+                Kartu berita FAKTA akan masuk ke kolom ini.
               </p>
 
               {/* Items dropped in Fakta */}
@@ -310,7 +318,7 @@ export const DetektifBeritaScreen: React.FC<DetektifBeritaScreenProps> = ({ miss
 
               {/* Sub-text */}
               <p className="text-[11px] text-[#8b4242] text-center font-medium leading-tight mb-2.5 select-none">
-                Tarik kartu berita yang menurutmu HOAKS ke sini.
+                Kartu berita HOAKS akan masuk ke kolom ini.
               </p>
 
               {/* Items dropped in Hoaks */}
