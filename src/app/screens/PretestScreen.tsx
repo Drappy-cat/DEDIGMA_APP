@@ -235,11 +235,11 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
       {/* Main Body Container: Parchment Board & Bottom Navigation */}
       <div className="relative z-10 flex-1 min-h-0 flex flex-col justify-between items-center px-2 sm:px-4 pb-4 pt-0.5 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         
-        {/* Parchment Board Container (Zero Scroll, Full Height, Visible Overflow for Signboard) */}
-        <div className="bg-[#fbf7ee] border-2 border-[#e6d9bd] rounded-3xl px-3 sm:px-5 pb-2 sm:pb-4 pt-9 sm:pt-12 md:pt-14 shadow-xl relative flex flex-col justify-between w-full max-w-4xl mx-auto flex-1 min-h-0 mt-6 sm:mt-8 mb-1 overflow-visible">
+        {/* Parchment Board Container */}
+        <div className="bg-[#fbf7ee] border-2 border-[#e6d9bd] rounded-3xl px-3 sm:px-5 pb-2 sm:pb-3 pt-6 sm:pt-8 md:pt-9 shadow-xl relative flex flex-col justify-between w-full max-w-4xl mx-auto flex-1 min-h-0 mt-4 sm:mt-6 mb-1 overflow-visible">
           
           {/* Centered Top Green Ribbon Banner Signboard */}
-          <div className="bg-[#2a6838] border-3 sm:border-4 border-[#1c4d29] text-[#fff5ce] font-['Fredoka'] font-extrabold px-6 sm:px-10 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm md:text-base flex items-center justify-center gap-2 sm:gap-3 shadow-xl absolute -top-4 sm:-top-5 md:-top-6 left-1/2 -translate-x-1/2 z-30 whitespace-nowrap border-b-4 uppercase tracking-widest">
+          <div className="bg-[#2a6838] border-3 sm:border-4 border-[#1c4d29] text-[#fff5ce] font-['Fredoka'] font-extrabold px-5 sm:px-8 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm md:text-base flex items-center justify-center gap-2 shadow-xl absolute -top-3.5 sm:-top-4.5 left-1/2 -translate-x-1/2 z-30 whitespace-nowrap border-b-3 uppercase tracking-wider">
             <span className="text-xs sm:text-sm select-none">🌿</span>
             <span>SOAL EVALUASI</span>
             <span className="text-xs sm:text-sm select-none transform scale-x-[-1]">🌿</span>
@@ -256,24 +256,24 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
             <span>⭐</span>
           </div>
 
-          {/* Question Statement Text & Options */}
+          {/* Question Statement Text & Options (Inner Scrollable Area) */}
           <motion.div
             key={current}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.25 }}
-            className="flex-1 min-h-0 flex flex-col justify-between pt-2 overflow-hidden"
+            className="flex-1 min-h-0 flex flex-col overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-0.5 space-y-2 pt-1"
           >
-            {/* Question Statement */}
-            <div className="flex-1 min-h-0 flex flex-col items-center justify-center pt-1 pb-2 px-2 sm:px-6 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-              <p className="text-[#3a2718] font-['Nunito'] font-extrabold text-xs sm:text-sm md:text-base leading-relaxed text-center my-auto">
+            {/* Question Statement Highlight Box */}
+            <div className="bg-[#f5ebd6]/90 border border-[#e5d8b8] rounded-2xl p-2.5 sm:p-3.5 text-center shadow-xs flex-shrink-0">
+              <p className="text-[#3a2718] font-['Nunito'] font-extrabold text-xs sm:text-sm md:text-base leading-relaxed">
                 {q.soal}
               </p>
             </div>
 
             {/* 4 Multiple Choice Capsule Option Buttons */}
-            <div className="space-y-1.5 sm:space-y-2.5 max-w-3xl mx-auto w-full flex-shrink-0 pb-1">
+            <div className="space-y-1.5 sm:space-y-2 max-w-3xl mx-auto w-full pt-0.5 pb-1">
               {q.opsi.map((o, idx) => {
                 const userAns = answers[current];
                 const isSelected = userAns === idx;
@@ -305,12 +305,12 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
                     type="button"
                     onClick={() => handleSelect(idx)}
                     disabled={answers[current] !== null}
-                    className={`w-full text-left rounded-full p-2 sm:p-2.5 flex items-center gap-3 transition-all cursor-pointer select-none ${buttonStyle}`}
+                    className={`w-full text-left rounded-full px-3 py-1.5 sm:px-4 sm:py-2 flex items-center gap-2.5 transition-all cursor-pointer select-none ${buttonStyle}`}
                   >
-                    <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full font-['Fredoka'] font-extrabold flex items-center justify-center text-xs sm:text-sm flex-shrink-0 shadow-xs ${badgeStyle}`}>
+                    <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full font-['Fredoka'] font-extrabold flex items-center justify-center text-xs flex-shrink-0 shadow-xs ${badgeStyle}`}>
                       {String.fromCharCode(65 + idx)}
                     </div>
-                    <span className="font-['Nunito'] font-extrabold text-xs sm:text-sm leading-tight flex-1 pr-2">
+                    <span className="font-['Nunito'] font-extrabold text-xs sm:text-sm leading-snug flex-1 pr-1">
                       {o}
                     </span>
                   </button>
