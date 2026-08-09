@@ -16,6 +16,34 @@ export const isSupabaseConfigured = (): boolean => {
   );
 };
 
+/**
+ * Service Helper: Reset Student Database (Danger)
+ * Deletes all student progress, pretests, posttests, and profiles.
+ */
+export async function resetStudentDatabase() {
+  if (!supabase || !isSupabaseConfigured()) return false;
+
+  try {
+    // Delete progress
+    const { error: err1 } = await supabase.from("progress_misi").delete().neq("id", 0);
+    // Delete pretest
+    const { error: err2 } = await supabase.from("pretest_results").delete().neq("id", 0);
+    // Delete posttest
+    const { error: err3 } = await supabase.from("posttest_results").delete().neq("id", 0);
+    // Delete student profiles
+    const { error: err4 } = await supabase.from("profiles").delete().eq("role", "siswa");
+
+    if (err1 || err2 || err3 || err4) {
+      console.error("Supabase reset database error:", err1, err2, err3, err4);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Failed to reset student database:", err);
+    return false;
+  }
+}
+
 // Initialize Supabase Client if credentials exist, otherwise null (Hybrid Offline Mode)
 export const supabase: SupabaseClient | null = isSupabaseConfigured()
   ? createClient(supabaseUrl, supabaseAnonKey)

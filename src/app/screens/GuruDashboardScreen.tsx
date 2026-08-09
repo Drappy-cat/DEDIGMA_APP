@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { MISSIONS } from "../data/missions";
 
-import { fetchGuruRekapFromSupabase, fetchSupabaseClassLocks, subscribeToClassLocks, toggleSupabaseClassLock, SupabaseClassLock } from "../services/supabase";
+import { fetchGuruRekapFromSupabase, fetchSupabaseClassLocks, subscribeToClassLocks, toggleSupabaseClassLock, SupabaseClassLock, resetStudentDatabase } from "../services/supabase";
 
 export const GuruDashboardScreen: React.FC = () => {
   const { userName, logout } = useAuth();
@@ -142,6 +142,25 @@ export const GuruDashboardScreen: React.FC = () => {
   const handleLogout = () => {
     playSFX("click");
     logout();
+  };
+
+  const handleResetDatabase = async () => {
+    playSFX("click");
+    const confirmReset = window.prompt("PERINGATAN BAHAYA!\nTindakan ini akan MENGHAPUS SEMUA DATA SISWA (akun, progress, pretest, dan posttest).\nKetik 'RESET' untuk melanjutkan:");
+    
+    if (confirmReset === "RESET") {
+      setIsRefreshing(true);
+      const success = await resetStudentDatabase();
+      if (success) {
+        alert("Database siswa berhasil direset.");
+        await loadData();
+      } else {
+        alert("Gagal mereset database. Periksa koneksi internet.");
+      }
+      setIsRefreshing(false);
+    } else if (confirmReset !== null) {
+      alert("Reset dibatalkan. Kata kunci tidak sesuai.");
+    }
   };
 
   const filtered = allStudents.filter((s) => {
@@ -296,19 +315,25 @@ export const GuruDashboardScreen: React.FC = () => {
               className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg cursor-pointer"
             >
               <Download size={14} />
-              <span>Ekspor PDF Rekap</span>
+              <span className="hidden sm:inline">Ekspor PDF</span>
+            </button>
+            <button
+              onClick={handleResetDatabase}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shadow-lg cursor-pointer ml-1"
+              title="Reset Semua Data Siswa"
+            >
+              <span className="text-lg leading-none">⚠️</span>
+              <span className="hidden sm:inline">Reset DB</span>
             </button>
 
+            <div className="h-8 w-px bg-white/20 mx-1"></div>
+
             <button
-              onClick={() => { 
-                playSFX("click"); 
-                logout(); 
-                window.location.reload();
-              }}
-              className="bg-rose-500/20 hover:bg-rose-500/40 text-rose-200 border border-rose-500/30 px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ml-2"
+              onClick={handleLogout}
+              className="bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-2 shadow-lg cursor-pointer border border-white/10"
             >
               <LogOut size={14} />
-              <span>Keluar</span>
+              <span className="hidden sm:inline">Keluar</span>
             </button>
           </div>
         </div>
