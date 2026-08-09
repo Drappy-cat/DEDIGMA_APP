@@ -518,8 +518,8 @@ function AppContent() {
   const allMissionsDone = completedMissions.has(1) && completedMissions.has(2) && completedMissions.has(3);
 
   return (
-    <div className="min-h-[100dvh] w-full bg-slate-900 flex items-center justify-center p-0 md:p-4 font-['Nunito'] select-none overflow-hidden" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
-      <div className="w-full max-w-5xl h-[100dvh] md:h-[720px] md:max-h-[92vh] bg-white relative overflow-hidden shadow-2xl md:rounded-3xl border-0 md:border md:border-white/10 flex flex-col">
+    <div className="min-h-[100dvh] w-full bg-slate-900 flex items-center justify-center p-0 lg:p-3 font-['Nunito'] select-none overflow-hidden" style={{ paddingTop: 'env(safe-area-inset-top)', paddingBottom: 'env(safe-area-inset-bottom)', paddingLeft: 'env(safe-area-inset-left)', paddingRight: 'env(safe-area-inset-right)' }}>
+      <div className="w-full max-w-6xl h-[100dvh] lg:h-[760px] lg:max-h-[94vh] bg-white relative overflow-hidden shadow-2xl lg:rounded-3xl border-0 lg:border lg:border-white/10 flex flex-col">
         <Suspense fallback={<ScreenLoader />}>
           <AnimatePresence mode="wait">
             <motion.div

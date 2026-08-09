@@ -210,19 +210,53 @@
   }
 }
 
-/* Auto-scale responsive layout for mobile landscape screens (1080p landscape, 720p landscape) */
-@media (orientation: landscape) and (max-height: 520px) {
+/* Comprehensive Multi-Resolution Responsive Scaling System (720p, 1080p, 1.5K, 2K, Tablets) */
+
+/* Tier 1: 720p HD Landscape Mobile (CSS height <= 400px) */
+@media (orientation: landscape) and (max-height: 400px) {
+  :root {
+    --font-size: 12px;
+  }
+}
+
+/* Tier 2: 1080p Full HD Landscape Mobile (CSS height 401px - 480px) */
+@media (orientation: landscape) and (min-height: 401px) and (max-height: 480px) {
   :root {
     --font-size: 13.5px;
   }
+}
 
-  .landscape-compact-padding {
-    padding-top: 0.25rem !important;
-    padding-bottom: 0.25rem !important;
-  }
-
-  .landscape-compact-gap {
-    gap: 0.35rem !important;
+/* Tier 3: 1.5K & 2K / QHD Landscape Mobile & Compact Tablets (CSS height 481px - 600px) */
+@media (orientation: landscape) and (min-height: 481px) and (max-height: 600px) {
+  :root {
+    --font-size: 14.5px;
   }
 }
+
+/* Tier 4: Large Tablets & Desktop Landscape (CSS height > 600px) */
+@media (orientation: landscape) and (min-height: 601px) {
+  :root {
+    --font-size: 16px;
+  }
+}
+
+/* Utility classes for fluid resolution auto-adjustments */
+.fluid-logo {
+  max-height: 20vh !important;
+  width: auto;
+}
+
+.fluid-mascot-lobby {
+  max-height: 58vh !important;
+  max-width: 25vw !important;
+}
+
+.fluid-btn-primary {
+  max-height: 14vh !important;
+}
+
+.fluid-btn-secondary {
+  max-height: 8vh !important;
+}
+
 
