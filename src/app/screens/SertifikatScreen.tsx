@@ -23,6 +23,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [isGenerating, setIsGenerating] = useState(false);
   const [scale, setScale] = useState(1);
+  const [showImageModal, setShowImageModal] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const certRef = useRef<HTMLDivElement>(null);
 
@@ -199,12 +200,19 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       drawMedal(pretestCX, "Pretest", pretestScore ?? 0, "#1b3d82", "#3a65c0");
       drawMedal(posttestCX, "Posttest", posttestScore ?? 0, "#1d5c1d", "#368a36");
 
-      // 8. Convert canvas to PDF
+      // 8. Handle Mobile vs Desktop Download
       const imgData = canvas.toDataURL("image/png", 1.0);
-      const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
-      pdf.addImage(imgData, "PNG", 0, 0, 297, 210);
-      pdf.save(`Sertifikat_DEDIGMA_${studentName.replace(/\s+/g, "_")}.pdf`);
-      playSFX("badge");
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        setShowImageModal(imgData);
+        playSFX("badge");
+      } else {
+        const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+        pdf.addImage(imgData, "PNG", 0, 0, 297, 210);
+        pdf.save(`Sertifikat_DEDIGMA_${studentName.replace(/\s+/g, "_")}.pdf`);
+        playSFX("badge");
+      }
     } catch (err) {
       console.error("Error generating PDF:", err);
       alert("Terjadi kesalahan saat mengunduh PDF. Silakan coba kembali.");
@@ -346,6 +354,22 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Full Screen Image Modal for Mobile Users to Long Press & Save */}
+      {showImageModal && (
+        <div className="fixed inset-0 bg-black/95 z-[9999] flex flex-col items-center justify-center p-4">
+          <p className="text-white font-['Fredoka'] text-sm md:text-base mb-4 text-center animate-pulse">
+            Tekan dan tahan gambar di bawah ini, lalu pilih <b>"Simpan Gambar"</b> 📱
+          </p>
+          <img src={showImageModal} alt="Sertifikat" className="w-full max-w-4xl rounded-xl shadow-[0_0_30px_rgba(255,255,255,0.2)] object-contain max-h-[75vh]" />
+          <button 
+            onClick={() => setShowImageModal(null)}
+            className="mt-6 bg-amber-500 hover:bg-amber-600 text-slate-900 font-['Fredoka'] font-bold py-3 px-8 rounded-full shadow-lg"
+          >
+            Tutup
+          </button>
+        </div>
+      )}
     </div>
   );
 };
