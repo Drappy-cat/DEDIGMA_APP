@@ -447,6 +447,16 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
     setIsAtBottom(reachedBottom);
   };
 
+  const scrollToBottom = () => {
+    playSFX("click");
+    if (contentRef.current) {
+      contentRef.current.scrollTo({
+        top: contentRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
+  };
+
   const handleTabChange = (key: MateriTab) => {
     playSFX("click");
     setTab(key);
@@ -858,7 +868,7 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
         </motion.div>
       </div>
 
-      {/* Fixed Bottom Floating Scroll Notice Badge (Fades out when scrolled to bottom) */}
+      {/* Fixed Bottom Floating Scroll Notice Badge (Fades out when scrolled to bottom, Clickable to Auto-Scroll) */}
       <AnimatePresence>
         {!isAtBottom && (
           <motion.div
@@ -866,13 +876,19 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             transition={{ duration: 0.25 }}
-            className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-40 pointer-events-none select-none"
+            className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-40 pointer-events-auto select-none"
           >
-            <div className="flex items-center gap-1.5 bg-[#f8ebd7]/95 backdrop-blur-xs border border-[#e2cca4] text-[#7a5a2b] px-4 py-1.5 rounded-full text-xs font-['Fredoka'] font-extrabold shadow-md">
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={scrollToBottom}
+              className="flex items-center gap-1.5 bg-[#f8ebd7]/95 hover:bg-[#f3dfbe] active:bg-[#e6cc9c] border border-[#e2cca4] text-[#7a5a2b] px-4 py-1.5 rounded-full text-xs font-['Fredoka'] font-extrabold shadow-md cursor-pointer transition-colors"
+              title="Klik untuk gulir ke bawah"
+            >
               <span>💡</span>
               <span>Gulir ke bawah untuk informasi lebih lanjut</span>
               <ChevronDown size={14} className="animate-bounce text-[#7a5a2b] flex-shrink-0 ml-0.5" />
-            </div>
+            </motion.button>
           </motion.div>
         )}
       </AnimatePresence>
