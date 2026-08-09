@@ -185,13 +185,15 @@ export const MISSIONS: Mission[] = [
         title: "Tradisi Nyadaran: Menghormati Leluhur",
         desc: "Liputan langsung prosesi Nyadaran — ziarah kubur, pembersihan makam, dan doa bersama untuk menghormati leluhur.",
         thumbId: "1772787429407-807643d391de",
-        query: "tradisi+nyadaran+jawa+menghormati+leluhur"
+        query: "tradisi+nyadaran+jawa+menghormati+leluhur",
+        videoId: "0Zw6lx_RDkk"
       },
       {
         title: "Nilai Luhur dalam Tradisi Nyadaran",
         desc: "Penjelasan tentang nilai-nilai luhur silaturahmi, religiusitas, dan cinta leluhur yang terkandung dalam tradisi Nyadaran.",
         thumbId: "1772787429344-109fdb272441",
-        query: "nyadaran+budaya+jawa+nilai+leluhur"
+        query: "nyadaran+budaya+jawa+nilai+leluhur",
+        videoId: "Tm4i3BSMWOc"
       }
     ]
   },
