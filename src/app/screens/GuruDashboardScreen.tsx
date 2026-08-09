@@ -60,7 +60,10 @@ export const GuruDashboardScreen: React.FC = () => {
             pretest: "-",
             posttest: "-",
             waktu: "-",
-            tanggal: p.created_at ? p.created_at.split("T")[0] : new Date().toISOString().split("T")[0]
+            tanggal: p.created_at ? p.created_at.split("T")[0] : new Date().toISOString().split("T")[0],
+            refleksi1: "",
+            refleksi2: "",
+            refleksi3: ""
           });
         });
 
@@ -70,13 +73,14 @@ export const GuruDashboardScreen: React.FC = () => {
             studentMap.set(p.user_name, {
               id: p.user_name, nama: p.user_name, kelas: p.kelas,
               misi1: false, misi2: false, misi3: false,
-              skor1: 0, skor2: 0, skor3: 0, skor: 0, pretest: "-", posttest: "-", waktu: "-", tanggal: p.updated_at ? p.updated_at.split("T")[0] : "-"
+              skor1: 0, skor2: 0, skor3: 0, skor: 0, pretest: "-", posttest: "-", waktu: "-", tanggal: p.updated_at ? p.updated_at.split("T")[0] : "-",
+              refleksi1: "", refleksi2: "", refleksi3: ""
             });
           }
           const s = studentMap.get(p.user_name);
-          if (p.mission_id === 1 && p.completed) { s.misi1 = true; s.skor1 = p.activity_score; }
-          if (p.mission_id === 2 && p.completed) { s.misi2 = true; s.skor2 = p.activity_score; }
-          if (p.mission_id === 3 && p.completed) { s.misi3 = true; s.skor3 = p.activity_score; }
+          if (p.mission_id === 1 && p.completed) { s.misi1 = true; s.skor1 = p.activity_score; s.refleksi1 = p.reflection_text || ""; }
+          if (p.mission_id === 2 && p.completed) { s.misi2 = true; s.skor2 = p.activity_score; s.refleksi2 = p.reflection_text || ""; }
+          if (p.mission_id === 3 && p.completed) { s.misi3 = true; s.skor3 = p.activity_score; s.refleksi3 = p.reflection_text || ""; }
           
           let completedCount = (s.misi1?1:0) + (s.misi2?1:0) + (s.misi3?1:0);
           if(completedCount > 0) {
@@ -370,7 +374,7 @@ export const GuruDashboardScreen: React.FC = () => {
               <tbody className="divide-y divide-gray-100 text-slate-700 font-semibold">
                 {filtered.map((s, idx) => {
                   const allDone = s.misi1 && s.misi2 && s.misi3;
-                  const hasRefleksi = Boolean(s.refleksi && Object.keys(s.refleksi).length > 0);
+                  const hasRefleksi = Boolean(s.refleksi1 || s.refleksi2 || s.refleksi3);
 
                   return (
                     <tr key={s.id} className="hover:bg-blue-50/50 transition-colors">
@@ -467,11 +471,11 @@ export const GuruDashboardScreen: React.FC = () => {
 
             <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
               {[1, 2, 3].map((mId) => {
-                const text = selectedRefleksiStudent.refleksi?.[mId];
+                const text = mId === 1 ? selectedRefleksiStudent.refleksi1 : mId === 2 ? selectedRefleksiStudent.refleksi2 : selectedRefleksiStudent.refleksi3;
                 return (
                   <div key={mId} className="bg-slate-800/80 border border-slate-700 p-3.5 rounded-xl space-y-1">
                     <span className="text-xs font-bold text-amber-300 uppercase tracking-wider block">
-                      Misi {mId}: {mId === 1 ? "Larung Sesaji" : mId === 2 ? "Nyadran" : "Ledhug Suro"}
+                      Misi {mId}
                     </span>
                     <p className="text-xs text-slate-200 leading-relaxed font-['Nunito'] italic whitespace-pre-wrap">
                       {text ? `"${text}"` : "Belum ada catatan refleksi untuk misi ini."}
