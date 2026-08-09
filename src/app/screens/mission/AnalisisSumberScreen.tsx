@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Check, AlertTriangle, BookOpen, X, Lightbulb } from "lucide-react";
 import { Mission } from "../../types";
 import { useAudio } from "../../contexts/AudioContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface AnalisisSumberScreenProps {
   mission: Mission;
@@ -12,10 +13,19 @@ interface AnalisisSumberScreenProps {
 
 export const AnalisisSumberScreen: React.FC<AnalisisSumberScreenProps> = ({ mission, onNext, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
-  const [answers, setAnswers] = useState<Record<number, boolean | null>>(
-    Object.fromEntries(mission.sumberAnalisis.map((_, i) => [i, null]))
-  );
-  const [checked, setChecked] = useState(false);
+  const { userName } = useAuth();
+  const storageKey = `dedigma_mission_${mission.id}_analisissumber_${userName}`;
+
+  const [answers, setAnswers] = useState<Record<number, boolean | null>>(() => {
+    const saved = sessionStorage.getItem(storageKey);
+    if (saved) return JSON.parse(saved).answers;
+    return Object.fromEntries(mission.sumberAnalisis.map((_, i) => [i, null]));
+  });
+  const [checked, setChecked] = useState(() => {
+    const saved = sessionStorage.getItem(storageKey);
+    if (saved) return JSON.parse(saved).checked;
+    return false;
+  });
   const [showHint, setShowHint] = useState(false);
 
   useEffect(() => {
@@ -26,6 +36,10 @@ export const AnalisisSumberScreen: React.FC<AnalisisSumberScreenProps> = ({ miss
       stopNarrator();
     };
   }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem(storageKey, JSON.stringify({ answers, checked }));
+  }, [answers, checked, storageKey]);
 
   const handleSelect = (idx: number, isReliable: boolean) => {
     if (checked) return;
