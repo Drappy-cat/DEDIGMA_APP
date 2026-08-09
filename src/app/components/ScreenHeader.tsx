@@ -31,7 +31,13 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({ title, onBack, onHom
 
   return (
     <>
-      <div className="bg-[#361a07] text-white px-3 sm:px-4 py-1.5 flex items-center gap-2 sm:gap-3 shadow-md select-none border-b-2 border-[#542d10] relative z-30 flex-shrink-0">
+      <div 
+        className="bg-[#361a07] text-white px-4 sm:px-6 md:px-8 py-1.5 flex items-center gap-2 sm:gap-3 shadow-md select-none border-b-2 border-[#542d10] relative z-30 flex-shrink-0"
+        style={{
+          paddingLeft: "max(env(safe-area-inset-left), 12px)",
+          paddingRight: "max(env(safe-area-inset-right), 12px)"
+        }}
+      >
         {onBack && (
           <button
             onClick={handleBack}

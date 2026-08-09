@@ -213,7 +213,13 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
       </div>
 
       {/* Sub-Header Progress Bar */}
-      <div className="bg-[#fbf7ee]/95 backdrop-blur-xs px-4 py-1.5 border-b border-[#e6d9bd] flex items-center justify-between shadow-xs select-none relative z-20 flex-shrink-0">
+      <div 
+        className="bg-[#fbf7ee]/95 backdrop-blur-xs px-4 sm:px-6 md:px-8 py-1.5 border-b border-[#e6d9bd] flex items-center justify-between shadow-xs select-none relative z-20 flex-shrink-0"
+        style={{
+          paddingLeft: "max(env(safe-area-inset-left), 12px)",
+          paddingRight: "max(env(safe-area-inset-right), 12px)"
+        }}
+      >
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#2a6838] text-white font-['Fredoka'] font-extrabold flex items-center justify-center text-xs sm:text-sm shadow-xs flex-shrink-0">
             {current + 1}
