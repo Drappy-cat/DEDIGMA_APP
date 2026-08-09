@@ -26,7 +26,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
   }, []);
 
   return (
-    <div className="flex flex-col h-full font-['Nunito'] justify-between overflow-hidden max-h-full min-h-0 relative p-1 sm:p-2 select-none">
+    <div className="flex flex-col h-full font-['Nunito'] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden p-2 sm:p-4 md:p-6 select-none relative">
       
       {/* Scrollable Main Content Container */}
       <div className="flex-1 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden space-y-3 sm:space-y-4 pr-1 pb-16 flex flex-col items-center">

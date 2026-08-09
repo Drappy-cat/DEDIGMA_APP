@@ -175,10 +175,10 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
   const heroPhoto = mission.galeri.length > 0 ? getPhotoUrl(mission.galeri[0], 600, 450) : "/assets/materi-bg.jpg";
 
   return (
-    <div className="flex flex-col h-full font-['Nunito'] justify-between overflow-hidden max-h-full min-h-0 relative p-1 sm:p-2 select-none">
+    <div className="flex flex-col h-full font-['Nunito'] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden p-2 sm:p-4 md:p-6 select-none relative">
       
       {/* Main Content Layout (Sidebar + Right Content Area) */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-5 flex-1 min-h-0 h-full items-stretch">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 flex-1 mt-2 md:mt-4">
         
         {/* Left Sidebar: Ribbon Header + Wood Signboard + Full Height Parchment Menu (Fixed Non-Scrollable) */}
         <div className="md:col-span-4 lg:col-span-3 flex flex-col items-center h-full min-h-0 relative z-20">
@@ -231,7 +231,7 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -12 }}
           transition={{ duration: 0.25 }}
-          className="md:col-span-8 lg:col-span-9 flex flex-col justify-between h-full min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-1 pb-16 sm:pb-20 space-y-3"
+          className="md:col-span-8 lg:col-span-9 flex flex-col space-y-4 md:space-y-6 h-full min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-1 pb-16 sm:pb-20 space-y-3"
         >
           {/* Header Title with Leaf Sprigs 🌿 & Scroll Notice */}
           <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
