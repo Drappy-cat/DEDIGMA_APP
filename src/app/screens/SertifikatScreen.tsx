@@ -46,17 +46,34 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
     const updateScale = () => {
       if (containerRef.current) {
         const { clientWidth, clientHeight } = containerRef.current;
-        const scaleX = clientWidth / 842;
-        const scaleY = clientHeight / 595;
-        // Set scale so it fits inside the container (limit max scale to 1)
+        // Add padding offset so the cert doesn't touch edges
+        const availW = clientWidth - 16;
+        const availH = clientHeight - 16;
+        const scaleX = availW / 842;
+        const scaleY = availH / 595;
         setScale(Math.min(scaleX, scaleY, 1));
       }
     };
 
-    // Small delay to ensure layout is ready
-    setTimeout(updateScale, 100);
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
+    // Delay to ensure layout is painted after orientation change
+    let timeout: ReturnType<typeof setTimeout>;
+    const debouncedUpdate = () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(updateScale, 150);
+    };
+
+    debouncedUpdate();
+    window.addEventListener("resize", debouncedUpdate);
+    window.addEventListener("orientationchange", debouncedUpdate);
+    // Also watch for screen.orientation API (modern browsers)
+    screen.orientation?.addEventListener?.("change", debouncedUpdate);
+
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("resize", debouncedUpdate);
+      window.removeEventListener("orientationchange", debouncedUpdate);
+      screen.orientation?.removeEventListener?.("change", debouncedUpdate);
+    };
   }, []);
 
   const handleDownloadPdf = async () => {
@@ -233,9 +250,9 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
     >
       <ScreenHeader title="Sertifikat Digital 🎓" onBack={onBack} />
 
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col items-center gap-4">
+      <div className="flex-1 overflow-y-auto p-2 sm:p-4 flex flex-col items-center gap-2 sm:gap-4">
         {/* Certificate Container Wrapper */}
-        <div ref={containerRef} className="w-full flex justify-center items-center flex-1 max-h-[60vh] md:max-h-[65vh] overflow-hidden">
+        <div ref={containerRef} className="w-full flex justify-center items-center flex-1 min-h-0 overflow-hidden">
           
           <div 
             className="shadow-2xl rounded-sm overflow-hidden bg-white flex justify-center items-center relative group origin-center transition-transform duration-300"
@@ -332,20 +349,20 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
         </div>
 
         {/* Buttons Action Bar */}
-        <div className="w-full max-w-sm space-y-2 mt-auto">
+        <div className="w-full max-w-sm space-y-1.5 sm:space-y-2 mt-auto pb-1 flex-shrink-0">
           <Btn
             onClick={handleDownloadPdf}
             disabled={isGenerating}
             variant="amber"
-            className="w-full text-lg py-3.5 justify-center shadow-lg font-bold"
+            className="w-full text-sm sm:text-lg py-2.5 sm:py-3.5 justify-center shadow-lg font-bold"
           >
             {isGenerating ? (
               <>
-                <RefreshCw size={20} className="animate-spin" /> Menyiapkan PDF...
+                <RefreshCw size={18} className="animate-spin" /> Menyiapkan...
               </>
             ) : (
               <>
-                <Download size={20} /> Simpan Sertifikat (.PDF)
+                <Download size={18} /> Simpan Sertifikat
               </>
             )}
           </Btn>
