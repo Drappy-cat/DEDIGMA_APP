@@ -126,6 +126,9 @@
 
   body {
     @apply bg-background text-foreground;
+    background: #0f172a !important;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
   }
 
   /**
