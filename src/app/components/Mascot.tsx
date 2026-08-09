@@ -76,7 +76,7 @@ export const MascotDimas: React.FC<MascotProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 450, damping: 25 }}
-            className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-[999] bg-blue-600 text-white font-['Fredoka'] text-xs font-bold px-3 py-1.5 rounded-2xl shadow-2xl border border-blue-400 whitespace-nowrap pointer-events-none"
+            className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-[999] bg-blue-600 text-white font-['Fredoka'] text-xs font-bold px-3 py-1.5 rounded-2xl shadow-2xl border border-blue-400 max-w-[200px] xs:max-w-[240px] text-center whitespace-normal pointer-events-none"
           >
             {bubbleText}
             <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-blue-600 rotate-45 border-r border-b border-blue-400" />
@@ -171,7 +171,7 @@ export const MascotGita: React.FC<MascotProps> = ({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -4, scale: 0.8 }}
             transition={{ type: "spring", stiffness: 450, damping: 25 }}
-            className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-[999] bg-amber-600 text-white font-['Fredoka'] text-xs font-bold px-3 py-1.5 rounded-2xl shadow-2xl border border-amber-400 whitespace-nowrap pointer-events-none"
+            className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-[999] bg-amber-600 text-white font-['Fredoka'] text-xs font-bold px-3 py-1.5 rounded-2xl shadow-2xl border border-amber-400 max-w-[200px] xs:max-w-[240px] text-center whitespace-normal pointer-events-none"
           >
             {bubbleText}
             <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-amber-600 rotate-45 border-r border-b border-amber-400" />

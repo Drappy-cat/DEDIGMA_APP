@@ -124,7 +124,7 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
             {/* Textarea Input Container */}
             <div className="relative">
               <textarea
-                value={answers[i]}
+                value={answers[i] || ""}
                 onChange={(e) => {
                   if (isSubmitted) return;
                   const val = e.target.value.slice(0, 300);
@@ -138,7 +138,7 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
               />
               {/* Character Counter */}
               <div className="absolute bottom-3 right-4 text-[11px] sm:text-xs font-semibold text-[#a89d88] pointer-events-none select-none">
-                {answers[i].length}/300
+                {(answers[i] || "").length}/300
               </div>
             </div>
           </motion.div>
