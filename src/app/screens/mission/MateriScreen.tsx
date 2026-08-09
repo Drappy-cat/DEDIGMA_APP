@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Volume2, X, Info, Clock, Target, Heart, Image, Play, Lightbulb, ChevronRight, ChevronDown, Sparkles } from "lucide-react";
+import { Volume2, X, Info, Clock, Target, Heart, Image, Play, Lightbulb, ChevronRight, ChevronLeft, ChevronDown, Sparkles, Users, Leaf, Handshake, Landmark, Palette, Calendar, MapPin, Anchor, Flag, ShieldCheck, Check } from "lucide-react";
 import { Mission, MateriTab } from "../../types";
 import { useAudio } from "../../contexts/AudioContext";
 
@@ -121,9 +121,285 @@ const nilaiBudayaIcons: Record<string, string> = {
   "Kreativitas": "🎨"
 };
 
+// Custom Pengertian Data per Mission matching reference design
+const pengertianDataByMission: Record<number, {
+  apaItuTitle: string;
+  par1: React.ReactNode;
+  par2: React.ReactNode;
+  maknaPillars: { icon: React.ReactNode; title: string; desc: string }[];
+  tahukahKamu: React.ReactNode;
+}> = {
+  1: {
+    apaItuTitle: "Apa itu Larung Sesaji?",
+    par1: (
+      <>
+        Larung Sesaji adalah tradisi ritual budaya masyarakat Jawa yang dilakukan di perairan atau danau sebagai{" "}
+        <strong className="text-[#1c5c32] font-extrabold">wujud syukur</strong> kepada Tuhan Yang Maha Esa.
+      </>
+    ),
+    par2: (
+      <>
+        Di Magetan, tradisi ini dilaksanakan setiap tahun di{" "}
+        <strong className="text-[#1c5c32] font-extrabold">Telaga Sarangan</strong> dengan cara melarung (menghanyutkan) sesaji ke tengah danau.
+      </>
+    ),
+    maknaPillars: [
+      { icon: <Heart size={20} className="text-white fill-white/20" />, title: "Wujud Syukur", desc: "Ungkapan rasa syukur atas limpahan nikmat dan keselamatan." },
+      { icon: <Users size={20} className="text-white" />, title: "Kebersamaan", desc: "Mempererat tali silaturahmi dan semangat gotong royong masyarakat." },
+      { icon: <Leaf size={20} className="text-white fill-white/20" />, title: "Kelestarian Alam", desc: "Menghormati alam dan menjaga keseimbangan lingkungan." },
+    ],
+    tahukahKamu: (
+      <>
+        Larung Sesaji bukan hanya sekadar tradisi, tetapi juga cerminan{" "}
+        <span className="text-[#ffe57f] font-extrabold">harmoni</span> antara{" "}
+        <span className="text-[#ffe57f] font-extrabold">manusia, alam, dan Tuhan</span>.
+      </>
+    ),
+  },
+  2: {
+    apaItuTitle: "Apa itu Nyadaran?",
+    par1: (
+      <>
+        Nyadaran adalah tradisi ziarah kubur dan membersihkan makam leluhur yang dilakukan masyarakat Jawa sebagai{" "}
+        <strong className="text-[#1c5c32] font-extrabold">bentuk penghormatan</strong> dan doa kepada arwah para leluhur.
+      </>
+    ),
+    par2: (
+      <>
+        Di Magetan, tradisi ini dilaksanakan secara rutin{" "}
+        <strong className="text-[#1c5c32] font-extrabold">menjelang bulan Ramadan</strong> dengan kerja bakti serta doa bersama seluruh warga desa.
+      </>
+    ),
+    maknaPillars: [
+      { icon: <Heart size={20} className="text-white fill-white/20" />, title: "Hormat Leluhur", desc: "Mendoakan arwah leluhur dan mengingat jasa para pendahulu." },
+      { icon: <Users size={20} className="text-white" />, title: "Silaturahmi", desc: "Mempererat persaudaraan antar sesama keluarga besar dan warga." },
+      { icon: <Sparkles size={20} className="text-white" />, title: "Religiusitas", desc: "Meningkatkan ketakwaan dan kesucian diri menjelang bulan Ramadan." },
+    ],
+    tahukahKamu: (
+      <>
+        Tradisi Nyadaran menjadi momentum penting untuk{" "}
+        <span className="text-[#ffe57f] font-extrabold">menyambung silaturahmi</span> dan menyucikan hati sebelum memasuki{" "}
+        <span className="text-[#ffe57f] font-extrabold">bulan suci Ramadan</span>.
+      </>
+    ),
+  },
+  3: {
+    apaItuTitle: "Apa itu Ledhug Suro?",
+    par1: (
+      <>
+        Ledhug Suro adalah festival perayaan{" "}
+        <strong className="text-[#1c5c32] font-extrabold">Tahun Baru Jawa (1 Suro / 1 Muharram)</strong> di Magetan yang ditandai dengan iringan bunyi bedug dan kesenian tradisional.
+      </>
+    ),
+    par2: (
+      <>
+        Festival ini dimeriahkan dengan{" "}
+        <strong className="text-[#1c5c32] font-extrabold">arak-arakan lesung dan bedug</strong> serta pertunjukan seni yang menyatukan seluruh masyarakat Magetan.
+      </>
+    ),
+    maknaPillars: [
+      { icon: <Handshake size={20} className="text-white" />, title: "Persatuan", desc: "Menyatukan seluruh elemen masyarakat dalam perayaan penuh kegembiraan." },
+      { icon: <Landmark size={20} className="text-white" />, title: "Pelestarian Budaya", desc: "Menjaga dan mengenalkan kesenian tradisional kepada generasi muda." },
+      { icon: <Palette size={20} className="text-white" />, title: "Kreativitas", desc: "Wadah ekspresi seni dan kreativitas warga Magetan." },
+    ],
+    tahukahKamu: (
+      <>
+        Nama <span className="text-[#ffe57f] font-extrabold">Ledhug</span> berasal dari gabungan bunyi{" "}
+        <span className="text-[#ffe57f] font-extrabold">lesung dan bedug</span> yang ditabuh secara meriah menandai pergantian tahun Jawa.
+      </>
+    ),
+  },
+};
+
+// Nilai Budaya Detailed Interactive Data per Mission matching reference design
+interface NilaiBudayaDetail {
+  title: string;
+  desc: React.ReactNode;
+  tahukahKamu: React.ReactNode;
+  photoId: string;
+}
+
+const nilaiBudayaDetailsByMission: Record<number, Record<string, NilaiBudayaDetail>> = {
+  1: {
+    "Syukur": {
+      title: "SYUKUR",
+      desc: (
+        <>
+          Larung Sesaji adalah wujud <strong className="text-[#1c5c32] font-extrabold">rasa syukur</strong> masyarakat kepada Tuhan Yang Maha Esa atas segala rahmat, rezeki, dan keselamatan yang diberikan. Hasil bumi, makanan, dan <strong className="text-[#1c5c32] font-extrabold">sesaji</strong> dilarung sebagai ungkapan terima kasih atas kehidupan yang harmonis.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Ungkapan syukur membuat kita <strong className="text-[#1c5c32] font-extrabold">lebih rendah hati</strong> dan menghargai setiap nikmat yang diterima.
+        </>
+      ),
+      photoId: "1598899134739-24c46f58b8c0",
+    },
+    "Kebersamaan": {
+      title: "KEBERSAMAAN",
+      desc: (
+        <>
+          Prosesi persiapan hingga melarung sesaji dilakukan secara <strong className="text-[#1c5c32] font-extrabold">bersama-sama</strong> oleh seluruh warga. Nilai kebersamaan ini mempererat rasa persaudaraan antarwarga tanpa membeda-bedakan status sosial.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Semangat kebersamaan melahirkan ikatan kekeluargaan yang kokoh dalam menjaga ketenteraman desa.
+        </>
+      ),
+      photoId: "1544644181-1484b3fdfc62",
+    },
+    "Kelestarian Alam": {
+      title: "KELESTARIAN ALAM",
+      desc: (
+        <>
+          Tradisi ini mengajarkan masyarakat untuk senantiasa <strong className="text-[#1c5c32] font-extrabold">menjaga dan merawat Telaga Sarangan</strong>. Lingkungan air dan hulu sungai dijaga kebersihannya agar berkah alam terus dirasakan generasi mendatang.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Masyarakat Magetan percaya bahwa alam yang dirawat dengan kasih sayang akan memberikan rezeki yang melimpah.
+        </>
+      ),
+      photoId: "1507525428034-b723cf961d3e",
+    },
+    "Gotong Royong": {
+      title: "GOTONG ROYONG",
+      desc: (
+        <>
+          Mulai dari pembuatan bucheng tumpeng, persiapan perahu, hingga pembersihan area telaga dilakukan dengan semangat <strong className="text-[#1c5c32] font-extrabold">gotong royong</strong> saling bantu-membantu secara sukarela.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Gotong royong adalah jati diri bangsa Indonesia yang menjadikan pekerjaan berat terasa jauh lebih ringan.
+        </>
+      ),
+      photoId: "1533105079780-92b9be482077",
+    },
+  },
+  2: {
+    "Hormat Leluhur": {
+      title: "HORMAT LELUHUR",
+      desc: (
+        <>
+          Nyadaran menjadi sarana mendoakan dan <strong className="text-[#1c5c32] font-extrabold">mengenang jasa para pendahulu</strong>. Mengingat asal-usul dan perjuangan leluhur menanamkan rasa hormat dan bakti pada generasi penerus.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Mendoakan orang tua dan leluhur adalah bentuk penghormatan tertinggi yang menyambung keberkahan hidup.
+        </>
+      ),
+      photoId: "1506744038136-46273834b3fb",
+    },
+    "Silaturahmi": {
+      title: "SILATURAHMI",
+      desc: (
+        <>
+          Momen Nyadaran menjadi ajang berkumpulnya sanak keluarga dari perantauan untuk <strong className="text-[#1c5c32] font-extrabold">mempererat silaturahmi</strong> dan saling memaafkan sebelum menjalankan ibadah puasa Ramadan.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Silaturahmi dilapangkan rezekinya dan dipanjangkan umurnya oleh Tuhan Yang Maha Esa.
+        </>
+      ),
+      photoId: "1544644181-1484b3fdfc62",
+    },
+    "Religiusitas": {
+      title: "RELIGIUSITAS",
+      desc: (
+        <>
+          Pembacaan doa-doa suci dan zikir bersama di makam leluhur meningkatkan <strong className="text-[#1c5c32] font-extrabold">ketakwaan dan kesucian diri</strong> dalam menyambut bulan penuh berkah.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Ziarah kubur mengingatkan manusia akan hakikat kehidupan serta mempersiapkan diri dengan perbuatan baik.
+        </>
+      ),
+      photoId: "1598899134739-24c46f58b8c0",
+    },
+    "Gotong Royong": {
+      title: "GOTONG ROYONG",
+      desc: (
+        <>
+          Kerja bakti membersihkan kompleks makam desa dilakukan secara bersama-sama penuh keikhlasan demi kenyamanan bersama.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Kebersihan kompleks makam mencerminkan kepedulian warga terhadap warisan sejarah desanya.
+        </>
+      ),
+      photoId: "1533105079780-92b9be482077",
+    },
+  },
+  3: {
+    "Persatuan": {
+      title: "PERSATUAN",
+      desc: (
+        <>
+          Festival Ledhug Suro menyatukan seluruh elemen masyarakat Magetan dalam <strong className="text-[#1c5c32] font-extrabold">suasana kebersamaan dan keceriaan</strong> menyambut Tahun Baru Jawa.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Persatuan warga menjadi kekuatan utama dalam menjaga kedaulatan dan keharmonisan daerah.
+        </>
+      ),
+      photoId: "1533105079780-92b9be482077",
+    },
+    "Pelestarian Budaya": {
+      title: "PELESTARIAN BUDAYA",
+      desc: (
+        <>
+          Arak-arakan lesung, bedug, dan pertunjukan seni etnik mengenalkan warisan seni khas Magetan kepada <strong className="text-[#1c5c32] font-extrabold">generasi muda</strong> agar tak lekang oleh waktu.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Mengenal budaya sendiri membuat kita bangga akan identitas dan nilai luhur bangsa.
+        </>
+      ),
+      photoId: "1598899134739-24c46f58b8c0",
+    },
+    "Kreativitas": {
+      title: "KREATIVITAS",
+      desc: (
+        <>
+          Pembuatan gunungan kue Bolu Rahayu khas Magetan serta aransemen musik lesung-bedug wadah ekspresi <strong className="text-[#1c5c32] font-extrabold">kreativitas seniman lokal</strong>.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Kreativitas lokal yang dipadukan dengan tradisi mampu menggerakkan ekonomi dan pariwisata daerah.
+        </>
+      ),
+      photoId: "1506744038136-46273834b3fb",
+    },
+    "Gotong Royong": {
+      title: "GOTONG ROYONG",
+      desc: (
+        <>
+          Pembagian roti Bolu Rahayu kepada ribuan warga merupakan simbol indahnya semangat <strong className="text-[#1c5c32] font-extrabold">berbagi dan gotong royong</strong> antar sesama.
+        </>
+      ),
+      tahukahKamu: (
+        <>
+          Berbagi makanan saat pesta rakyat membawa kegembiraan dan kebahagiaan bagi seluruh lapisan masyarakat.
+        </>
+      ),
+      photoId: "1544644181-1484b3fdfc62",
+    },
+  },
+};
+
 export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [tab, setTab] = useState<MateriTab>("pengertian");
+  const [selectedNilaiIndex, setSelectedNilaiIndex] = useState(0);
   const [lightbox, setLightbox] = useState<number | null>(null);
   const [showFunFact, setShowFunFact] = useState(false);
 
@@ -162,9 +438,33 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
     }
   }, [tab, mission.name]);
 
+  const [isAtBottom, setIsAtBottom] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    const reachedBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - 30;
+    setIsAtBottom(reachedBottom);
+  };
+
+  const scrollToBottom = () => {
+    playSFX("click");
+    if (contentRef.current) {
+      contentRef.current.scrollTo({
+        top: contentRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
+  };
+
   const handleTabChange = (key: MateriTab) => {
     playSFX("click");
     setTab(key);
+    setSelectedNilaiIndex(0);
+    setIsAtBottom(false);
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0;
+    }
   };
 
   const handleNext = () => {
@@ -227,43 +527,139 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
         {/* Right Content Area: Header Title + Content Display (Scrollable) */}
         <motion.div
           key={tab}
+          ref={contentRef}
+          onScroll={handleScroll}
           initial={{ opacity: 0, x: 12 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -12 }}
           transition={{ duration: 0.25 }}
           className="md:col-span-8 lg:col-span-9 flex flex-col space-y-4 md:space-y-6 h-full min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-1 pb-16 sm:pb-20 space-y-3"
         >
-          {/* Header Title with Leaf Sprigs 🌿 & Scroll Notice */}
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-1">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl text-[#1c5c32] select-none">🌿</span>
-              <h2 className="font-['Fredoka'] font-extrabold text-2xl sm:text-3xl text-[#1c5c32] uppercase tracking-wider leading-none">
-                {tab === "nilai-budaya" ? "NILAI BUDAYA" : tab}
-              </h2>
-              <span className="text-2xl text-[#1c5c32] select-none transform scale-x-[-1]">🌿</span>
+          {/* Header Title with Leaf Sprigs 🌿 (for non-pengertian tabs) */}
+          {tab !== "pengertian" && (
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl text-[#1c5c32] select-none">🌿</span>
+                <h2 className="font-['Fredoka'] font-extrabold text-2xl sm:text-3xl text-[#1c5c32] uppercase tracking-wider leading-none">
+                  {tab === "nilai-budaya" ? "NILAI BUDAYA" : tab}
+                </h2>
+                <span className="text-2xl text-[#1c5c32] select-none transform scale-x-[-1]">🌿</span>
+              </div>
             </div>
-
-            {/* Scroll Notice */}
-            <div className="flex items-center gap-1.5 bg-[#f5ebd6]/90 border border-[#e8d9bd] text-[#7a5316] px-3 py-1 rounded-full text-xs font-['Nunito'] font-bold shadow-xs">
-              <ChevronDown size={14} className="animate-bounce text-[#1c5c32] flex-shrink-0" />
-              <span>gulir kebawah untuk informasi lebih lanjut</span>
-            </div>
-          </div>
+          )}
 
           {/* Tab Content Display */}
           <div className="flex-1 min-h-0 space-y-3">
-            {/* Text Tabs (Pengertian, Sejarah, Tujuan) with Tilted Polaroid Photo */}
-            {(tab === "pengertian" || tab === "sejarah" || tab === "tujuan") && (
+            {/* Pengertian Tab — Matching Reference Image 100% */}
+            {tab === "pengertian" && (() => {
+              const pData = pengertianDataByMission[mission.id] || pengertianDataByMission[1];
+              return (
+                <div className="space-y-4">
+                  {/* Header Title Section */}
+                  <div className="flex flex-col items-center text-center pt-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-2xl text-[#1c5c32] select-none">🌿</span>
+                      <h2 className="font-['Fredoka'] font-extrabold text-2xl sm:text-3xl md:text-4xl text-[#1c5c32] uppercase tracking-wider leading-none">
+                        PENGERTIAN
+                      </h2>
+                      <span className="text-2xl text-[#1c5c32] select-none transform scale-x-[-1]">🌿</span>
+                    </div>
+                    <p className="text-xs sm:text-sm text-[#6b4f35] font-semibold mt-1">
+                      Mengenal lebih dekat tradisi budaya Indonesia
+                    </p>
+                    {/* Decorative Gold Flourish */}
+                    <div className="flex items-center gap-2 text-[#d4af37] text-xs mt-1 select-none opacity-80">
+                      <span>―――</span>
+                      <span>❖</span>
+                      <span>―――</span>
+                    </div>
+                  </div>
+
+                  {/* Main 2-Column Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-5 items-start">
+                    
+                    {/* Left Column: Card 1 (Apa itu...?) + Card 2 (Inti Makna Tradisi) */}
+                    <div className="md:col-span-7 space-y-4">
+                      
+                      {/* Card 1: Apa itu [Nama Tradisi]? */}
+                      <div className="bg-[#fefcf8] border border-[#e8dfcf] rounded-2xl p-4 sm:p-5 shadow-xs flex flex-col gap-3 relative">
+                        {/* Header Tag Pill */}
+                        <div>
+                          <span className="bg-[#255224] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm px-4 py-1.5 rounded-full inline-flex items-center gap-1.5 shadow-2xs">
+                            <span>⭐</span>
+                            <span>{pData.apaItuTitle}</span>
+                          </span>
+                        </div>
+
+                        {/* Paragraph 1 */}
+                        <p className="text-[#3a2718] font-['Nunito'] font-semibold text-xs sm:text-sm leading-relaxed">
+                          {pData.par1}
+                        </p>
+
+                        {/* Dashed Separator */}
+                        <div className="border-t border-dashed border-[#d8ccb6] my-1" />
+
+                        {/* Paragraph 2 */}
+                        <p className="text-[#3a2718] font-['Nunito'] font-semibold text-xs sm:text-sm leading-relaxed">
+                          {pData.par2}
+                        </p>
+                      </div>
+
+                      {/* Card 2: Inti Makna Tradisi */}
+                      <div className="bg-[#edf6ee] border border-[#b8e0bc] rounded-2xl p-3.5 sm:p-4 shadow-xs relative mt-4">
+                        {/* Header Tag Pill Centered on Top Border */}
+                        <span className="bg-[#255224] text-white font-['Fredoka'] font-extrabold text-xs px-4 py-1 rounded-full shadow-2xs absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap">
+                          Inti Makna Tradisi
+                        </span>
+
+                        {/* 3 Pillars Grid */}
+                        <div className="grid grid-cols-3 gap-2 pt-2.5 text-center">
+                          {pData.maknaPillars.map((pillar, i) => (
+                            <div key={i} className="flex flex-col items-center gap-1.5">
+                              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-[#387a3e] text-white flex items-center justify-center text-lg sm:text-xl shadow-xs">
+                                {pillar.icon}
+                              </div>
+                              <h4 className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-xs leading-tight mt-0.5">
+                                {pillar.title}
+                              </h4>
+                              <p className="font-['Nunito'] text-[10px] sm:text-[11px] text-[#4a3728] leading-tight font-semibold">
+                                {pillar.desc}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Right Column: Tilted Polaroid Photo */}
+                    <div className="md:col-span-5 flex flex-col items-center justify-center pt-2">
+                      
+                      {/* Tilted Polaroid Photo Frame */}
+                      <div className="w-full max-w-[280px] sm:max-w-[320px] bg-[#fdfbf7] p-3 sm:p-3.5 pb-7 sm:pb-8 rounded-2xl border border-[#ded5c0] shadow-[0_10px_30px_rgba(0,0,0,0.12)] relative transform rotate-2 hover:rotate-0 transition-transform">
+                        {/* Top Paper Tape Accent */}
+                        <div className="bg-[#d9c49d]/90 border border-[#bfa87e] w-20 h-4.5 rounded-xs absolute -top-2.5 left-1/2 -translate-x-1/2 shadow-2xs z-10 opacity-90" />
+
+                        {/* Image */}
+                        <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#eedebe] border border-[#d6c7a3] shadow-inner">
+                          <img
+                            src={heroPhoto}
+                            alt={mission.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Other Text Tabs (Sejarah, Tujuan) with Tilted Polaroid Photo */}
+            {(tab === "sejarah" || tab === "tujuan") && (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
                 {/* Text Paragraph (Left Column) */}
                 <div className="md:col-span-7 bg-[#fbf7ee] border border-[#e5dabf] rounded-2xl p-4 sm:p-5 shadow-xs">
                   <p className="text-[#4a3728] text-xs sm:text-sm leading-relaxed font-semibold font-['Nunito'] text-justify">
-                    {tab === "pengertian" && (
-                      <>
-                        <strong className="text-[#1c5c32] font-bold">{mission.name}</strong>{" "}
-                        {content.pengertian.replace(mission.name, "").trimStart()}
-                      </>
-                    )}
                     {tab === "sejarah" && content.sejarah}
                     {tab === "tujuan" && content.tujuan}
                   </p>
@@ -289,32 +685,116 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
               </div>
             )}
 
-            {/* Nilai Budaya Tab */}
-            {tab === "nilai-budaya" && (
-              <div className="bg-[#fbf7ee] border border-[#e5dabf] rounded-2xl p-4 sm:p-5 shadow-xs space-y-3">
-                <h3 className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-sm sm:text-base mb-2">
-                  Nilai-Nilai Budaya yang Terkandung:
-                </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {content.nilaiBudaya.map((n, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ scale: 0.9, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      transition={{ delay: 0.1 + i * 0.05 }}
-                      className="bg-[#f5ebd6]/80 border border-[#e8d9bd] rounded-2xl p-3 flex flex-col items-center justify-center gap-2 shadow-xs hover:shadow-sm transition-shadow text-center"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-[#1c5c32] text-white flex items-center justify-center text-xl shadow-xs">
-                        {nilaiBudayaIcons[n] || "✨"}
+            {/* Nilai Budaya Tab — Detailed Interactive Presentation Matching Reference Image */}
+            {tab === "nilai-budaya" && (() => {
+              const nilaiList = content.nilaiBudaya || ["Syukur", "Kebersamaan", "Kelestarian Alam", "Gotong Royong"];
+              const safeIndex = Math.min(selectedNilaiIndex, nilaiList.length - 1);
+              const currentNilaiName = nilaiList[safeIndex] || nilaiList[0];
+              const missionDetails = nilaiBudayaDetailsByMission[mission.id] || nilaiBudayaDetailsByMission[1];
+              const activeDetail = missionDetails[currentNilaiName] || {
+                title: currentNilaiName.toUpperCase(),
+                desc: `${mission.name} mengandung nilai ${currentNilaiName} yang sangat luhur dan perlu dilestarikan.`,
+                tahukahKamu: `Nilai ${currentNilaiName} mengajarkan kita untuk senantiasa hidup harmonis dalam bermasyarakat.`,
+                photoId: "1598899134739-24c46f58b8c0",
+              };
+
+              return (
+                <div className="flex flex-col justify-between h-full min-h-0 space-y-3 relative select-none">
+                  
+                  {/* Top Header Title with Leaf Sprigs 🌿 */}
+                  <div className="flex flex-col items-center text-center">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl sm:text-2xl text-[#2d6132] select-none">🌿</span>
+                      <h2 className="font-['Fredoka'] font-extrabold text-2xl sm:text-3xl text-[#1c5c32] uppercase tracking-wider leading-none">
+                        {activeDetail.title}
+                      </h2>
+                      <span className="text-xl sm:text-2xl text-[#2d6132] select-none transform scale-x-[-1]">🌿</span>
+                    </div>
+                  </div>
+
+                  {/* Main 2-Column Section: Left Photo Frame + Right Description & Tahukah Kamu */}
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    
+                    {/* Left Column: Rounded Image Frame */}
+                    <div className="md:col-span-5 flex justify-center">
+                      <div className="w-full max-w-[260px] sm:max-w-[290px] aspect-[4/3] rounded-3xl overflow-hidden bg-[#eedebe] border-2 border-[#d6c7a3] shadow-[0_8px_25px_rgba(0,0,0,0.12)]">
+                        <img
+                          src={unsplashUrl(activeDetail.photoId)}
+                          alt={activeDetail.title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <span className="font-['Fredoka'] font-extrabold text-[#3a2718] text-xs leading-tight">
-                        {n}
-                      </span>
-                    </motion.div>
-                  ))}
+                    </div>
+
+                    {/* Right Column: Main Explanation + Tahukah Kamu? Box */}
+                    <div className="md:col-span-7 flex flex-col gap-3">
+                      {/* Main Explanation Paragraph */}
+                      <p className="text-[#3a2718] font-['Nunito'] font-semibold text-xs sm:text-sm leading-relaxed text-justify">
+                        {activeDetail.desc}
+                      </p>
+
+                      {/* Soft Sage Green Callout Box 🌿 Tahukah Kamu? */}
+                      <div className="bg-[#e7f0e6] border border-[#c5e3c7] rounded-2xl p-3.5 sm:p-4 shadow-2xs flex flex-col gap-1 mt-1">
+                        <div className="flex items-center gap-1.5 text-[#1c5c32] font-['Fredoka'] font-extrabold text-xs sm:text-sm">
+                          <span className="text-base">🌿</span>
+                          <span>Tahukah Kamu?</span>
+                        </div>
+                        <p className="text-[#3a2718] font-['Nunito'] font-semibold text-xs leading-relaxed">
+                          {activeDetail.tahukahKamu}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Bottom Navigation & Stepper Control Row */}
+                  <div className="flex items-center justify-between pt-2 border-t border-[#e8dfcf] mt-1 pr-32 sm:pr-44 md:pr-48 relative z-20">
+                    {/* Stepper Pagination Dots */}
+                    <div className="flex items-center gap-2">
+                      {nilaiList.map((item, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            playSFX("click");
+                            setSelectedNilaiIndex(idx);
+                          }}
+                          className={`w-3.5 h-3.5 rounded-full transition-all cursor-pointer border ${
+                            safeIndex === idx
+                              ? "bg-[#2d6132] border-[#1c4722] scale-110 shadow-xs"
+                              : "bg-transparent border-[#8a7259] hover:bg-[#d8c8a8]"
+                          }`}
+                          title={item}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Right Action Button */}
+                    {safeIndex < nilaiList.length - 1 ? (
+                      <button
+                        onClick={() => {
+                          playSFX("click");
+                          setSelectedNilaiIndex((prev) => prev + 1);
+                        }}
+                        className="bg-[#376935] hover:bg-[#285226] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm px-5 sm:px-6 py-2 rounded-full flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer whitespace-nowrap z-20"
+                      >
+                        <span>Selanjutnya</span>
+                        <ChevronRight size={18} />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => {
+                          playSFX("click");
+                          handleTabChange("galeri");
+                        }}
+                        className="bg-[#376935] hover:bg-[#285226] text-white font-['Fredoka'] font-extrabold text-xs sm:text-sm px-5 sm:px-6 py-2 rounded-full flex items-center gap-1.5 shadow-md active:scale-95 transition-all cursor-pointer whitespace-nowrap z-20"
+                      >
+                        <span>Selesai</span>
+                        <Check size={18} />
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Galeri Tab */}
             {tab === "galeri" && (
@@ -387,6 +867,31 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
           </div>
         </motion.div>
       </div>
+
+      {/* Fixed Bottom Floating Scroll Notice Badge (Fades out when scrolled to bottom, Clickable to Auto-Scroll) */}
+      <AnimatePresence>
+        {!isAtBottom && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.25 }}
+            className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 z-40 pointer-events-auto select-none"
+          >
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={scrollToBottom}
+              className="flex items-center gap-1.5 bg-[#f8ebd7]/95 hover:bg-[#f3dfbe] active:bg-[#e6cc9c] border border-[#e2cca4] text-[#7a5a2b] px-4 py-1.5 rounded-full text-xs font-['Fredoka'] font-extrabold shadow-md cursor-pointer transition-colors"
+              title="Klik untuk gulir ke bawah"
+            >
+              <span>💡</span>
+              <span>Gulir ke bawah untuk informasi lebih lanjut</span>
+              <ChevronDown size={14} className="animate-bounce text-[#7a5a2b] flex-shrink-0 ml-0.5" />
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Fixed Top-Layer Dimas Mascot & Dialogue Speech Bubble (Lifted Up for Instant Visibility Without Scroll) */}
       <div className="absolute bottom-14 sm:bottom-16 right-2 sm:right-4 z-50 pointer-events-auto flex flex-row-reverse items-end gap-2.5 sm:gap-3.5 max-w-[92%] sm:max-w-[88%] select-none">
