@@ -166,7 +166,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 w-full relative z-10 flex flex-col items-center justify-between py-2 sm:py-4 px-4 overflow-hidden">
+      <div className="flex-1 w-full relative z-10 flex flex-col items-center justify-between py-2 sm:py-4 px-4 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
 
         {/* Logo Title (Center Top) */}
         <motion.div

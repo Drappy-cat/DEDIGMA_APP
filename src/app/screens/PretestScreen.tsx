@@ -98,7 +98,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
   if (done) {
     return (
       <div
-        className="h-full flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none font-['Nunito'] relative overflow-hidden"
+        className="h-full min-h-[100dvh] flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none font-['Nunito'] relative overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         style={{
           backgroundImage: "url('/assets/telaga.png')",
           backgroundSize: "cover",
@@ -110,7 +110,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
         <div className={`absolute inset-0 ${perf.showBlurEffects ? 'bg-black/30 backdrop-blur-xs' : 'bg-black/40'} z-0 pointer-events-none`} />
 
         {/* Content Container */}
-        <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md space-y-4">
+        <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md space-y-4 my-auto py-4">
           
           {/* Top Header Section with Ribbon Medal & Wood Signboard */}
           <div className="flex flex-col items-center relative mb-2 w-full flex-shrink-0">
@@ -195,7 +195,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
 
   return (
     <div
-      className="h-full flex flex-col overflow-hidden font-['Nunito'] relative select-none"
+      className="h-full flex flex-col overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden font-['Nunito'] relative select-none"
       style={{
         backgroundImage: "url('/assets/telaga.png')",
         backgroundSize: "cover",
@@ -211,7 +211,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
       {/* Sub-Header Progress Bar */}
       <div className="bg-[#fbf7ee]/95 backdrop-blur-xs px-4 py-1.5 border-b border-[#e6d9bd] flex items-center justify-between shadow-xs select-none relative z-20 flex-shrink-0">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#2a6838] text-white font-['Fredoka'] font-extrabold flex items-center justify-center text-xs sm:text-sm shadow-xs flex-shrink-0">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#2a6838] text-[#fff] font-['Fredoka'] font-extrabold flex items-center justify-center text-xs sm:text-sm shadow-xs flex-shrink-0">
             {current + 1}
           </div>
           <span className="font-['Fredoka'] font-extrabold text-xs sm:text-sm text-[#4a3728]">
@@ -227,7 +227,7 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
       </div>
 
       {/* Main Body Container: Parchment Board & Bottom Navigation */}
-      <div className="relative z-10 flex-1 min-h-0 flex flex-col justify-between items-center px-2 sm:px-4 pb-1 sm:pb-3 pt-0.5 sm:pt-1 overflow-visible">
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col justify-between items-center px-2 sm:px-4 pb-4 pt-0.5 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         
         {/* Parchment Board Container (Zero Scroll, Full Height, Visible Overflow for Signboard) */}
         <div className="bg-[#fbf7ee] border-2 border-[#e6d9bd] rounded-3xl px-3 sm:px-5 pb-2 sm:pb-4 pt-7 sm:pt-9 md:pt-10 shadow-xl relative flex flex-col justify-between w-full max-w-4xl mx-auto flex-1 min-h-0 mt-5 sm:mt-7 mb-1 overflow-visible">

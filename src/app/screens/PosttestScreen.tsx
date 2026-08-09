@@ -102,7 +102,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
   if (done) {
     return (
       <div
-        className="h-full flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none font-['Nunito'] relative overflow-hidden"
+        className="h-full min-h-[100dvh] flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none font-['Nunito'] relative overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         style={{
           backgroundImage: "url('/assets/telaga.png')",
           backgroundSize: "cover",
@@ -114,7 +114,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
         <div className={`absolute inset-0 ${perf.showBlurEffects ? 'bg-black/30 backdrop-blur-xs' : 'bg-black/40'} z-0 pointer-events-none`} />
 
         {/* Content Container */}
-        <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md space-y-4">
+        <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md space-y-4 my-auto py-4">
           
           {/* Top Header Section with Ribbon Medal & Wood Signboard */}
           <div className="flex flex-col items-center relative mb-2 w-full flex-shrink-0">
@@ -173,10 +173,10 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
               <span className="text-lg select-none flex-shrink-0 mt-0.5">🍃</span>
               <p className="text-[#235430] text-xs sm:text-sm font-['Nunito'] font-bold leading-relaxed">
                 {score >= 85
-                  ? "Luar biasa! Pemahamanmu tentang materi budaya ini sangat cemerlang."
+                  ? "Luar biasa! Pemahaman budayamu sangat cemerlang."
                   : score >= 70
-                  ? "Hebat sekali! Kamu berhasil menyelesaikan evaluasi akhir dengan baik."
-                  : "Bagus! Terus tingkatkan belajar dan pemahaman budayamu."}
+                  ? "Hebat sekali! Kamu berhasil menuntaskan seluruh tantangan DEDIGMA."
+                  : "Selamat! Kamu telah berhasil menuntaskan evaluasi DEDIGMA."}
               </p>
             </div>
           </motion.div>
@@ -189,7 +189,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
             onClick={() => onComplete(score)}
             className="w-full bg-gradient-to-b from-[#f5a32b] via-[#e58e1d] to-[#d87c14] hover:from-[#f7ad3d] hover:to-[#e2861a] border-2 border-[#fff5ce] text-white font-['Fredoka'] font-extrabold rounded-full py-3.5 sm:py-4 text-base sm:text-lg shadow-xl transition-transform active:scale-95 cursor-pointer uppercase tracking-wider border-b-4 flex items-center justify-center gap-2"
           >
-            <span>Lihat Sertifikat Kelulusan</span>
+            <span>Lihat Lencana & Sertifikat</span>
             <span>→</span>
           </motion.button>
         </div>
@@ -199,7 +199,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
   return (
     <div
-      className="h-full flex flex-col overflow-hidden font-['Nunito'] relative select-none"
+      className="h-full flex flex-col overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden font-['Nunito'] relative select-none"
       style={{
         backgroundImage: "url('/assets/telaga.png')",
         backgroundSize: "cover",
@@ -209,7 +209,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
     >
       {/* Top Navbar Header (Preserved as requested) */}
       <div className="relative z-30 flex-shrink-0">
-        <ScreenHeader title="Posttest DEDIGMA 📝" onBack={onBack} onHome={onBack} />
+        <ScreenHeader title="Posttest DEDIGMA 🎓" onBack={onBack} onHome={onBack} />
       </div>
 
       {/* Sub-Header Progress Bar */}
@@ -231,7 +231,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
       </div>
 
       {/* Main Body Container: Parchment Board & Bottom Navigation */}
-      <div className="relative z-10 flex-1 min-h-0 flex flex-col justify-between items-center px-2 sm:px-4 pb-1 sm:pb-3 pt-0.5 sm:pt-1 overflow-visible">
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col justify-between items-center px-2 sm:px-4 pb-4 pt-0.5 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         
         {/* Parchment Board Container (Zero Scroll, Full Height, Visible Overflow for Signboard) */}
         <div className="bg-[#fbf7ee] border-2 border-[#e6d9bd] rounded-3xl px-3 sm:px-5 pb-2 sm:pb-4 pt-7 sm:pt-9 md:pt-10 shadow-xl relative flex flex-col justify-between w-full max-w-4xl mx-auto flex-1 min-h-0 mt-5 sm:mt-7 mb-1 overflow-visible">
