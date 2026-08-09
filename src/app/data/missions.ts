@@ -277,10 +277,11 @@ export const MISSIONS: Mission[] = [
       }
     ],
     galeri: [
-      { photoId: "1752760023111-aed0c41f11f9", imageSrc: "/assets/materi/misi3/slametanbersihdesa.jpeg", caption: "Upacara Slametan Bersih Desa & Festival Ledhug Suro" },
-      { photoId: "1773562612529-7931f115516f", imageSrc: "/assets/materi/misi4/wargabawaberkat.jpeg", caption: "Warga membawa berkat dalam festival kebudayaan" },
-      { photoId: "1631813991050-477dc7f7e2f6", imageSrc: "/assets/materi/slametanbersihdesa.jpeg", caption: "Perempuan berkebaya dalam perayaan Tahun Baru Jawa" },
-      { photoId: "1698267703889-06c41f9acba5", imageSrc: "/assets/materi/wargabawaberkat.jpeg", caption: "Suasana meriah festival di tanah Magetan" }
+      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_1.png", caption: "Roti raksasa berbentuk bedug diarak oleh warga dalam perayaan Ledhug Suro." },
+      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_2.jpg", caption: "Bupati Magetan secara simbolis memukul bedug membuka rangkaian acara." },
+      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_3.png", caption: "Penampilan tarian tradisional yang memukau dalam panggung Festival Musik Ledhug." },
+      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_4.jpg", caption: "Generasi muda melestarikan budaya dengan membunyikan lesung dan alu (Ledhug)." },
+      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_5.jpg", caption: "Grup musik tradisional membawakan tembang bernuansa Islami dan Jawa." }
     ],
     video: [
       {
