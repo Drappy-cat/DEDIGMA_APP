@@ -227,24 +227,24 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
       </div>
 
       {/* Main Body Container: Parchment Board & Bottom Navigation */}
-      <div className="relative z-10 flex-1 min-h-0 flex flex-col justify-between items-center px-2 sm:px-4 pb-2 sm:pb-4 pt-1 sm:pt-2 overflow-visible">
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col justify-between items-center px-2 sm:px-4 pb-1 sm:pb-3 pt-0.5 sm:pt-1 overflow-visible">
         
         {/* Parchment Board Container (Zero Scroll, Full Height, Visible Overflow for Signboard) */}
-        <div className="bg-[#fbf7ee] border-2 border-[#e6d9bd] rounded-3xl px-3 sm:px-5 pb-3 sm:pb-5 pt-6 sm:pt-7 shadow-xl relative flex flex-col justify-between w-full max-w-4xl mx-auto flex-1 min-h-0 mt-7 sm:mt-8 mb-1 overflow-visible">
+        <div className="bg-[#fbf7ee] border-2 border-[#e6d9bd] rounded-3xl px-3 sm:px-5 pb-2 sm:pb-4 pt-7 sm:pt-9 md:pt-10 shadow-xl relative flex flex-col justify-between w-full max-w-4xl mx-auto flex-1 min-h-0 mt-5 sm:mt-7 mb-1 overflow-visible">
           
-          {/* Centered Top Green Ribbon Banner Signboard — Significantly Enlarged */}
-          <div className="bg-[#2a6838] border-3 sm:border-4 border-[#1c4d29] text-[#fff5ce] font-['Fredoka'] font-extrabold px-10 sm:px-14 py-2 sm:py-2.5 rounded-full text-lg sm:text-xl md:text-2xl flex items-center justify-center gap-3 shadow-xl absolute -top-6 sm:-top-7 left-1/2 -translate-x-1/2 z-30 whitespace-nowrap border-b-4 uppercase tracking-widest">
-            <span className="text-lg sm:text-xl select-none">🌿</span>
+          {/* Centered Top Green Ribbon Banner Signboard */}
+          <div className="bg-[#2a6838] border-3 sm:border-4 border-[#1c4d29] text-[#fff5ce] font-['Fredoka'] font-extrabold px-6 sm:px-12 py-1 sm:py-2 rounded-full text-xs sm:text-base md:text-xl flex items-center justify-center gap-2 sm:gap-3 shadow-xl absolute -top-4 sm:-top-5 md:-top-6 left-1/2 -translate-x-1/2 z-30 whitespace-nowrap border-b-4 uppercase tracking-widest">
+            <span className="text-xs sm:text-base select-none">🌿</span>
             <span>SOAL EVALUASI</span>
-            <span className="text-lg sm:text-xl select-none transform scale-x-[-1]">🌿</span>
+            <span className="text-xs sm:text-base select-none transform scale-x-[-1]">🌿</span>
           </div>
 
           {/* Decorative Corner Stars */}
-          <div className="absolute top-2.5 left-4 text-amber-400 text-xs sm:text-sm select-none opacity-80 flex gap-0.5">
+          <div className="absolute top-2 left-4 text-amber-400 text-xs sm:text-sm select-none opacity-80 flex gap-0.5">
             <span>⭐</span>
             <span>⭐</span>
           </div>
-          <div className="absolute top-2.5 right-4 text-amber-400 text-xs sm:text-sm select-none opacity-80 flex gap-0.5">
+          <div className="absolute top-2 right-4 text-amber-400 text-xs sm:text-sm select-none opacity-80 flex gap-0.5">
             <span>⭐</span>
             <span>⭐</span>
             <span>⭐</span>
@@ -257,10 +257,10 @@ export const PretestScreen: React.FC<PretestScreenProps> = ({ onComplete, onBack
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.25 }}
-            className="flex-1 min-h-0 flex flex-col justify-between pt-4 overflow-hidden"
+            className="flex-1 min-h-0 flex flex-col justify-between pt-1 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           >
             {/* Question Statement */}
-            <div className="flex-1 min-h-0 flex items-center justify-center my-auto px-2 sm:px-6">
+            <div className="flex-1 min-h-0 flex items-center justify-center my-auto px-2 sm:px-6 py-1.5 sm:py-3">
               <p className="text-[#3a2718] font-['Nunito'] font-extrabold text-xs sm:text-sm md:text-base leading-relaxed text-center">
                 {q.soal}
               </p>
