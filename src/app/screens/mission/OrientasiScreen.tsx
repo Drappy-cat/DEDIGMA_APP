@@ -35,7 +35,7 @@ export const OrientasiScreen: React.FC<OrientasiScreenProps> = ({ mission, onNex
     : "/assets/materi-bg.jpg";
 
   return (
-    <div className="flex flex-col h-full font-['Nunito'] justify-between overflow-y-auto max-h-full [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden min-h-0 relative p-1 sm:p-2 select-none">
+    <div className="flex flex-col h-full font-['Nunito'] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden p-3 sm:p-4 md:p-6 select-none">
       
       {/* Top Centered Header Area */}
       <div className="flex flex-col items-center relative mb-1 sm:mb-2">
@@ -63,17 +63,17 @@ export const OrientasiScreen: React.FC<OrientasiScreenProps> = ({ mission, onNex
       </div>
 
       {/* Main Content Grid Layout (2 Columns) */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-5 flex-1 min-h-0 items-center my-auto">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 flex-1 mt-2 md:mt-4">
         
         {/* Left Column: Polaroid Photo Card + Mascot Overlay + Speech Bubble */}
         <motion.div
           initial={{ x: -15, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.35 }}
-          className="md:col-span-5 relative flex flex-col justify-center items-center h-full min-h-[220px] sm:min-h-[270px]"
+          className="md:col-span-5 relative flex flex-col justify-center items-center"
         >
           {/* Polaroid Photo Frame */}
-          <div className="w-full max-w-[250px] sm:max-w-[280px] bg-[#fdfbf7] p-2.5 sm:p-3 pb-7 sm:pb-8 rounded-3xl border border-[#e2d8c3] shadow-[0_8px_25px_rgba(0,0,0,0.15)] relative transform -rotate-1 transition-transform hover:rotate-0">
+          <div className="w-full max-w-[180px] xs:max-w-[200px] sm:max-w-[240px] md:max-w-[280px] bg-[#fdfbf7] p-2.5 sm:p-3 pb-7 sm:pb-8 rounded-3xl border border-[#e2d8c3] shadow-[0_8px_25px_rgba(0,0,0,0.15)] relative transform -rotate-1 transition-transform hover:rotate-0">
             {/* Top Left Leaf Accent Badge */}
             <div className="absolute -top-2 -left-2 text-xl select-none z-10">🌿</div>
 
@@ -88,7 +88,7 @@ export const OrientasiScreen: React.FC<OrientasiScreenProps> = ({ mission, onNex
           </div>
 
           {/* Dimas Mascot Overlay at Bottom Left */}
-          <div className="absolute -bottom-3 -left-3 sm:-bottom-5 sm:-left-5 w-32 sm:w-44 z-20 pointer-events-none">
+          <div className="absolute -bottom-3 -left-3 xs:-left-6 sm:-bottom-5 sm:-left-8 w-24 xs:w-28 sm:w-36 md:w-44 z-20 pointer-events-none">
             <img
               src="/assets/mascot/Dimas-Petunjuk.svg"
               alt="Dimas Mascot"
@@ -96,8 +96,8 @@ export const OrientasiScreen: React.FC<OrientasiScreenProps> = ({ mission, onNex
             />
           </div>
 
-          {/* Speech Bubble Attached to Photo — Positioned cleanly out of mascot hand overlap */}
-          <div className="bg-[#fdfcf7] border-2 border-[#e8dcb8] rounded-2xl py-2.5 px-3 sm:py-3 sm:px-4 pl-12 sm:pl-14 flex items-center gap-2 shadow-xs -mt-5 sm:-mt-6 ml-16 sm:ml-24 relative z-10 max-w-[240px] sm:max-w-[280px]">
+          {/* Speech Bubble Attached to Photo */}
+          <div className="bg-[#fdfcf7] border-2 border-[#e8dcb8] rounded-2xl py-2 px-3 sm:py-3 sm:px-4 pl-10 sm:pl-14 flex items-center gap-2 shadow-xs -mt-4 sm:-mt-6 ml-12 sm:ml-24 relative z-10 max-w-[200px] sm:max-w-[260px] md:max-w-[280px]">
             <p className="text-[#523e2b] text-[11px] sm:text-xs font-['Nunito'] font-bold leading-snug">
               Setiap tradisi menyimpan pesan penting untuk kehidupan kita.
             </p>
@@ -109,10 +109,10 @@ export const OrientasiScreen: React.FC<OrientasiScreenProps> = ({ mission, onNex
           initial={{ x: 15, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.35, delay: 0.1 }}
-          className="md:col-span-7 flex flex-col justify-between h-full space-y-3"
+          className="md:col-span-7 flex flex-col justify-between space-y-4 md:space-y-6"
         >
           {/* Parchment Narration Card */}
-          <div className="bg-[#fbf7ee] border border-[#e5dabf] rounded-3xl p-4 sm:p-5 shadow-xs space-y-3 relative flex-1 flex flex-col justify-between">
+          <div className="bg-[#fbf7ee] border border-[#e5dabf] rounded-3xl p-4 sm:p-6 shadow-xs space-y-3 sm:space-y-4 flex-1">
             {/* Greeting Header with Leaf Badge & Sparkles */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
