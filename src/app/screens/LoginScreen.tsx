@@ -212,9 +212,17 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSiswa, onLoginG
                         <select
                           value={kelas}
                           onChange={(e) => setKelas(e.target.value)}
-                          className="w-full border-2 border-[#b59e7a] rounded-xl px-3 py-2 font-['Nunito'] text-sm text-gray-800 focus:outline-none focus:border-[#366635] bg-white/90"
+                          className="w-full border-2 border-[#b59e7a] rounded-xl px-3 py-2 font-['Nunito'] text-sm text-gray-800 focus:outline-none focus:border-[#366635] bg-white/90 cursor-pointer"
                         >
                           <option value="4">Kelas 4</option>
+                          <option value="4A">Kelas 4A</option>
+                          <option value="4B">Kelas 4B</option>
+                          <option value="5">Kelas 5</option>
+                          <option value="5A">Kelas 5A</option>
+                          <option value="5B">Kelas 5B</option>
+                          <option value="6">Kelas 6</option>
+                          <option value="6A">Kelas 6A</option>
+                          <option value="6B">Kelas 6B</option>
                         </select>
                       </div>
                     </div>
