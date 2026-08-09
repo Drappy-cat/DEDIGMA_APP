@@ -238,14 +238,14 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -left-10 xs:-left-6 sm:-left-4 md:left-0 lg:left-4 -bottom-4 sm:-bottom-8 landscape:bottom-0 z-10 pointer-events-none flex flex-col items-center"
+          className="absolute -left-6 xs:-left-4 sm:-left-4 md:left-0 lg:left-4 -bottom-2 sm:-bottom-8 landscape:bottom-0 z-10 pointer-events-none flex flex-col items-center"
         >
           <div className="relative flex flex-col items-center">
             <div className="pointer-events-auto">
               <MascotDimas size="lobby" animate={true} isLobby={true} />
             </div>
-            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#2a5bb5] via-[#1c4899] to-[#143778] border-2 border-[#6095f5] rounded-2xl px-2.5 sm:px-6 py-0.5 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[95px] sm:min-w-[155px] pointer-events-auto">
-              <h3 className="font-['Fredoka'] font-extrabold text-[10px] sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
+            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#2a5bb5] via-[#1c4899] to-[#143778] border-2 border-[#6095f5] rounded-xl sm:rounded-2xl px-1.5 sm:px-6 py-0.5 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[75px] sm:min-w-[155px] pointer-events-auto">
+              <h3 className="font-['Fredoka'] font-extrabold text-[9px] sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
                 DIMAS
               </h3>
               <p className="font-['Nunito'] font-bold text-[8px] sm:text-[11px] text-blue-100 leading-none mt-0.5 drop-shadow-xs">
@@ -259,14 +259,14 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -right-10 xs:-right-6 sm:-right-4 md:right-0 lg:right-4 -bottom-4 sm:-bottom-8 landscape:bottom-0 z-10 pointer-events-none flex flex-col items-center"
+          className="absolute -right-6 xs:-right-4 sm:-right-4 md:right-0 lg:right-4 -bottom-2 sm:-bottom-8 landscape:bottom-0 z-10 pointer-events-none flex flex-col items-center"
         >
           <div className="relative flex flex-col items-center">
             <div className="pointer-events-auto">
               <MascotGita size="lobby" animate={true} isLobby={true} />
             </div>
-            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#8f4121] via-[#7e371b] to-[#592410] border-2 border-[#bd6d46] rounded-2xl px-2.5 sm:px-6 py-0.5 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[95px] sm:min-w-[155px] pointer-events-auto">
-              <h3 className="font-['Fredoka'] font-extrabold text-[10px] sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
+            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#8f4121] via-[#7e371b] to-[#592410] border-2 border-[#bd6d46] rounded-xl sm:rounded-2xl px-1.5 sm:px-6 py-0.5 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[75px] sm:min-w-[155px] pointer-events-auto">
+              <h3 className="font-['Fredoka'] font-extrabold text-[9px] sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
                 GITA
               </h3>
               <p className="font-['Nunito'] font-bold text-[8px] sm:text-[11px] text-amber-100 leading-none mt-0.5 drop-shadow-xs">
