@@ -175,10 +175,11 @@ export const MISSIONS: Mission[] = [
       }
     ],
     galeri: [
-      { photoId: "1772787429344-109fdb272441", imageSrc: "/assets/materi/misi1/bersihdesa.jpeg", caption: "Pelaksanaan upacara tradisi Bersih Desa / Nyadaran" },
-      { photoId: "1772787429356-5acf7e71fe40", imageSrc: "/assets/materi/bersihdesa.jpeg", caption: "Menuangkan air bunga pada makam leluhur" },
-      { photoId: "1772787429407-807643d391de", caption: "Masyarakat berkumpul dalam upacara Nyadaran" },
-      { photoId: "1587632467120-c79b296a5dda", caption: "Rangkaian bunga dan sesaji untuk leluhur" }
+      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_1.jpg", caption: "Suasana kebersamaan warga saat makan bersama (kembul bujana) usai doa bersama." },
+      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_2.jpg", caption: "Warga khusyuk memanjatkan doa di area makam leluhur atau pepunden desa." },
+      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_3.jpg", caption: "Arak-arakan warga dengan pakaian adat membawa sesaji hasil bumi menuju tempat Nyadran." },
+      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_4.png", caption: "Tokoh masyarakat dan warga membacakan doa dan tahlil bersama di bawah pohon rindang makam leluhur." },
+      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_5.jpg", caption: "Berbagai sajian makanan dan jajanan tradisional disiapkan untuk dimakan bersama usai prosesi doa." }
     ],
     video: [
       {
