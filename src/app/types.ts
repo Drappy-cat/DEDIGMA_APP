@@ -90,6 +90,7 @@ export interface Mission {
     desc: string;
     thumbId: string;
     query: string;
+    videoId?: string;
   }[];
 }
 

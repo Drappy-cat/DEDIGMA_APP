@@ -87,7 +87,8 @@ export const MISSIONS: Mission[] = [
         title: "Tradisi Larung Sesaji Telaga Sarangan",
         desc: "Dokumentasi upacara adat Larung Sesaji yang dilaksanakan setiap tahun oleh masyarakat Magetan di Telaga Sarangan.",
         thumbId: "1601058497548-f247dfe349d6",
-        query: "larung+sesaji+telaga+sarangan+magetan"
+        query: "larung+sesaji+telaga+sarangan+magetan",
+        videoId: "E_Gb_eiHg20"
       },
       {
         title: "Makna & Nilai Budaya Larung Sesaji",

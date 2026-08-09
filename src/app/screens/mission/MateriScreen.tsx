@@ -14,15 +14,25 @@ const getPhotoUrl = (item: { photoId: string; imageSrc?: string }, w = 600, h = 
 };
 
 // Video Card sub-component
-const VideoCard: React.FC<{ item: { title: string; desc: string; thumbId: string; query: string }; missionName: string }> = ({ item, missionName }) => {
+const VideoCard: React.FC<{ item: { title: string; desc: string; thumbId: string; query: string; videoId?: string }; missionName: string }> = ({ item, missionName }) => {
   const [playing, setPlaying] = useState(false);
   const { playSFX } = useAudio();
-  const youtubeSearch = `https://www.youtube.com/results?search_query=${item.query}`;
+  const youtubeSearch = item.videoId 
+    ? `https://www.youtube.com/watch?v=${item.videoId}` 
+    : `https://www.youtube.com/results?search_query=${item.query}`;
+
+  const embedUrl = item.videoId 
+    ? `https://www.youtube.com/embed/${item.videoId}?autoplay=1&rel=0`
+    : `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(item.query)}`;
+
+  const thumbUrl = item.videoId 
+    ? `https://img.youtube.com/vi/${item.videoId}/hqdefault.jpg` 
+    : unsplashUrl(item.thumbId, 640, 360);
 
   return (
     <div className="bg-[#faf5ea] border border-[#e2d5bc] rounded-2xl overflow-hidden shadow-xs">
       <div className="relative w-full select-none" style={{ aspectRatio: "16/9" }}>
-        <img src={unsplashUrl(item.thumbId, 640, 360)} alt={item.title} className="w-full h-full object-cover" />
+        <img src={thumbUrl} alt={item.title} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/25" />
         <button
           onClick={() => { playSFX("click"); setPlaying(true); }}
@@ -61,7 +71,7 @@ const VideoCard: React.FC<{ item: { title: string; desc: string; thumbId: string
               <iframe
                 width="100%"
                 height="100%"
-                src={`https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(item.query)}`}
+                src={embedUrl}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
                 className="w-full h-full border-0"
@@ -70,7 +80,7 @@ const VideoCard: React.FC<{ item: { title: string; desc: string; thumbId: string
             <p className="text-white/60 text-[10px] text-center mt-2 font-['Nunito']">
               Atau{" "}
               <a href={youtubeSearch} target="_blank" rel="noopener noreferrer" className="text-[#f3cc69] underline font-semibold">
-                buka pencarian langsung di YouTube
+                {item.videoId ? "buka langsung di YouTube" : "buka pencarian langsung di YouTube"}
               </a>
             </p>
           </div>
