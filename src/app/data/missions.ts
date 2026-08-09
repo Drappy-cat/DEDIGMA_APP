@@ -287,13 +287,15 @@ export const MISSIONS: Mission[] = [
         title: "Festival Ledhug Suro Magetan",
         desc: "Dokumentasi lengkap perayaan Tahun Baru Jawa (1 Suro) di Magetan — arak-arakan bedug, pertunjukan seni, dan antusiasme masyarakat.",
         thumbId: "1752760023111-aed0c41f11f9",
-        query: "festival+ledhug+suro+magetan+tahun+baru+jawa"
+        query: "festival+ledhug+suro+magetan+tahun+baru+jawa",
+        videoId: "x7CPHvosdc0"
       },
       {
         title: "Makna Filosofis Ledhug Suro",
         desc: "Menyelami makna di balik bunyi bedug dan ritual Ledhug Suro — perpaduan tradisi Islam dan budaya Jawa dengan harmonis.",
         thumbId: "1773562612529-7931f115516f",
-        query: "makna+ledhug+suro+filosofi+budaya+jawa"
+        query: "makna+ledhug+suro+filosofi+budaya+jawa",
+        videoId: "8kOC2JeM1wE"
       }
     ]
   }
