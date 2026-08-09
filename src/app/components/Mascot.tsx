@@ -34,17 +34,17 @@ export const MascotDimas: React.FC<MascotProps> = ({
   const [isBouncing, setIsBouncing] = useState<boolean>(false);
 
   const sizeClasses: Record<string, string> = {
-    sm: "w-12 h-12",
-    md: "w-24 h-24 sm:w-28 sm:h-28",
-    lg: "w-36 h-36 sm:w-44 sm:h-44",
-    xl: "w-48 h-48 sm:w-64 sm:h-64",
-    "2xl": "w-60 h-60 sm:w-80 sm:h-80",
-    "3xl": "w-28 h-28 xs:w-36 xs:h-36 sm:w-56 sm:h-56 md:w-64 md:h-64 landscape:w-72 landscape:h-72",
-    "4xl": "w-72 h-72 sm:w-96 sm:h-96",
-    lobby: "w-44 h-44 xs:w-52 xs:h-52 sm:w-80 sm:h-80 md:w-96 md:h-96",
-    "5xl": "w-[30rem] h-[30rem]",
-    "6xl": "w-[40rem] h-[40rem]",
-    "7xl": "w-[50rem] h-[50rem]"
+    sm: "w-8 h-8 sm:w-12 sm:h-12",
+    md: "w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28",
+    lg: "w-20 h-20 sm:w-32 sm:h-32 md:w-44 md:h-44",
+    xl: "w-24 h-24 sm:w-40 sm:h-40 md:w-64 md:h-64",
+    "2xl": "w-28 h-28 sm:w-48 sm:h-48 md:w-80 md:h-80",
+    "3xl": "w-24 h-24 xs:w-32 xs:h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 landscape:w-56 landscape:h-56",
+    "4xl": "w-28 h-28 sm:w-56 sm:h-56 md:w-80 md:h-80",
+    lobby: "w-28 h-28 xs:w-36 xs:h-36 sm:w-56 sm:h-56 md:w-80 md:h-80 lg:w-96 lg:h-96",
+    "5xl": "w-32 h-32 sm:w-[20rem] sm:h-[20rem] md:w-[30rem] md:h-[30rem]",
+    "6xl": "w-40 h-40 sm:w-[25rem] sm:h-[25rem] md:w-[40rem] md:h-[40rem]",
+    "7xl": "w-48 h-48 sm:w-[30rem] sm:h-[30rem] md:w-[50rem] md:h-[50rem]"
   };
 
   const handleTap = (e: React.MouseEvent) => {
@@ -129,17 +129,17 @@ export const MascotGita: React.FC<MascotProps> = ({
   const [isBouncing, setIsBouncing] = useState<boolean>(false);
 
   const sizeClasses: Record<string, string> = {
-    sm: "w-12 h-12",
-    md: "w-24 h-24 sm:w-28 sm:h-28",
-    lg: "w-36 h-36 sm:w-44 sm:h-44",
-    xl: "w-48 h-48 sm:w-64 sm:h-64",
-    "2xl": "w-60 h-60 sm:w-80 sm:h-80",
-    "3xl": "w-28 h-28 xs:w-36 xs:h-36 sm:w-56 sm:h-56 md:w-64 md:h-64 landscape:w-72 landscape:h-72",
-    "4xl": "w-72 h-72 sm:w-96 sm:h-96",
-    lobby: "w-44 h-44 xs:w-52 xs:h-52 sm:w-80 sm:h-80 md:w-96 md:h-96",
-    "5xl": "w-[30rem] h-[30rem]",
-    "6xl": "w-[40rem] h-[40rem]",
-    "7xl": "w-[50rem] h-[50rem]"
+    sm: "w-8 h-8 sm:w-12 sm:h-12",
+    md: "w-16 h-16 sm:w-24 sm:h-24 md:w-28 md:h-28",
+    lg: "w-20 h-20 sm:w-32 sm:h-32 md:w-44 md:h-44",
+    xl: "w-24 h-24 sm:w-40 sm:h-40 md:w-64 md:h-64",
+    "2xl": "w-28 h-28 sm:w-48 sm:h-48 md:w-80 md:h-80",
+    "3xl": "w-24 h-24 xs:w-32 xs:h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 landscape:w-56 landscape:h-56",
+    "4xl": "w-28 h-28 sm:w-56 sm:h-56 md:w-80 md:h-80",
+    lobby: "w-28 h-28 xs:w-36 xs:h-36 sm:w-56 sm:h-56 md:w-80 md:h-80 lg:w-96 lg:h-96",
+    "5xl": "w-32 h-32 sm:w-[20rem] sm:h-[20rem] md:w-[30rem] md:h-[30rem]",
+    "6xl": "w-40 h-40 sm:w-[25rem] sm:h-[25rem] md:w-[40rem] md:h-[40rem]",
+    "7xl": "w-48 h-48 sm:w-[30rem] sm:h-[30rem] md:w-[50rem] md:h-[50rem]"
   };
 
   const handleTap = (e: React.MouseEvent) => {

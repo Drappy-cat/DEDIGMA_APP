@@ -125,7 +125,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-10 sm:bottom-12 left-1 sm:left-3 z-40 pointer-events-auto flex flex-col items-center select-none max-w-[220px] sm:max-w-[280px] md:max-w-[320px]"
+        className="absolute bottom-10 sm:bottom-12 left-1 sm:left-3 z-40 pointer-events-auto flex flex-col items-center select-none max-w-[160px] sm:max-w-[280px] md:max-w-[320px]"
       >
         {/* Dimas Speech Dialogue Explanation */}
         <motion.div
@@ -149,7 +149,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
           <img
             src="/assets/mascot/dimas-peta.svg"
             alt="Dimas Mascot"
-            className="w-40 sm:w-56 md:w-64 lg:w-72 h-auto object-contain filter drop-shadow-2xl"
+            className="w-32 xs:w-40 sm:w-56 md:w-64 lg:w-72 h-auto object-contain filter drop-shadow-2xl"
           />
 
           {/* Dimas Name Badge — Overlapping & Covering Bottom Boundary Line */}
@@ -163,7 +163,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-        className="absolute bottom-10 sm:bottom-12 right-1 sm:right-3 z-40 pointer-events-auto flex flex-col items-center select-none max-w-[220px] sm:max-w-[280px] md:max-w-[320px]"
+        className="absolute bottom-10 sm:bottom-12 right-1 sm:right-3 z-40 pointer-events-auto flex flex-col items-center select-none max-w-[160px] sm:max-w-[280px] md:max-w-[320px]"
       >
         {/* Gita Speech Dialogue Explanation */}
         <motion.div
@@ -187,7 +187,7 @@ export const MisiSelesaiScreen: React.FC<MisiSelesaiScreenProps> = ({
           <img
             src="/assets/mascot/Gita-Petunjuk.svg"
             alt="Gita Mascot"
-            className="w-40 sm:w-56 md:w-64 lg:w-72 h-auto object-contain filter drop-shadow-2xl"
+            className="w-32 xs:w-40 sm:w-56 md:w-64 lg:w-72 h-auto object-contain filter drop-shadow-2xl"
           />
 
           {/* Gita Name Badge — Overlapping & Covering Bottom Boundary Line */}
