@@ -482,7 +482,20 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
     onNext();
   };
 
-  const heroPhoto = mission.galeri.length > 0 ? getPhotoUrl(mission.galeri[0], 600, 450) : "/assets/materi-bg.jpg";
+  const getHeroPhoto = () => {
+    let index = 0;
+    if (tab === "sejarah") index = 1;
+    else if (tab === "tujuan") index = 2;
+    else if (tab === "nilai-budaya") index = 3;
+    
+    if (mission.galeri && mission.galeri.length > index) {
+      return getPhotoUrl(mission.galeri[index], 600, 450);
+    } else if (mission.galeri && mission.galeri.length > 0) {
+      return getPhotoUrl(mission.galeri[0], 600, 450);
+    }
+    return "/assets/materi-bg.jpg";
+  };
+  const heroPhoto = getHeroPhoto();
 
   return (
     <div className="flex flex-col h-full font-['Nunito'] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden p-2 sm:p-4 md:p-6 select-none relative">
@@ -729,7 +742,7 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
                     <div className="md:col-span-5 flex justify-center">
                       <div className="w-full max-w-[260px] sm:max-w-[290px] aspect-[4/3] rounded-3xl overflow-hidden bg-[#eedebe] border-2 border-[#d6c7a3] shadow-[0_8px_25px_rgba(0,0,0,0.12)]">
                         <img
-                          src={unsplashUrl(activeDetail.photoId)}
+                          src={heroPhoto}
                           alt={activeDetail.title}
                           className="w-full h-full object-cover"
                         />
