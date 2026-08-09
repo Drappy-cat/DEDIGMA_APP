@@ -77,10 +77,10 @@ export const MISSIONS: Mission[] = [
       }
     ],
     galeri: [
-      { photoId: "1601058497548-f247dfe349d6", imageSrc: "/assets/materi/misi2/Larungsesaji.jpeg", caption: "Ritual Larung Sesaji di Telaga Sarangan, Magetan" },
-      { photoId: "1529547078401-761086c0a19b", imageSrc: "/assets/materi/Larungsesaji.jpeg", caption: "Perahu sesaji melayang di tengah danau" },
-      { photoId: "1589309736404-2e142a2acdf0", caption: "Panorama telaga saat senja tiba" },
-      { photoId: "1710611229178-4d9015dd1ba0", caption: "Prosesi warga membawa sesaji bersama" }
+      { photoId: "", imageSrc: "/assets/materi/misi1/larung_1.png", caption: "Suasana meriah Telaga Sarangan dipenuhi perahu pengiring sesaji berlatar Gunung Lawu." },
+      { photoId: "", imageSrc: "/assets/materi/misi1/larung_2.png", caption: "Warga melarung (melabuh) sesaji berupa hasil bumi dan ingkung ayam ke tengah Telaga Sarangan." },
+      { photoId: "", imageSrc: "/assets/materi/misi1/larung_3.jpg", caption: "Arak-arakan Tumpeng Gono Bahu raksasa yang dibawa warga menuju telaga." },
+      { photoId: "", imageSrc: "/assets/materi/misi1/larung_4.jpg", caption: "Gotong royong warga mengawal tumpeng hasil bumi menggunakan speedboat." }
     ],
     video: [
       {
