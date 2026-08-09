@@ -41,7 +41,7 @@ export const MascotDimas: React.FC<MascotProps> = ({
     "2xl": "w-28 h-28 sm:w-48 sm:h-48 md:w-80 md:h-80",
     "3xl": "w-24 h-24 xs:w-32 xs:h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 landscape:w-56 landscape:h-56",
     "4xl": "w-28 h-28 sm:w-56 sm:h-56 md:w-80 md:h-80",
-    lobby: "w-44 h-44 xs:w-52 xs:h-52 sm:w-80 sm:h-80 md:w-96 md:h-96",
+    lobby: "w-32 h-32 xs:w-40 xs:h-40 sm:w-52 sm:h-52 md:w-64 md:h-64 lg:w-72 lg:h-72 max-h-[58vh] max-w-[25vw]",
     "5xl": "w-32 h-32 sm:w-[20rem] sm:h-[20rem] md:w-[30rem] md:h-[30rem]",
     "6xl": "w-40 h-40 sm:w-[25rem] sm:h-[25rem] md:w-[40rem] md:h-[40rem]",
     "7xl": "w-48 h-48 sm:w-[30rem] sm:h-[30rem] md:w-[50rem] md:h-[50rem]"
@@ -106,7 +106,7 @@ export const MascotDimas: React.FC<MascotProps> = ({
         <img
           src="/assets/mascot/dimas-char.svg"
           alt="Dimas Mascot"
-          className={`${sizeClasses[size]} object-contain filter drop-shadow-md origin-bottom`}
+          className={`${sizeClasses[size]} object-contain filter drop-shadow-md origin-bottom max-h-[58vh] max-w-[25vw]`}
         />
         {!isLobby && (
           <span className="text-[10px] font-['Fredoka'] font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full mt-1 shadow-sm">
@@ -202,7 +202,7 @@ export const MascotGita: React.FC<MascotProps> = ({
         <img
           src="/assets/mascot/gita-char.svg"
           alt="Gita Mascot"
-          className={`${sizeClasses[size]} object-contain filter drop-shadow-md origin-bottom`}
+          className={`${sizeClasses[size]} object-contain filter drop-shadow-md origin-bottom max-h-[58vh] max-w-[25vw]`}
         />
         {!isLobby && (
           <span className="text-[10px] font-['Fredoka'] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full mt-1 shadow-sm">

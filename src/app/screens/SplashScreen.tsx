@@ -166,19 +166,19 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
       />
 
       {/* Main Content Area */}
-      <div className="flex-1 w-full relative z-10 flex flex-col items-center justify-center px-4 overflow-hidden">
+      <div className="flex-1 w-full relative z-10 flex flex-col items-center justify-between py-2 sm:py-4 px-4 overflow-hidden">
 
         {/* Logo Title (Center Top) */}
         <motion.div
           initial={{ y: -15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="mb-3 flex flex-col items-center z-20 pointer-events-auto select-none"
+          className="mt-0.5 sm:mt-2 mb-1 flex flex-col items-center z-20 pointer-events-auto select-none"
         >
           <img
             src="/assets/title-dedigma.png"
             alt="DEDIGMA Title Logo"
-            className="w-[300px] sm:w-[420px] md:w-[500px] h-auto object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
+            className="w-[240px] xs:w-[280px] sm:w-[360px] md:w-[460px] max-h-[18vh] sm:max-h-[22vh] h-auto object-contain filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.5)]"
           />
         </motion.div>
 
@@ -187,7 +187,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="flex flex-col items-center gap-3 w-full max-w-[250px] sm:max-w-[270px] z-50 relative pointer-events-auto"
+          className="flex flex-col items-center gap-2 sm:gap-3 w-full max-w-[180px] xs:max-w-[210px] sm:max-w-[240px] z-50 relative pointer-events-auto my-auto"
         >
           {/* MULAI Button */}
           <motion.button
@@ -199,12 +199,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
             <img
               src="/assets/button/mulai.svg"
               alt="Mulai Misi Budaya"
-              className="w-full h-auto object-contain filter drop-shadow-lg"
+              className="w-full max-h-[12vh] sm:max-h-[15vh] h-auto object-contain filter drop-shadow-lg"
             />
           </motion.button>
 
           {/* Sub buttons row: Petunjuk and Profil */}
-          <div className="grid grid-cols-2 gap-3.5 mt-1 w-full relative z-50 items-end">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3.5 mt-0.5 w-full relative z-50 items-end">
             <motion.button
               onClick={() => handleAction(onPetunjuk)}
               whileHover={{ scale: 1.05 }}
@@ -214,7 +214,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
               <img
                 src="/assets/button/petunjuk.svg"
                 alt="Petunjuk"
-                className="w-full h-auto object-contain transform scale-[1.055] filter drop-shadow-md"
+                className="w-full max-h-[7vh] sm:max-h-[9vh] h-auto object-contain transform scale-[1.055] filter drop-shadow-md"
               />
             </motion.button>
 
@@ -222,12 +222,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
               onClick={() => handleAction(onProfil)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="cursor-pointer focus:outline-none flex justify-center z-50 relative -translate-y-[2.5px]"
+              className="cursor-pointer focus:outline-none flex justify-center z-50 relative -translate-y-[2px]"
             >
               <img
                 src="/assets/button/profil.svg"
                 alt="Profil"
-                className="w-full h-auto object-contain filter drop-shadow-md"
+                className="w-full max-h-[7vh] sm:max-h-[9vh] h-auto object-contain filter drop-shadow-md"
               />
             </motion.button>
           </div>
@@ -238,17 +238,17 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -left-6 xs:-left-4 sm:-left-4 md:left-0 lg:left-4 -bottom-2 sm:-bottom-8 landscape:bottom-0 z-10 pointer-events-none flex flex-col items-center"
+          className="absolute -left-6 xs:-left-3 sm:left-2 md:left-6 bottom-0 z-10 pointer-events-none flex flex-col items-center"
         >
           <div className="relative flex flex-col items-center">
             <div className="pointer-events-auto">
               <MascotDimas size="lobby" animate={true} isLobby={true} />
             </div>
-            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#2a5bb5] via-[#1c4899] to-[#143778] border-2 border-[#6095f5] rounded-xl sm:rounded-2xl px-1.5 sm:px-6 py-0.5 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[75px] sm:min-w-[155px] pointer-events-auto">
-              <h3 className="font-['Fredoka'] font-extrabold text-[9px] sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
+            <div className="absolute bottom-1 sm:bottom-3 bg-gradient-to-b from-[#2a5bb5] via-[#1c4899] to-[#143778] border-2 border-[#6095f5] rounded-xl sm:rounded-2xl px-2 sm:px-4 py-0.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[70px] sm:min-w-[130px] pointer-events-auto">
+              <h3 className="font-['Fredoka'] font-extrabold text-[9px] sm:text-xs text-white leading-tight tracking-wider drop-shadow-sm">
                 DIMAS
               </h3>
-              <p className="font-['Nunito'] font-bold text-[8px] sm:text-[11px] text-blue-100 leading-none mt-0.5 drop-shadow-xs">
+              <p className="font-['Nunito'] font-bold text-[7px] sm:text-[9px] text-blue-100 leading-none mt-0.5 drop-shadow-xs">
                 Detektif Digital
               </p>
             </div>
@@ -259,17 +259,17 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ opacity: 0, x: 30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -right-6 xs:-right-4 sm:-right-4 md:right-0 lg:right-4 -bottom-2 sm:-bottom-8 landscape:bottom-0 z-10 pointer-events-none flex flex-col items-center"
+          className="absolute -right-6 xs:-right-3 sm:right-2 md:right-6 bottom-0 z-10 pointer-events-none flex flex-col items-center"
         >
           <div className="relative flex flex-col items-center">
             <div className="pointer-events-auto">
               <MascotGita size="lobby" animate={true} isLobby={true} />
             </div>
-            <div className="absolute top-[52%] -translate-y-1/2 bg-gradient-to-b from-[#8f4121] via-[#7e371b] to-[#592410] border-2 border-[#bd6d46] rounded-xl sm:rounded-2xl px-1.5 sm:px-6 py-0.5 sm:py-1.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[75px] sm:min-w-[155px] pointer-events-auto">
-              <h3 className="font-['Fredoka'] font-extrabold text-[9px] sm:text-base text-white leading-tight tracking-wider drop-shadow-sm">
+            <div className="absolute bottom-1 sm:bottom-3 bg-gradient-to-b from-[#8f4121] via-[#7e371b] to-[#592410] border-2 border-[#bd6d46] rounded-xl sm:rounded-2xl px-2 sm:px-4 py-0.5 text-center shadow-[0_8px_20px_rgba(0,0,0,0.6)] select-none z-20 min-w-[70px] sm:min-w-[130px] pointer-events-auto">
+              <h3 className="font-['Fredoka'] font-extrabold text-[9px] sm:text-xs text-white leading-tight tracking-wider drop-shadow-sm">
                 GITA
               </h3>
-              <p className="font-['Nunito'] font-bold text-[8px] sm:text-[11px] text-amber-100 leading-none mt-0.5 drop-shadow-xs">
+              <p className="font-['Nunito'] font-bold text-[7px] sm:text-[9px] text-amber-100 leading-none mt-0.5 drop-shadow-xs">
                 Penjaga Budaya
               </p>
             </div>

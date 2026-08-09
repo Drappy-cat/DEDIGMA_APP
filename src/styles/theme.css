@@ -209,3 +209,20 @@
     -webkit-backdrop-filter: none !important;
   }
 }
+
+/* Auto-scale responsive layout for mobile landscape screens (1080p landscape, 720p landscape) */
+@media (orientation: landscape) and (max-height: 520px) {
+  :root {
+    --font-size: 13.5px;
+  }
+
+  .landscape-compact-padding {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+  }
+
+  .landscape-compact-gap {
+    gap: 0.35rem !important;
+  }
+}
+
