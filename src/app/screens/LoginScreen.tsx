@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
+import { Eye, EyeOff } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { useAudio } from "../contexts/AudioContext";
 import { Role } from "../types";
@@ -20,6 +21,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSiswa, onLoginG
   const [kelas, setKelas] = useState("4");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -232,13 +234,22 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLoginSiswa, onLoginG
                       </div>
                       <div className="space-y-1">
                         <label className="font-['Nunito'] font-bold text-xs text-[#4a3728] block">Password Guru</label>
-                        <input
-                          type="password"
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          placeholder="Masukkan password..."
-                          className="w-full border-2 border-[#b59e7a] rounded-xl px-3 py-2 font-['Nunito'] text-sm text-gray-800 focus:outline-none focus:border-[#7e371b] bg-white/90"
-                        />
+                        <div className="relative">
+                          <input
+                            type={showPassword ? "text" : "password"}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Masukkan password..."
+                            className="w-full border-2 border-[#b59e7a] rounded-xl px-3 py-2 pr-10 font-['Nunito'] text-sm text-gray-800 focus:outline-none focus:border-[#7e371b] bg-white/90"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#7e371b] transition-colors focus:outline-none cursor-pointer"
+                          >
+                            {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}
