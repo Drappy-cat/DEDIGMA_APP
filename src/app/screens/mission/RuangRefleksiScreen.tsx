@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { Lightbulb } from "lucide-react";
 import { Mission } from "../../types";
 import { useAudio } from "../../contexts/AudioContext";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface RuangRefleksiScreenProps {
   mission: Mission;
@@ -12,7 +13,20 @@ interface RuangRefleksiScreenProps {
 
 export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ mission, onNext, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
-  const [answers, setAnswers] = useState<string[]>(mission.refleksiPertanyaan.map(() => ""));
+  const { userName } = useAuth();
+  const storageKey = `dedigma_mission_${mission.id}_refleksi_${userName}`;
+
+  const [answers, setAnswers] = useState<string[]>(() => {
+    const saved = sessionStorage.getItem(storageKey);
+    if (saved) return JSON.parse(saved).answers;
+    return mission.refleksiPertanyaan.map(() => "");
+  });
+  
+  const [isSubmitted, setIsSubmitted] = useState(() => {
+    const saved = sessionStorage.getItem(storageKey);
+    if (saved) return JSON.parse(saved).isSubmitted;
+    return false;
+  });
 
   useEffect(() => {
     playNarrator(
@@ -23,13 +37,20 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
     };
   }, []);
 
+  useEffect(() => {
+    sessionStorage.setItem(storageKey, JSON.stringify({ answers, isSubmitted }));
+  }, [answers, isSubmitted, storageKey]);
+
   const handleNext = () => {
     playSFX("click");
+    if (!isSubmitted) {
+      setIsSubmitted(true);
+    }
     const formattedReflection = answers.map((ans, idx) => `Q${idx + 1}: ${ans.trim()}`).join(" | ");
     onNext(formattedReflection);
   };
 
-  const canContinue = answers.every((a) => a.trim().length >= 5);
+  const canContinue = isSubmitted || answers.every((a) => a.trim().length >= 5);
 
   return (
     <div className="flex flex-col h-full font-['Nunito'] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden p-2 sm:p-4 md:p-6 select-none relative">
@@ -105,11 +126,15 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
               <textarea
                 value={answers[i]}
                 onChange={(e) => {
+                  if (isSubmitted) return;
                   const val = e.target.value.slice(0, 300);
                   setAnswers((prev) => prev.map((a, j) => (j === i ? val : a)));
                 }}
-                placeholder="Tuliskan pemikiran atau tanggapanmu di sini..."
-                className="w-full bg-[#fcfaf5]/80 border border-[#e2d6b9] focus:border-[#256c3a] focus:bg-white rounded-2xl p-3.5 sm:p-4 text-xs sm:text-sm text-[#3a2718] font-['Nunito'] font-semibold leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#256c3a]/30 resize-none transition-all min-h-[120px] sm:min-h-[150px]"
+                disabled={isSubmitted}
+                placeholder={isSubmitted ? "" : "Tuliskan pemikiran atau tanggapanmu di sini..."}
+                className={`w-full border border-[#e2d6b9] focus:bg-white rounded-2xl p-3.5 sm:p-4 text-xs sm:text-sm font-['Nunito'] font-semibold leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#256c3a]/30 resize-none transition-all min-h-[120px] sm:min-h-[150px] ${
+                  isSubmitted ? "bg-[#e8e4db] text-[#595349] cursor-not-allowed opacity-80" : "bg-[#fcfaf5]/80 focus:border-[#256c3a] text-[#3a2718]"
+                }`}
               />
               {/* Character Counter */}
               <div className="absolute bottom-3 right-4 text-[11px] sm:text-xs font-semibold text-[#a89d88] pointer-events-none select-none">
@@ -144,7 +169,7 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
               : "bg-[#ccc3b1] text-[#787163] border-[#a89f8f] cursor-not-allowed opacity-70"
           }`}
         >
-          <span>Kirim Refleksi</span>
+          <span>{isSubmitted ? "Lanjut" : "Kirim Refleksi"}</span>
           <span>→</span>
         </button>
       </div>
