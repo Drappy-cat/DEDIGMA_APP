@@ -5,6 +5,7 @@ import { AudioProvider, useAudio } from "./contexts/AudioContext";
 import { Screen, Role, GameState, createDefaultGameState, calculateBadges } from "./types";
 import { Btn } from "./components/Btn";
 import { Toaster, toast } from "sonner";
+import { RefreshCw } from "lucide-react";
 import { syncProgressToSupabase, syncPretestToSupabase, syncPosttestToSupabase, fetchStudentDataFromSupabase, subscribeToStudentProgress } from "./services/supabase";
 import { usePerformance } from "./hooks/usePerformance";
 
@@ -676,10 +677,28 @@ function AppContent() {
   );
 }
 
+const PortraitBlocker = () => (
+  <div className="fixed inset-0 z-[99999] bg-slate-900 flex-col items-center justify-center p-6 text-center select-none hidden portrait:flex landscape:hidden">
+    <div className="w-24 h-24 bg-amber-400 rounded-full flex items-center justify-center mb-6 animate-pulse shadow-lg shadow-amber-500/20">
+      <span className="text-6xl font-black text-slate-900 leading-none">!</span>
+    </div>
+    <h2 className="text-2xl sm:text-3xl font-['Fredoka'] font-extrabold text-white mb-3 tracking-wide">
+      Mohon Putar Perangkat Anda
+    </h2>
+    <p className="text-slate-300 font-['Nunito'] text-sm sm:text-base max-w-sm font-semibold">
+      Aplikasi DEDIGMA dirancang untuk dimainkan secara optimal dalam mode mendatar (Landscape). Silakan putar layar HP/Tablet Anda untuk melanjutkan petualangan.
+    </p>
+    <div className="mt-8 text-amber-400 opacity-80" style={{ animation: "spin 4s linear infinite" }}>
+      <RefreshCw size={48} strokeWidth={1.5} />
+    </div>
+  </div>
+);
+
 export function App() {
   return (
     <AuthProvider>
       <AudioProvider>
+        <PortraitBlocker />
         <AppContent />
         <Toaster position="top-center" richColors />
       </AudioProvider>
