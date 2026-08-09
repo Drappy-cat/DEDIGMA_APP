@@ -94,7 +94,8 @@ export const MISSIONS: Mission[] = [
         title: "Makna & Nilai Budaya Larung Sesaji",
         desc: "Penjelasan mendalam mengenai filosofi, sejarah, dan nilai-nilai luhur yang terkandung dalam tradisi Larung Sesaji.",
         thumbId: "1529547078401-761086c0a19b",
-        query: "makna+larung+sesaji+budaya+jawa"
+        query: "makna+larung+sesaji+budaya+jawa",
+        videoId: "2rmxjoDiisM"
       }
     ]
   },
