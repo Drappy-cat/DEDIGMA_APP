@@ -237,13 +237,17 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Banner Title Asset - Absolute Overlay */}
-      <div className="absolute -top-4 sm:-top-8 inset-x-0 z-40 flex justify-center pointer-events-none">
+
+
+      {/* Main Content: Stamp Cards Carousel & Title */}
+      <div className="flex-1 relative z-10 flex flex-col items-center justify-center pb-24 sm:pb-28 px-2 sm:px-6 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        
+        {/* Banner Title Asset */}
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="w-60 sm:w-80 md:w-96"
+          className="w-60 sm:w-80 md:w-96 mb-6 sm:mb-8 pointer-events-none z-40"
         >
           <img 
             src="/assets/map-petatxt.svg" 
@@ -251,10 +255,7 @@ export const PetaMisiScreen: React.FC<PetaMisiScreenProps> = ({
             className="w-full h-auto drop-shadow-[0_4px_8px_rgba(0,0,0,0.6)] object-contain"
           />
         </motion.div>
-      </div>
 
-      {/* Main Content: Stamp Cards Carousel */}
-      <div className="flex-1 relative z-10 flex flex-col items-center justify-start pt-32 sm:pt-40 pb-8 sm:pb-12 px-2 sm:px-6 min-h-0 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {/* Stamp Cards Row */}
         <div className="flex items-center justify-center gap-1.5 sm:gap-4 w-full max-w-4xl">
           {/* Left Arrow */}
