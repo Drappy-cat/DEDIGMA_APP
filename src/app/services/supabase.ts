@@ -25,11 +25,11 @@ export async function resetStudentDatabase() {
 
   try {
     // Delete progress
-    const { error: err1 } = await supabase.from("progress_misi").delete().neq("id", 0);
+    const { error: err1 } = await supabase.from("progress_misi").delete().not("id", "is", null);
     // Delete pretest
-    const { error: err2 } = await supabase.from("pretest_results").delete().neq("id", 0);
+    const { error: err2 } = await supabase.from("pretest_results").delete().not("id", "is", null);
     // Delete posttest
-    const { error: err3 } = await supabase.from("posttest_results").delete().neq("id", 0);
+    const { error: err3 } = await supabase.from("posttest_results").delete().not("id", "is", null);
     // Delete student profiles
     const { error: err4 } = await supabase.from("profiles").delete().eq("role", "siswa");
 
