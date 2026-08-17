@@ -10,7 +10,8 @@ export const POSTTEST_QUESTIONS: Question[] = [
       "Menggambar informasi",
       "Menyimpan informasi"
     ],
-    jawaban: 0
+    jawaban: 0,
+    pembahasan: "Mengevaluasi informasi berarti menilai kebenaran, keakuratan, dan kredibilitas sebuah berita dengan membandingkannya terhadap referensi atau sumber resmi, agar terhindar dari misinformasi."
   },
   {
     id: 2,
@@ -21,7 +22,8 @@ export const POSTTEST_QUESTIONS: Question[] = [
       "Menghapus informasi",
       "Membuat informasi"
     ],
-    jawaban: 0
+    jawaban: 0,
+    pembahasan: "Verifikasi informasi adalah sebuah proses penting literasi digital yang dilakukan untuk memeriksa, menyocokkan, dan mengonfirmasi kebenaran suatu data dari berbagai sudut pandang (termasuk sumber pemerintah)."
   },
   {
     id: 3,
@@ -32,7 +34,8 @@ export const POSTTEST_QUESTIONS: Question[] = [
       "Larung Sesaji hanya untuk wisatawan",
       "Larung Sesaji adalah bentuk rasa Syukur"
     ],
-    jawaban: 3
+    jawaban: 3,
+    pembahasan: "Gagasan utama (informasi penting) dari bacaan di atas adalah nilai filosofis luhur dari tradisi Larung Sesaji, yaitu sebagai wujud syukur masyarakat kepada Tuhan Yang Maha Esa atas anugerah alam."
   },
   {
     id: 4,
@@ -43,7 +46,8 @@ export const POSTTEST_QUESTIONS: Question[] = [
       "Menggunakan informasi secara bijak",
       "Mengubah informasi"
     ],
-    jawaban: 2
+    jawaban: 2,
+    pembahasan: "Membaca artikel secara utuh dan menyeluruh (tidak hanya tergiur oleh judul *clickbait*) sebelum membagikannya adalah ciri khas pengguna internet yang memiliki literasi digital yang bijak."
   },
   {
     id: 5,
@@ -54,7 +58,8 @@ export const POSTTEST_QUESTIONS: Question[] = [
       "Pendapat pribadi",
       "Tebakan"
     ],
-    jawaban: 1
+    jawaban: 1,
+    pembahasan: "Pernyataan tersebut bersifat objektif dan benar adanya. Pelaksanaan Larung Sesaji di Telaga Sarangan adalah kejadian nyata yang lokasinya dapat dibuktikan kebenarannya oleh siapapun, sehingga diklasifikasikan sebagai kalimat fakta."
   },
   {
     id: 6,
@@ -65,7 +70,8 @@ export const POSTTEST_QUESTIONS: Question[] = [
       "Menyebarkan informasi tersebut",
       "Mengabaikan semua informasi"
     ],
-    jawaban: 1
+    jawaban: 1,
+    pembahasan: "Sebagai pembaca yang kritis (Detektif Budaya), apabila kita menemukan inkonsistensi informasi, kita harus mengecek kembali sumber-sumber tersebut untuk melihat mana yang memiliki otoritas dan verifikasi yang lebih kuat."
   },
   {
     id: 7,
@@ -76,7 +82,8 @@ export const POSTTEST_QUESTIONS: Question[] = [
       "Ledug Suro",
       "Karapan Sapi"
     ],
-    jawaban: 0
+    jawaban: 0,
+    pembahasan: "Tradisi yang secara spesifik melibatkan aksi 'melarungkan' (menghanyutkan) sesaji ke tengah Telaga Sarangan oleh masyarakat Magetan dikenal luas sebagai upacara adat Larung Sesaji."
   },
   {
     id: 8,
@@ -87,7 +94,8 @@ export const POSTTEST_QUESTIONS: Question[] = [
       "Sekaten",
       "Grebeg"
     ],
-    jawaban: 1
+    jawaban: 1,
+    pembahasan: "Festival Ledug Suro diadakan setiap tahunnya untuk memperingati datangnya bulan Muharam (1 Suro) dalam kalender Hijriah/Jawa, yang diramaikan dengan berbagai pertunjukan seni budaya."
   },
   {
     id: 9,
@@ -98,7 +106,8 @@ export const POSTTEST_QUESTIONS: Question[] = [
       "Egoisme",
       "Gotong royong"
     ],
-    jawaban: 3
+    jawaban: 3,
+    pembahasan: "Nilai gotong royong sangat kental dan melekat dalam tradisi budaya masyarakat Jawa. Hal ini tercermin nyata dari kekompakan warga desa saat bekerja sama mempersiapkan seluruh elemen upacara adat."
   },
   {
     id: 10,
@@ -109,6 +118,7 @@ export const POSTTEST_QUESTIONS: Question[] = [
       "Bangga dan ikut menjaga budaya daerah",
       "Menolak tradisi yang ada"
     ],
-    jawaban: 2
+    jawaban: 2,
+    pembahasan: "Dengan mempelajari budaya lokal melalui media DEDIGMA, generasi penerus diharapkan dapat menumbuhkan rasa bangga dan termotivasi untuk turut serta menjaga dan merawat warisan kearifan lokal Nusantara."
   }
 ];
