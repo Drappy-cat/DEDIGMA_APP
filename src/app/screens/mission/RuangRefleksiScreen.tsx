@@ -11,6 +11,8 @@ interface RuangRefleksiScreenProps {
   onBack?: () => void;
 }
 
+const MIN_CHARS = 10;
+
 export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ mission, onNext, onBack }) => {
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const { userName } = useAuth();
@@ -30,7 +32,7 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
 
   useEffect(() => {
     playNarrator(
-      `Ruang Refleksi. Tuliskan pendapat atau perasaanmu setelah mempelajari tradisi ${mission.name}. Tulis minimal 5 huruf ya.`
+      `Ruang Refleksi. Tuliskan pendapat atau perasaanmu setelah mempelajari tradisi ${mission.name}. Tulis minimal ${MIN_CHARS} karakter untuk setiap pertanyaan ya.`
     );
     return () => {
       stopNarrator();
@@ -50,7 +52,7 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
     onNext(formattedReflection);
   };
 
-  const canContinue = isSubmitted || answers.every((a) => a.trim().length >= 5);
+  const canContinue = isSubmitted || answers.every((a) => a.trim().length >= MIN_CHARS);
 
   return (
     <div className="flex flex-col h-full font-['Nunito'] overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden p-2 sm:p-4 md:p-6 select-none relative">
@@ -97,52 +99,83 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
             <div className="absolute top-4 -left-2 w-0 h-0 border-t-7 border-t-transparent border-r-[9px] border-r-[#fdfcf7] border-b-7 border-b-transparent" />
 
             <p className="text-[#4a3728] text-xs sm:text-sm font-['Nunito'] font-bold leading-relaxed">
-              Hai! Aku Gita. Sekarang saatnya menuliskan pemikiranmu. Tidak ada jawaban salah, tulis apa saja yang kamu rasakan tentang warisan budaya kita! 🌸
+              Hai! Aku Gita. Tuliskan pendapat atau perasaanmu secara bermakna ya (minimal <span className="text-[#256c3a] font-extrabold">{MIN_CHARS} karakter</span> per kolom). Tidak ada jawaban salah, ayo ungkapkan apa yang kamu pelajari! 🌸
             </p>
           </div>
         </div>
 
         {/* Reflection Questions List */}
-        {mission.refleksiPertanyaan.map((q, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1 }}
-            className="bg-[#fdfcf7] border border-[#e8dcb8] rounded-3xl p-4 sm:p-5 shadow-xs space-y-3 relative"
-          >
-            {/* Question Title Header with Green Circular Number Badge */}
-            <div className="flex items-center gap-3">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#256c3a] text-white font-['Fredoka'] font-extrabold text-sm sm:text-base flex items-center justify-center flex-shrink-0 shadow-xs">
-                {i + 1}
-              </div>
-              <h3 className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-sm sm:text-base md:text-lg leading-snug">
-                {q}
-              </h3>
-            </div>
+        {mission.refleksiPertanyaan.map((q, i) => {
+          const charLen = (answers[i] || "").trim().length;
+          const isMet = charLen >= MIN_CHARS;
 
-            {/* Textarea Input Container */}
-            <div className="relative">
-              <textarea
-                value={answers[i] || ""}
-                onChange={(e) => {
-                  if (isSubmitted) return;
-                  const val = e.target.value.slice(0, 300);
-                  setAnswers((prev) => prev.map((a, j) => (j === i ? val : a)));
-                }}
-                disabled={isSubmitted}
-                placeholder={isSubmitted ? "" : "Tuliskan pemikiran atau tanggapanmu di sini..."}
-                className={`w-full border border-[#e2d6b9] focus:bg-white rounded-2xl p-3.5 sm:p-4 text-xs sm:text-sm font-['Nunito'] font-semibold leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#256c3a]/30 resize-none transition-all min-h-[120px] sm:min-h-[150px] ${
-                  isSubmitted ? "bg-[#e8e4db] text-[#595349] cursor-not-allowed opacity-80" : "bg-[#fcfaf5]/80 focus:border-[#256c3a] text-[#3a2718]"
-                }`}
-              />
-              {/* Character Counter */}
-              <div className="absolute bottom-3 right-4 text-[11px] sm:text-xs font-semibold text-[#a89d88] pointer-events-none select-none">
-                {(answers[i] || "").length}/300
+          return (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="bg-[#fdfcf7] border border-[#e8dcb8] rounded-3xl p-4 sm:p-5 shadow-xs space-y-3 relative"
+            >
+              {/* Question Title Header with Green Circular Number Badge */}
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#256c3a] text-white font-['Fredoka'] font-extrabold text-sm sm:text-base flex items-center justify-center flex-shrink-0 shadow-xs">
+                    {i + 1}
+                  </div>
+                  <h3 className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-sm sm:text-base md:text-lg leading-snug">
+                    {q}
+                  </h3>
+                </div>
+
+                {/* Status Pill Badge */}
+                {!isSubmitted && (
+                  <div
+                    className={`text-[10px] sm:text-xs font-['Fredoka'] font-extrabold px-2.5 py-0.5 rounded-full border flex items-center gap-1 flex-shrink-0 ${
+                      isMet
+                        ? "bg-[#e8f5e9] text-[#256c3a] border-[#a5d6a7]"
+                        : "bg-[#fff3e0] text-[#b85a1a] border-[#ffcc80]"
+                    }`}
+                  >
+                    {isMet ? "✓ Lengkap" : `Min. ${MIN_CHARS} karakter`}
+                  </div>
+                )}
               </div>
-            </div>
-          </motion.div>
-        ))}
+
+              {/* Textarea Input Container */}
+              <div className="relative">
+                <textarea
+                  value={answers[i]}
+                  onChange={(e) => {
+                    if (isSubmitted) return;
+                    const val = e.target.value.slice(0, 300);
+                    setAnswers((prev) => prev.map((a, j) => (j === i ? val : a)));
+                  }}
+                  disabled={isSubmitted}
+                  placeholder={isSubmitted ? "" : `Tuliskan pendapatmu secara jelas di sini (minimal ${MIN_CHARS} karakter)...`}
+                  className={`w-full border rounded-2xl p-3.5 sm:p-4 text-xs sm:text-sm font-['Nunito'] font-semibold leading-relaxed focus:outline-none focus:ring-2 resize-none transition-all min-h-[120px] sm:min-h-[140px] pb-8 ${
+                    isSubmitted
+                      ? "bg-[#e8e4db] text-[#595349] border-[#e2d6b9] cursor-not-allowed opacity-80"
+                      : isMet
+                      ? "bg-[#fcfaf5]/80 border-[#a5d6a7] focus:border-[#256c3a] focus:bg-white text-[#3a2718] focus:ring-[#256c3a]/30"
+                      : "bg-[#fcfaf5]/80 border-[#e2d6b9] focus:border-[#d97706] focus:bg-white text-[#3a2718] focus:ring-[#d97706]/30"
+                  }`}
+                />
+                {/* Character Counter & Helper */}
+                <div className="absolute bottom-2.5 right-4 flex items-center gap-2 pointer-events-none select-none text-[11px] sm:text-xs font-semibold">
+                  {!isSubmitted && (
+                    <span className={isMet ? "text-[#256c3a]" : "text-[#b85a1a]"}>
+                      {isMet ? "✓ Siap" : `Kurang ${Math.max(0, MIN_CHARS - charLen)} karakter`}
+                    </span>
+                  )}
+                  <span className="text-[#a89d88]">
+                    {(answers[i] || "").length}/300
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Bottom Action / Navigation Bar */}
@@ -160,18 +193,26 @@ export const RuangRefleksiScreen: React.FC<RuangRefleksiScreenProps> = ({ missio
           <div className="w-20" />
         )}
 
-        <button
-          onClick={() => { playSFX("click"); handleNext(); }}
-          disabled={!canContinue}
-          className={`rounded-full px-6 py-2 flex items-center gap-2 font-['Fredoka'] font-extrabold text-sm shadow-lg transition-all border-2 ${
-            canContinue
-              ? "bg-gradient-to-b from-[#fdb813] via-[#f59e0b] to-[#e68a00] hover:from-[#ffc125] hover:to-[#f09300] text-white border-[#fff5ce] cursor-pointer hover:scale-105 active:scale-95"
-              : "bg-[#ccc3b1] text-[#787163] border-[#a89f8f] cursor-not-allowed opacity-70"
-          }`}
-        >
-          <span>{isSubmitted ? "Lanjut" : "Kirim Refleksi"}</span>
-          <span>→</span>
-        </button>
+        <div className="flex items-center gap-3">
+          {!canContinue && !isSubmitted && (
+            <span className="text-[11px] sm:text-xs font-bold text-[#8c5220] bg-[#fff6e5] border border-[#f0d4a8] px-3 py-1 rounded-full hidden sm:inline-block animate-pulse">
+              ⚠️ Isi semua kolom minimal {MIN_CHARS} karakter
+            </span>
+          )}
+
+          <button
+            onClick={() => { playSFX("click"); handleNext(); }}
+            disabled={!canContinue}
+            className={`rounded-full px-6 py-2 flex items-center gap-2 font-['Fredoka'] font-extrabold text-sm shadow-lg transition-all border-2 ${
+              canContinue
+                ? "bg-gradient-to-b from-[#fdb813] via-[#f59e0b] to-[#e68a00] hover:from-[#ffc125] hover:to-[#f09300] text-white border-[#fff5ce] cursor-pointer hover:scale-105 active:scale-95"
+                : "bg-[#ccc3b1] text-[#787163] border-[#a89f8f] cursor-not-allowed opacity-70"
+            }`}
+          >
+            <span>{isSubmitted ? "Lanjut" : "Kirim Refleksi"}</span>
+            <span>→</span>
+          </button>
+        </div>
       </div>
     </div>
   );
