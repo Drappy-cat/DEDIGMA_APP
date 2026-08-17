@@ -84,6 +84,7 @@ export interface Mission {
     photoId: string;
     imageSrc?: string;
     caption: string;
+    source?: string;
   }[];
   video: {
     title: string;

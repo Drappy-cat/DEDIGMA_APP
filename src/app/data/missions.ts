@@ -20,7 +20,7 @@ export const MISSIONS: Mission[] = [
       pengertian:
         "Larung Sesaji adalah tradisi ritual budaya masyarakat Jawa yang dilakukan di perairan atau danau sebagai wujud syukur kepada Tuhan Yang Maha Esa. Di Magetan, tradisi ini dilaksanakan setiap tahun di Telaga Sarangan dengan cara melarung (menghanyutkan) sesaji ke tengah danau.",
       sejarah:
-        "Tradisi Larung Sesaji telah berlangsung selama ratusan tahun dan diwariskan secara turun-temurun oleh masyarakat Magetan. Kegiatan ini menjadi simbol harmoni antara manusia, alam, dan Sang Pencipta. Setiap tahun, ribuan masyarakat dan wisatawan menyaksikan ritual sakral ini.",
+        "Tradisi Larung Sesaji di Telaga Sarangan memiliki akar sejarah yang sangat panjang, diperkirakan telah ada sejak abad ke-15 Masehi, bersamaan dengan terbentuknya pemukiman masyarakat di sekitar lereng Gunung Lawu. Menurut legenda lokal, Telaga Sarangan terbentuk akibat peristiwa supranatural yang melibatkan Kyai Pasir — seorang tokoh spiritual yang dipercaya sebagai cikal bakal masyarakat setempat. Masyarakat kemudian melakukan ritual melarung sesaji ke tengah telaga sebagai wujud penghormatan dan rasa syukur atas keberadaan telaga yang menjadi sumber kehidupan.\n\nSetiap tahunnya, tradisi ini dilaksanakan pada bulan Suro (Muharram) dalam kalender Jawa, tepatnya menjelang atau sesudah tanggal 1 Suro. Prosesi dimulai dengan pembuatan tumpeng raksasa yang disebut Tumpeng Gono Bahu, kemudian diarak bersama-sama oleh warga dari pendopo kecamatan menuju Telaga Sarangan. Sesaji berupa hasil bumi, bunga, dan ingkung ayam dilarung (dihanyutkan) ke tengah telaga menggunakan perahu tradisional.\n\nSebagai kearifan lokal Magetan, Larung Sesaji bukan sekadar ritual — tetapi juga menjadi sarana pelestarian nilai gotong royong, penghormatan terhadap alam, dan penguatan identitas budaya masyarakat Magetan. Tradisi ini telah ditetapkan sebagai salah satu agenda tahunan pariwisata Kabupaten Magetan dan menarik ribuan wisatawan dari berbagai daerah.",
       tujuan:
         "Larung Sesaji dilaksanakan sebagai ungkapan rasa syukur atas berkah Tuhan Yang Maha Esa, memohon keselamatan bagi masyarakat, serta menjaga kelestarian alam dan kearifan lokal Magetan agar tetap lestari untuk generasi mendatang.",
       nilaiBudaya: ["Syukur", "Gotong Royong", "Harmoni Alam", "Kebersamaan"]
@@ -77,10 +77,10 @@ export const MISSIONS: Mission[] = [
       }
     ],
     galeri: [
-      { photoId: "", imageSrc: "/assets/materi/misi1/larung_1.png", caption: "Suasana meriah Telaga Sarangan dipenuhi perahu pengiring sesaji berlatar Gunung Lawu." },
-      { photoId: "", imageSrc: "/assets/materi/misi1/larung_2.png", caption: "Warga melarung (melabuh) sesaji berupa hasil bumi dan ingkung ayam ke tengah Telaga Sarangan." },
-      { photoId: "", imageSrc: "/assets/materi/misi1/larung_3.jpg", caption: "Arak-arakan Tumpeng Gono Bahu raksasa yang dibawa warga menuju telaga." },
-      { photoId: "", imageSrc: "/assets/materi/misi1/larung_4.jpg", caption: "Gotong royong warga mengawal tumpeng hasil bumi menggunakan speedboat." }
+      { photoId: "", imageSrc: "/assets/materi/misi1/larung_1.png", caption: "Suasana meriah Telaga Sarangan dipenuhi perahu pengiring sesaji berlatar Gunung Lawu.", source: "Dok. Pemkab Magetan" },
+      { photoId: "", imageSrc: "/assets/materi/misi1/larung_2.png", caption: "Warga melarung (melabuh) sesaji berupa hasil bumi dan ingkung ayam ke tengah Telaga Sarangan.", source: "Dok. Dinas Kebudayaan Magetan" },
+      { photoId: "", imageSrc: "/assets/materi/misi1/larung_3.jpg", caption: "Arak-arakan Tumpeng Gono Bahu raksasa yang dibawa warga menuju telaga.", source: "Dok. Pemkab Magetan" },
+      { photoId: "", imageSrc: "/assets/materi/misi1/larung_4.jpg", caption: "Gotong royong warga mengawal tumpeng hasil bumi menggunakan speedboat.", source: "Dok. Pemkab Magetan" }
     ],
     video: [
       {
@@ -118,7 +118,7 @@ export const MISSIONS: Mission[] = [
       pengertian:
         "Nyadaran adalah tradisi ziarah kubur dan membersihkan makam leluhur yang dilakukan masyarakat Jawa, termasuk di Magetan. Tradisi ini dilaksanakan sebagai bentuk penghormatan dan doa kepada arwah para leluhur yang telah mendahului.",
       sejarah:
-        "Nyadaran telah diwariskan secara turun-temurun dalam budaya Jawa sejak berabad-abad lalu. Tradisi ini biasanya dilakukan menjelang bulan Ramadan sebagai bagian dari persiapan spiritual masyarakat Magetan.",
+        "Tradisi Nyadaran (atau Nyadran) berasal dari kata Jawa 'sadar' yang bermakna kesadaran diri dan introspeksi. Tradisi ini merupakan bentuk akulturasi budaya pra-Islam (Hindu-Buddha) dengan nilai-nilai Islam yang telah berlangsung sejak masa Kerajaan Mataram Islam pada abad ke-16 hingga ke-17 Masehi. Pada masa itu, para ulama dan tokoh agama Islam memperkenalkan tradisi ziarah kubur dan doa bersama sebagai pengganti ritual sesembahan kepada arwah leluhur.\n\nDi Magetan, pelaksanaan Nyadaran biasanya jatuh pada bulan Ruwah (Sya'ban) dalam kalender Jawa, yaitu sekitar 1-2 minggu menjelang bulan Ramadan. Prosesi dimulai dengan kerja bakti membersihkan kompleks makam desa (pepunden), dilanjutkan dengan pembacaan doa dan tahlil bersama yang dipimpin oleh tokoh agama atau sesepuh desa. Setelah itu, warga mengadakan kembul bujana — makan bersama dengan hidangan yang telah dibawa masing-masing keluarga.\n\nNyadaran memiliki makna filosofis yang sangat dalam bagi masyarakat Magetan: pertama, sebagai sarana menyucikan diri sebelum memasuki bulan Ramadan; kedua, sebagai momentum menyambung silaturahmi dengan sanak keluarga yang datang dari perantauan; dan ketiga, sebagai pengingat akan hakikat kehidupan dan kematian. Tradisi ini menjadi kearifan lokal yang memperkuat ikatan sosial antarwarga desa di Magetan dan telah diakui sebagai warisan budaya tak benda (intangible cultural heritage) Jawa Timur.",
       tujuan:
         "Menghormati dan mendoakan arwah leluhur, mempererat tali silaturahmi antar anggota keluarga besar, serta menjaga dan melestarikan nilai-nilai luhur budaya lokal Magetan.",
       nilaiBudaya: ["Hormat Leluhur", "Silaturahmi", "Kebersamaan", "Religiusitas"]
@@ -175,11 +175,11 @@ export const MISSIONS: Mission[] = [
       }
     ],
     galeri: [
-      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_1.jpg", caption: "Suasana kebersamaan warga saat makan bersama (kembul bujana) usai doa bersama." },
-      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_2.jpg", caption: "Warga khusyuk memanjatkan doa di area makam leluhur atau pepunden desa." },
-      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_3.jpg", caption: "Arak-arakan warga dengan pakaian adat membawa sesaji hasil bumi menuju tempat Nyadran." },
-      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_4.png", caption: "Tokoh masyarakat dan warga membacakan doa dan tahlil bersama di bawah pohon rindang makam leluhur." },
-      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_5.jpg", caption: "Berbagai sajian makanan dan jajanan tradisional disiapkan untuk dimakan bersama usai prosesi doa." }
+      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_1.jpg", caption: "Suasana kebersamaan warga saat makan bersama (kembul bujana) usai doa bersama.", source: "Dok. Dinas Kebudayaan Jawa Timur" },
+      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_2.jpg", caption: "Warga khusyuk memanjatkan doa di area makam leluhur atau pepunden desa.", source: "Dok. Pemkab Magetan" },
+      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_3.jpg", caption: "Arak-arakan warga dengan pakaian adat membawa sesaji hasil bumi menuju tempat Nyadran.", source: "Dok. Dinas Kebudayaan Jawa Timur" },
+      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_4.png", caption: "Tokoh masyarakat dan warga membacakan doa dan tahlil bersama di bawah pohon rindang makam leluhur.", source: "Dok. Pemkab Magetan" },
+      { photoId: "", imageSrc: "/assets/materi/misi2/nyadran_5.jpg", caption: "Berbagai sajian makanan dan jajanan tradisional disiapkan untuk dimakan bersama usai prosesi doa.", source: "Dok. Dinas Kebudayaan Jawa Timur" }
     ],
     video: [
       {
@@ -217,7 +217,7 @@ export const MISSIONS: Mission[] = [
       pengertian:
         "Ledhug Suro adalah perayaan Tahun Baru Jawa (1 Muharram/Suro) yang ditandai dengan iringan bunyi ledhug (bedug) dan pertunjukan berbagai kesenian tradisional Jawa. 'Ledhug' berarti bunyi bedug yang dipukul menandai pergantian tahun.",
       sejarah:
-        "Perayaan Ledhug Suro telah menjadi festival budaya tahunan di Magetan yang menggabungkan tradisi Islam dan budaya Jawa dengan harmonis. Festival ini menarik ribuan pengunjung dari berbagai daerah dan menjadi kebanggaan masyarakat Magetan.",
+        "Nama 'Ledhug Suro' berasal dari gabungan dua kata dalam bahasa Jawa: 'Lesung' (alat penumbuk padi tradisional) dan 'Bedug' (alat tabuh masjid). Bunyi kedua alat ini ditabuh secara bersahutan pada malam pergantian tahun Jawa (1 Suro / 1 Muharram) sehingga menghasilkan irama khas yang disebut 'ledhug'. Festival ini diperkirakan telah ada sejak era awal berdirinya Kabupaten Magetan pada abad ke-19, dan semakin berkembang menjadi perayaan budaya skala besar sejak tahun 2000-an.\n\nPuncak perayaan Ledhug Suro berlangsung pada malam 1 Suro (1 Muharram) dengan serangkaian acara yang sangat meriah. Prosesi utama berupa arak-arakan gunungan Bolu Rahayu — roti bolu raksasa khas Magetan yang dibentuk menyerupai gunung dan dihiasi ornamen tradisional. Gunungan ini diarak keliling kota oleh ribuan warga sebelum akhirnya diperebutkan masyarakat sebagai simbol berkah dan harapan di tahun baru. Selain itu, festival ini juga menampilkan pertunjukan seni tradisional seperti tabuhan lesung-bedug, tari Jaranan, pentas wayang, dan musik tradisional.\n\nLedhug Suro telah menjadi ikon identitas budaya Kabupaten Magetan yang membedakannya dari daerah lain di Jawa Timur. Festival ini merupakan kearifan lokal yang memadukan nilai-nilai religius Islam (menyambut 1 Muharram) dengan tradisi budaya Jawa secara harmonis. Pemerintah Kabupaten Magetan telah mendaftarkan Ledhug Suro sebagai warisan budaya tak benda dan menjadikannya sebagai agenda utama pariwisata tahunan yang menarik puluhan ribu pengunjung dari seluruh Nusantara.",
       tujuan:
         "Merayakan Tahun Baru Jawa (1 Suro), melestarikan kesenian dan kebudayaan tradisional Jawa, serta mempererat persatuan dan kebersamaan masyarakat Magetan dalam nuansa penuh kegembiraan.",
       nilaiBudaya: ["Persatuan", "Pelestarian Budaya", "Toleransi", "Kreativitas"]
@@ -277,11 +277,11 @@ export const MISSIONS: Mission[] = [
       }
     ],
     galeri: [
-      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_1.png", caption: "Roti raksasa berbentuk bedug diarak oleh warga dalam perayaan Ledhug Suro." },
-      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_2.jpg", caption: "Bupati Magetan secara simbolis memukul bedug membuka rangkaian acara." },
-      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_3.png", caption: "Penampilan tarian tradisional yang memukau dalam panggung Festival Musik Ledhug." },
-      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_4.jpg", caption: "Generasi muda melestarikan budaya dengan membunyikan lesung dan alu (Ledhug)." },
-      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_5.jpg", caption: "Grup musik tradisional membawakan tembang bernuansa Islami dan Jawa." }
+      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_1.png", caption: "Roti raksasa berbentuk bedug diarak oleh warga dalam perayaan Ledhug Suro.", source: "Dok. Pemkab Magetan" },
+      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_2.jpg", caption: "Bupati Magetan secara simbolis memukul bedug membuka rangkaian acara.", source: "Dok. Pemkab Magetan" },
+      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_3.png", caption: "Penampilan tarian tradisional yang memukau dalam panggung Festival Musik Ledhug.", source: "Dok. Dinas Pariwisata Magetan" },
+      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_4.jpg", caption: "Generasi muda melestarikan budaya dengan membunyikan lesung dan alu (Ledhug).", source: "Dok. Dinas Kebudayaan Jawa Timur" },
+      { photoId: "", imageSrc: "/assets/materi/misi3/ledhug_5.jpg", caption: "Grup musik tradisional membawakan tembang bernuansa Islami dan Jawa.", source: "Dok. Dinas Pariwisata Magetan" }
     ],
     video: [
       {

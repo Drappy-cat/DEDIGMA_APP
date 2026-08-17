@@ -178,7 +178,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           <img
             src="/assets/title-dedigma.png"
             alt="DEDIGMA Title Logo"
-            className="w-[240px] xs:w-[280px] sm:w-[360px] md:w-[460px] max-h-[18vh] sm:max-h-[22vh] h-auto object-contain filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.5)]"
+            className="w-[300px] xs:w-[340px] sm:w-[420px] md:w-[540px] max-h-[24vh] sm:max-h-[28vh] h-auto object-contain filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.5)]"
           />
         </motion.div>
 

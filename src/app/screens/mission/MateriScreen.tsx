@@ -742,7 +742,11 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
                     <div className="md:col-span-5 flex justify-center">
                       <div className="w-full max-w-[260px] sm:max-w-[290px] aspect-[4/3] rounded-3xl overflow-hidden bg-[#eedebe] border-2 border-[#d6c7a3] shadow-[0_8px_25px_rgba(0,0,0,0.12)]">
                         <img
-                          src={heroPhoto}
+                          src={
+                            mission.galeri && mission.galeri.length > 0
+                              ? (mission.galeri[safeIndex % mission.galeri.length].imageSrc || unsplashUrl(mission.galeri[safeIndex % mission.galeri.length].photoId, 600, 450))
+                              : heroPhoto
+                          }
                           alt={activeDetail.title}
                           className="w-full h-full object-cover"
                         />
@@ -841,6 +845,9 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
                       </div>
                       <div className="p-2.5">
                         <p className="text-[#4a3728] text-xs font-['Nunito'] font-bold leading-snug">{item.caption}</p>
+                        {item.source && (
+                          <p className="text-[#8a7b68] text-[10px] font-['Nunito'] font-semibold mt-1 italic">📷 Sumber: {item.source}</p>
+                        )}
                       </div>
                     </motion.button>
                   ))}
@@ -988,6 +995,9 @@ export const MateriScreen: React.FC<MateriScreenProps> = ({ mission, onNext, onB
               className="w-full rounded-2xl object-cover shadow-2xl"
             />
             <p className="text-white text-sm text-center mt-3 leading-relaxed font-['Nunito']">{mission.galeri[lightbox].caption}</p>
+            {mission.galeri[lightbox].source && (
+              <p className="text-white/50 text-xs text-center mt-1 font-['Nunito'] italic">📷 Sumber: {mission.galeri[lightbox].source}</p>
+            )}
           </div>
         </div>
       )}
