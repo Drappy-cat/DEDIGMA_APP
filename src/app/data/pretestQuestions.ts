@@ -10,7 +10,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Komentar pengguna internet",
       "Pesan yang dikirim teman"
     ],
-    jawaban: 1
+    jawaban: 1,
+    pembahasan: "Situs resmi pemerintah daerah (.go.id) merupakan sumber informasi primer yang kredibel dan dapat dipertanggungjawabkan kebenarannya, berbeda dengan akun media sosial tanpa sumber yang jelas yang rentan terhadap penyebaran hoaks."
   },
   {
     id: 2,
@@ -21,7 +22,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Pendapat pribadi",
       "Tebakan"
     ],
-    jawaban: 0
+    jawaban: 0,
+    pembahasan: "Pernyataan tersebut adalah sebuah fakta, karena lokasi pelaksanaan Larung Sesaji di Telaga Sarangan benar-benar terjadi setiap tahun dan kebenarannya dapat dibuktikan melalui observasi langsung maupun dokumentasi resmi."
   },
   {
     id: 3,
@@ -32,7 +34,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Membandingkan dan memeriksa sumber informasi",
       "Menyebarkan keduanya"
     ],
-    jawaban: 2
+    jawaban: 2,
+    pembahasan: "Ketika menjumpai informasi yang saling bertentangan, langkah terbaik sebagai pembaca cerdas (Detektif Berita) adalah melakukan verifikasi dengan membandingkan sumber-sumber lain yang lebih terpercaya."
   },
   {
     id: 4,
@@ -43,7 +46,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Akun anonim",
       "Sumber resmi dan jelas"
     ],
-    jawaban: 3
+    jawaban: 3,
+    pembahasan: "Sumber resmi (seperti buku sejarah, jurnal pendidikan, situs pemerintah, atau wawancara tokoh adat) memiliki proses verifikasi yang ketat sehingga informasi yang disampaikan akurat dan bebas dari opini menyesatkan."
   },
   {
     id: 5,
@@ -54,7 +58,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Mengganti isi artikel sesuai keinginannya",
       "Hanya melihat judul artikel"
     ],
-    jawaban: 1
+    jawaban: 1,
+    pembahasan: "Sebelum menyebarkan informasi (prinsip 'Saring sebelum Sharing'), kita wajib melakukan verifikasi fakta untuk memastikan kebenarannya dan mencegah kita menjadi agen penyebar berita palsu (hoaks)."
   },
   {
     id: 6,
@@ -65,7 +70,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Mencari informasi pembanding dari sumber lain yang lebih jelas",
       "Menganggap semua informasi pasti benar"
     ],
-    jawaban: 2
+    jawaban: 2,
+    pembahasan: "Informasi di media sosial tanpa sumber yang jelas memiliki tingkat akurasi yang rendah. Langkah kritis yang harus dilakukan adalah mencari *cross-check* atau mencari informasi pembanding dari situs atau media yang kredibel."
   },
   {
     id: 7,
@@ -76,7 +82,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Ledug Suro",
       "Karapan Sapi"
     ],
-    jawaban: 1
+    jawaban: 1,
+    pembahasan: "Sesuai dengan namanya, 'Larung' berarti menghanyutkan dan 'Sesaji' adalah persembahan berupa tumpeng raksasa atau hasil bumi. Ini merupakan tradisi tahunan ikonik masyarakat Magetan di Telaga Sarangan."
   },
   {
     id: 8,
@@ -87,7 +94,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Sedekah Laut",
       "Ledug Suro"
     ],
-    jawaban: 3
+    jawaban: 3,
+    pembahasan: "Festival Ledug Suro (gabungan dari kata Lesung dan Bedug) adalah tradisi khas Magetan untuk menyambut Tahun Baru Islam (1 Suro) yang diwarnai dengan tabuhan alat tradisional, tarian, dan arak-arakan budaya."
   },
   {
     id: 9,
@@ -98,7 +106,8 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Kemarahan",
       "Kegoisme"
     ],
-    jawaban: 0
+    jawaban: 0,
+    pembahasan: "Bekerja sama bahu-membahu dalam mempersiapkan upacara adat mencerminkan nilai luhur gotong royong, di mana masyarakat saling membantu tanpa pamrih demi kesuksesan dan kelancaran acara bersama."
   },
   {
     id: 10,
@@ -109,6 +118,7 @@ export const PRETEST_QUESTIONS: Question[] = [
       "Melupakan budaya yang telah dipelajari",
       "Menolak tradisi yang ada"
     ],
-    jawaban: 0
+    jawaban: 0,
+    pembahasan: "Mengenal dan melestarikan budaya daerah adalah wujud penghargaan terhadap warisan leluhur. Generasi muda yang cerdas digital juga harus bangga dan berupaya menjaga identitas budaya bangsa."
   }
 ];
