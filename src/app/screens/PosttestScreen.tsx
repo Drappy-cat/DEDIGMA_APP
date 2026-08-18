@@ -102,7 +102,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
   if (done) {
     return (
       <div
-        className="h-full flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none font-['Nunito'] relative overflow-hidden"
+        className="h-full min-h-[100dvh] flex flex-col items-center justify-center p-4 sm:p-6 text-center select-none font-['Nunito'] relative overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
         style={{
           backgroundImage: "url('/assets/telaga.png')",
           backgroundSize: "cover",
@@ -114,7 +114,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
         <div className={`absolute inset-0 ${perf.showBlurEffects ? 'bg-black/30 backdrop-blur-xs' : 'bg-black/40'} z-0 pointer-events-none`} />
 
         {/* Content Container */}
-        <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md space-y-4">
+        <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-md space-y-4 my-auto py-4">
           
           {/* Top Header Section with Ribbon Medal & Wood Signboard */}
           <div className="flex flex-col items-center relative mb-2 w-full flex-shrink-0">
@@ -173,10 +173,10 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
               <span className="text-lg select-none flex-shrink-0 mt-0.5">🍃</span>
               <p className="text-[#235430] text-xs sm:text-sm font-['Nunito'] font-bold leading-relaxed">
                 {score >= 85
-                  ? "Luar biasa! Pemahamanmu tentang materi budaya ini sangat cemerlang."
+                  ? "Luar biasa! Pemahaman budayamu sangat cemerlang."
                   : score >= 70
-                  ? "Hebat sekali! Kamu berhasil menyelesaikan evaluasi akhir dengan baik."
-                  : "Bagus! Terus tingkatkan belajar dan pemahaman budayamu."}
+                  ? "Hebat sekali! Kamu berhasil menuntaskan seluruh tantangan DEDIGMA."
+                  : "Selamat! Kamu telah berhasil menuntaskan evaluasi DEDIGMA."}
               </p>
             </div>
           </motion.div>
@@ -189,7 +189,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
             onClick={() => onComplete(score)}
             className="w-full bg-gradient-to-b from-[#f5a32b] via-[#e58e1d] to-[#d87c14] hover:from-[#f7ad3d] hover:to-[#e2861a] border-2 border-[#fff5ce] text-white font-['Fredoka'] font-extrabold rounded-full py-3.5 sm:py-4 text-base sm:text-lg shadow-xl transition-transform active:scale-95 cursor-pointer uppercase tracking-wider border-b-4 flex items-center justify-center gap-2"
           >
-            <span>Lihat Sertifikat Kelulusan</span>
+            <span>Lihat Lencana & Sertifikat</span>
             <span>→</span>
           </motion.button>
         </div>
@@ -199,7 +199,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
 
   return (
     <div
-      className="h-full flex flex-col overflow-hidden font-['Nunito'] relative select-none"
+      className="h-full flex flex-col overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden font-['Nunito'] relative select-none"
       style={{
         backgroundImage: "url('/assets/telaga.png')",
         backgroundSize: "cover",
@@ -209,11 +209,17 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
     >
       {/* Top Navbar Header (Preserved as requested) */}
       <div className="relative z-30 flex-shrink-0">
-        <ScreenHeader title="Posttest DEDIGMA 📝" onBack={onBack} onHome={onBack} />
+        <ScreenHeader title="Posttest DEDIGMA 🎓" onBack={onBack} onHome={onBack} />
       </div>
 
       {/* Sub-Header Progress Bar */}
-      <div className="bg-[#fbf7ee]/95 backdrop-blur-xs px-4 py-1.5 border-b border-[#e6d9bd] flex items-center justify-between shadow-xs select-none relative z-20 flex-shrink-0">
+      <div 
+        className="bg-[#fbf7ee]/95 backdrop-blur-xs px-4 sm:px-6 md:px-8 py-1.5 border-b border-[#e6d9bd] flex items-center justify-between shadow-xs select-none relative z-20 flex-shrink-0"
+        style={{
+          paddingLeft: "max(env(safe-area-inset-left), 12px)",
+          paddingRight: "max(env(safe-area-inset-right), 12px)"
+        }}
+      >
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#2a6838] text-white font-['Fredoka'] font-extrabold flex items-center justify-center text-xs sm:text-sm shadow-xs flex-shrink-0">
             {current + 1}
@@ -231,47 +237,47 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
       </div>
 
       {/* Main Body Container: Parchment Board & Bottom Navigation */}
-      <div className="relative z-10 flex-1 min-h-0 flex flex-col justify-between items-center px-2 sm:px-4 pb-2 sm:pb-4 pt-1 sm:pt-2 overflow-visible">
+      <div className="relative z-10 flex-1 min-h-0 flex flex-col justify-between items-center px-2 sm:px-4 pb-4 pt-0.5 overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         
-        {/* Parchment Board Container (Zero Scroll, Full Height, Visible Overflow for Signboard) */}
-        <div className="bg-[#fbf7ee] border-2 border-[#e6d9bd] rounded-3xl px-3 sm:px-5 pb-3 sm:pb-5 pt-6 sm:pt-7 shadow-xl relative flex flex-col justify-between w-full max-w-4xl mx-auto flex-1 min-h-0 mt-7 sm:mt-8 mb-1 overflow-visible">
+        {/* Parchment Board Container */}
+        <div className="bg-[#fbf7ee] border-2 border-[#e6d9bd] rounded-3xl px-3 sm:px-5 pb-2 sm:pb-3 pt-6 sm:pt-8 md:pt-9 shadow-xl relative flex flex-col justify-between w-full max-w-4xl mx-auto flex-1 min-h-0 mt-4 sm:mt-6 mb-1 overflow-visible">
           
-          {/* Centered Top Green Ribbon Banner Signboard — Significantly Enlarged */}
-          <div className="bg-[#2a6838] border-3 sm:border-4 border-[#1c4d29] text-[#fff5ce] font-['Fredoka'] font-extrabold px-10 sm:px-14 py-2 sm:py-2.5 rounded-full text-lg sm:text-xl md:text-2xl flex items-center justify-center gap-3 shadow-xl absolute -top-6 sm:-top-7 left-1/2 -translate-x-1/2 z-30 whitespace-nowrap border-b-4 uppercase tracking-widest">
-            <span className="text-lg sm:text-xl select-none">🌿</span>
+          {/* Centered Top Green Ribbon Banner Signboard */}
+          <div className="bg-[#2a6838] border-3 sm:border-4 border-[#1c4d29] text-[#fff5ce] font-['Fredoka'] font-extrabold px-5 sm:px-8 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm md:text-base flex items-center justify-center gap-2 shadow-xl absolute -top-3.5 sm:-top-4.5 left-1/2 -translate-x-1/2 z-30 whitespace-nowrap border-b-3 uppercase tracking-wider">
+            <span className="text-xs sm:text-sm select-none">🌿</span>
             <span>SOAL EVALUASI</span>
-            <span className="text-lg sm:text-xl select-none transform scale-x-[-1]">🌿</span>
+            <span className="text-xs sm:text-sm select-none transform scale-x-[-1]">🌿</span>
           </div>
 
           {/* Decorative Corner Stars */}
-          <div className="absolute top-2.5 left-4 text-amber-400 text-xs sm:text-sm select-none opacity-80 flex gap-0.5">
+          <div className="absolute top-2 left-4 text-amber-400 text-xs sm:text-sm select-none opacity-80 flex gap-0.5">
             <span>⭐</span>
             <span>⭐</span>
           </div>
-          <div className="absolute top-2.5 right-4 text-amber-400 text-xs sm:text-sm select-none opacity-80 flex gap-0.5">
+          <div className="absolute top-2 right-4 text-amber-400 text-xs sm:text-sm select-none opacity-80 flex gap-0.5">
             <span>⭐</span>
             <span>⭐</span>
             <span>⭐</span>
           </div>
 
-          {/* Question Statement Text & Options */}
+          {/* Question Statement Text & Options (Inner Scrollable Area) */}
           <motion.div
             key={current}
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.25 }}
-            className="flex-1 min-h-0 flex flex-col justify-between pt-4 overflow-hidden"
+            className="flex-1 min-h-0 flex flex-col overflow-y-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden pr-0.5 space-y-2 pt-1"
           >
-            {/* Question Statement */}
-            <div className="flex-1 min-h-0 flex items-center justify-center my-auto px-2 sm:px-6">
-              <p className="text-[#3a2718] font-['Nunito'] font-extrabold text-xs sm:text-sm md:text-base leading-relaxed text-center">
+            {/* Question Statement Highlight Box */}
+            <div className="bg-[#f5ebd6]/90 border border-[#e5d8b8] rounded-2xl p-2.5 sm:p-3.5 text-center shadow-xs flex-shrink-0">
+              <p className="text-[#3a2718] font-['Nunito'] font-extrabold text-xs sm:text-sm md:text-base leading-relaxed">
                 {q.soal}
               </p>
             </div>
 
             {/* 4 Multiple Choice Capsule Option Buttons */}
-            <div className="space-y-1.5 sm:space-y-2.5 max-w-3xl mx-auto w-full flex-shrink-0 pb-1">
+            <div className="space-y-1.5 sm:space-y-2 max-w-3xl mx-auto w-full pt-0.5 pb-1">
               {q.opsi.map((o, idx) => {
                 const userAns = answers[current];
                 const isSelected = userAns === idx;
@@ -303,12 +309,12 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
                     type="button"
                     onClick={() => handleSelect(idx)}
                     disabled={answers[current] !== null}
-                    className={`w-full text-left rounded-full p-2 sm:p-2.5 flex items-center gap-3 transition-all cursor-pointer select-none ${buttonStyle}`}
+                    className={`w-full text-left rounded-full px-3 py-1.5 sm:px-4 sm:py-2 flex items-center gap-2.5 transition-all cursor-pointer select-none ${buttonStyle}`}
                   >
-                    <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full font-['Fredoka'] font-extrabold flex items-center justify-center text-xs sm:text-sm flex-shrink-0 shadow-xs ${badgeStyle}`}>
+                    <div className={`w-6 h-6 sm:w-7 sm:h-7 rounded-full font-['Fredoka'] font-extrabold flex items-center justify-center text-xs flex-shrink-0 shadow-xs ${badgeStyle}`}>
                       {String.fromCharCode(65 + idx)}
                     </div>
-                    <span className="font-['Nunito'] font-extrabold text-xs sm:text-sm leading-tight flex-1 pr-2">
+                    <span className="font-['Nunito'] font-extrabold text-xs sm:text-sm leading-snug flex-1 pr-1">
                       {o}
                     </span>
                   </button>

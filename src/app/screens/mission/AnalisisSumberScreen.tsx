@@ -27,6 +27,7 @@ export const AnalisisSumberScreen: React.FC<AnalisisSumberScreenProps> = ({ miss
     return false;
   });
   const [showHint, setShowHint] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
 
   useEffect(() => {
     playNarrator(
@@ -123,6 +124,121 @@ export const AnalisisSumberScreen: React.FC<AnalisisSumberScreenProps> = ({ miss
           <strong className="text-[#256c3a] font-extrabold">TERPERCAYA (kredibel)</strong> dan{" "}
           <strong className="text-[#c83737] font-extrabold">TIDAK TERPERCAYA (kurang valid)</strong>.
         </p>
+      </div>
+
+      {/* Panduan Analisis Sumber — Expandable Guide Panel */}
+      <div className="flex-shrink-0 mb-2">
+        <button
+          onClick={() => {
+            playSFX("click");
+            setShowGuide((prev: boolean) => !prev);
+          }}
+          className="w-full bg-[#edf6ee] border-2 border-[#b8e0bc] rounded-2xl p-3 sm:p-3.5 shadow-xs flex items-center justify-between cursor-pointer hover:bg-[#e3f1e5] transition-all active:scale-[0.99] group"
+        >
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-[#256c3a] text-white flex items-center justify-center flex-shrink-0 shadow-xs">
+              <Lightbulb size={18} className="stroke-[2.5]" />
+            </div>
+            <div className="text-left">
+              <h3 className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-xs sm:text-sm leading-tight">
+                📖 Panduan Analisis Sumber Informasi
+              </h3>
+              <p className="text-[10px] sm:text-[11px] text-[#4a6e3a] font-semibold leading-tight mt-0.5">
+                Pelajari cara membedakan sumber terpercaya dan tidak terpercaya
+              </p>
+            </div>
+          </div>
+          <span className={`text-[#256c3a] transition-transform ${showGuide ? "rotate-180" : ""}`}>
+            ▼
+          </span>
+        </button>
+
+        <AnimatePresence>
+          {showGuide && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="overflow-hidden"
+            >
+              <div className="bg-[#fefcf8] border-2 border-t-0 border-[#b8e0bc] rounded-b-2xl p-4 sm:p-5 space-y-4">
+                {/* Checklist Cara Mengenali Sumber Terpercaya */}
+                <div>
+                  <h4 className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-xs sm:text-sm mb-2 flex items-center gap-1.5">
+                    ✅ Ciri-Ciri Sumber TERPERCAYA
+                  </h4>
+                  <ul className="space-y-1.5 text-[#3a2718] text-xs sm:text-sm font-['Nunito'] font-semibold leading-relaxed ml-1">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#256c3a] font-extrabold flex-shrink-0 mt-0.5">•</span>
+                      <span>Diterbitkan oleh <strong className="text-[#1c5c32]">lembaga resmi</strong> (pemerintah, universitas, media berita besar)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#256c3a] font-extrabold flex-shrink-0 mt-0.5">•</span>
+                      <span>Memiliki <strong className="text-[#1c5c32]">penulis yang jelas</strong> dan bisa diverifikasi identitasnya</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#256c3a] font-extrabold flex-shrink-0 mt-0.5">•</span>
+                      <span>Mencantumkan <strong className="text-[#1c5c32]">referensi atau sumber data</strong> yang digunakan</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#256c3a] font-extrabold flex-shrink-0 mt-0.5">•</span>
+                      <span>Menggunakan domain resmi seperti <strong className="text-[#1c5c32]">.go.id, .ac.id, .edu</strong></span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Checklist Sumber Tidak Terpercaya */}
+                <div>
+                  <h4 className="font-['Fredoka'] font-extrabold text-[#c83737] text-xs sm:text-sm mb-2 flex items-center gap-1.5">
+                    ⚠️ Ciri-Ciri Sumber TIDAK TERPERCAYA
+                  </h4>
+                  <ul className="space-y-1.5 text-[#3a2718] text-xs sm:text-sm font-['Nunito'] font-semibold leading-relaxed ml-1">
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#c83737] font-extrabold flex-shrink-0 mt-0.5">•</span>
+                      <span>Berasal dari <strong className="text-[#c83737]">akun anonim</strong> atau akun media sosial tidak terverifikasi</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#c83737] font-extrabold flex-shrink-0 mt-0.5">•</span>
+                      <span><strong className="text-[#c83737]">Tidak mencantumkan sumber</strong> atau referensi yang jelas</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#c83737] font-extrabold flex-shrink-0 mt-0.5">•</span>
+                      <span>Berupa <strong className="text-[#c83737]">blog pribadi, pesan berantai,</strong> atau opini tanpa data</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-[#c83737] font-extrabold flex-shrink-0 mt-0.5">•</span>
+                      <span>Menggunakan judul <strong className="text-[#c83737]">sensasional (clickbait)</strong> untuk memancing klik</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Contoh Konkret */}
+                <div className="bg-[#f5ebd6]/60 border border-[#e5d8b8] rounded-xl p-3 sm:p-3.5">
+                  <h4 className="font-['Fredoka'] font-extrabold text-[#59432e] text-xs sm:text-sm mb-2 flex items-center gap-1.5">
+                    📌 Contoh Konkret
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="bg-[#e8f5e9] border border-[#a5d6a7] rounded-xl p-2.5 flex items-start gap-2">
+                      <span className="text-lg flex-shrink-0">🏛️</span>
+                      <div>
+                        <p className="font-['Fredoka'] font-extrabold text-[#1c5c32] text-[11px] sm:text-xs">magetan.go.id</p>
+                        <p className="text-[10px] sm:text-[11px] text-[#3a5a2a] font-semibold">Situs resmi pemda → TERPERCAYA</p>
+                      </div>
+                    </div>
+                    <div className="bg-[#fdf2f0] border border-[#f4b6b6] rounded-xl p-2.5 flex items-start gap-2">
+                      <span className="text-lg flex-shrink-0">📱</span>
+                      <div>
+                        <p className="font-['Fredoka'] font-extrabold text-[#c83737] text-[11px] sm:text-xs">@info_random (anonim)</p>
+                        <p className="text-[10px] sm:text-[11px] text-[#8b4545] font-semibold">Tanpa sumber → TIDAK TERPERCAYA</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Main Content Area: Source Items Scrollable Cards */}

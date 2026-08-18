@@ -121,14 +121,15 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
+    outline-color: color-mix(in srgb, var(--ring) 50%, transparent);
   }
 
   body {
-    @apply bg-background text-foreground;
+    color: var(--foreground);
+    background-color: var(--background);
     background: #0f172a !important;
     overscroll-behavior: none;
-    -webkit-overflow-scrolling: touch;
   }
 
   /**
@@ -205,7 +206,58 @@
   .backdrop-blur-sm,
   .backdrop-blur-md,
   .backdrop-blur-lg {
-    backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
   }
 }
+
+/* Comprehensive Multi-Resolution Responsive Scaling System (720p, 1080p, 1.5K, 2K, Tablets) */
+
+/* Tier 1: 720p HD Landscape Mobile (CSS height <= 400px) */
+@media (orientation: landscape) and (max-height: 400px) {
+  :root {
+    --font-size: 12px;
+  }
+}
+
+/* Tier 2: 1080p Full HD Landscape Mobile (CSS height 401px - 480px) */
+@media (orientation: landscape) and (min-height: 401px) and (max-height: 480px) {
+  :root {
+    --font-size: 13.5px;
+  }
+}
+
+/* Tier 3: 1.5K & 2K / QHD Landscape Mobile & Compact Tablets (CSS height 481px - 600px) */
+@media (orientation: landscape) and (min-height: 481px) and (max-height: 600px) {
+  :root {
+    --font-size: 14.5px;
+  }
+}
+
+/* Tier 4: Large Tablets & Desktop Landscape (CSS height > 600px) */
+@media (orientation: landscape) and (min-height: 601px) {
+  :root {
+    --font-size: 16px;
+  }
+}
+
+/* Utility classes for fluid resolution auto-adjustments */
+.fluid-logo {
+  max-height: 20vh !important;
+  width: auto;
+}
+
+.fluid-mascot-lobby {
+  max-height: 58vh !important;
+  max-width: 25vw !important;
+}
+
+.fluid-btn-primary {
+  max-height: 14vh !important;
+}
+
+.fluid-btn-secondary {
+  max-height: 8vh !important;
+}
+
+
