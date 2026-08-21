@@ -173,12 +173,12 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({ onMulai, onPetunjuk,
           initial={{ y: -15, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="mt-0.5 sm:mt-2 mb-1 flex flex-col items-center z-20 pointer-events-auto select-none"
+          className="mt-0.5 sm:mt-1 mb-1 flex flex-col items-center z-20 pointer-events-auto select-none"
         >
           <img
             src="/assets/title-dedigma.png"
             alt="DEDIGMA Title Logo"
-            className="w-[300px] xs:w-[340px] sm:w-[420px] md:w-[540px] max-h-[24vh] sm:max-h-[28vh] h-auto object-contain filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.5)]"
+            className="w-[360px] xs:w-[420px] sm:w-[500px] md:w-[620px] lg:w-[700px] max-h-[28vh] sm:max-h-[32vh] md:max-h-[36vh] h-auto object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.55)]"
           />
         </motion.div>
 

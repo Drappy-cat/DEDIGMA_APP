@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { jsPDF } from "jspdf";
-import { Download, RefreshCw, FileText, Image as ImageIcon, Share2, X } from "lucide-react";
+import { Download, RefreshCw, FileText, Image as ImageIcon, Share2, X, ExternalLink } from "lucide-react";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { Btn } from "../components/Btn";
 import { useAudio } from "../contexts/AudioContext";
@@ -77,142 +77,216 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
     };
   }, []);
 
-  // Helper to trigger direct browser file download
+  // Helper to trigger direct browser file download with fallbacks
   const triggerBrowserDownload = (url: string, filename: string) => {
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    link.target = "_blank";
-    link.rel = "noopener noreferrer";
-    document.body.appendChild(link);
-    link.click();
-    setTimeout(() => {
-      document.body.removeChild(link);
-    }, 200);
+    try {
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        try {
+          document.body.removeChild(link);
+        } catch {}
+      }, 300);
+    } catch (e) {
+      console.warn("Direct link download failed, opening in new tab:", e);
+      window.open(url, "_blank");
+    }
   };
 
-  const generateCertificateCanvas = async () => {
+  const generateCertificateCanvas = async (): Promise<HTMLCanvasElement> => {
     const W = 2480;
     const H = 1754;
 
-    const svgImg = await new Promise<HTMLImageElement>((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = `/assets/bg-sertifikat.svg?v=${Date.now()}`;
-    });
+    // Helper to draw texts and badges on any canvas
+    const drawCertificateDetails = (canvas: HTMLCanvasElement) => {
+      const ctx = canvas.getContext("2d")!;
+      const SCALE = canvas.width / 842;
 
+      // Student Name
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      const nameY = canvas.height * 0.485;
+      const fontSp = Math.round(36 * SCALE);
+      ctx.font = `900 ${fontSp}px 'Fredoka', 'Nunito', sans-serif`;
+
+      const depth = Math.round(3 * (SCALE / 2.946));
+      ctx.fillStyle = "#3d2400";
+      for (let i = depth; i > 0; i--) {
+        ctx.fillText(studentName, canvas.width / 2, nameY + i, canvas.width * 0.65);
+      }
+
+      const textGrad = ctx.createLinearGradient(0, nameY - fontSp / 2, 0, nameY + fontSp / 2);
+      textGrad.addColorStop(0, "#fff7ad");
+      textGrad.addColorStop(0.35, "#ffd700");
+      textGrad.addColorStop(0.7, "#d49b00");
+      textGrad.addColorStop(1, "#996d00");
+
+      ctx.fillStyle = textGrad;
+      ctx.shadowColor = "rgba(61, 36, 0, 0.5)";
+      ctx.shadowBlur = Math.round(6 * SCALE);
+      ctx.shadowOffsetY = Math.round(3 * SCALE);
+      ctx.fillText(studentName, canvas.width / 2, nameY, canvas.width * 0.65);
+
+      ctx.strokeStyle = "#3d2400";
+      ctx.lineWidth = Math.round(1 * SCALE);
+      ctx.strokeText(studentName, canvas.width / 2, nameY, canvas.width * 0.65);
+      ctx.restore();
+
+      // Description text
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#4a3728";
+      ctx.font = `700 ${Math.round(12 * SCALE)}px 'Nunito', sans-serif`;
+      ctx.fillText(
+        "ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.",
+        canvas.width / 2,
+        canvas.height * 0.61,
+        canvas.width * 0.60
+      );
+      ctx.restore();
+
+      // Date
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#888888";
+      ctx.font = `italic ${Math.round(11 * SCALE)}px 'Nunito', sans-serif`;
+      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, canvas.width / 2, canvas.height * 0.645);
+      ctx.restore();
+
+      // Medal Badges
+      const R = Math.round(40 * SCALE);
+      const medalY = canvas.height * 0.72;
+      const pretestCX = canvas.width / 2 - R - Math.round(16 * SCALE);
+      const posttestCX = canvas.width / 2 + R + Math.round(16 * SCALE);
+
+      const drawMedal = (cx: number, label: string, score: number, darkColor: string, lightColor: string) => {
+        ctx.save();
+
+        const gradient = ctx.createRadialGradient(cx, medalY, R * 0.5, cx, medalY, R);
+        gradient.addColorStop(0, "#f5e6a3");
+        gradient.addColorStop(0.5, "#d4a82a");
+        gradient.addColorStop(1, "#a07820");
+        ctx.beginPath();
+        ctx.arc(cx, medalY, R, 0, Math.PI * 2);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+
+        const innerGrad = ctx.createRadialGradient(cx - R * 0.2, medalY - R * 0.2, R * 0.05, cx, medalY, R * 0.82);
+        innerGrad.addColorStop(0, lightColor);
+        innerGrad.addColorStop(1, darkColor);
+        ctx.beginPath();
+        ctx.arc(cx, medalY, R * 0.82, 0, Math.PI * 2);
+        ctx.fillStyle = innerGrad;
+        ctx.fill();
+
+        ctx.fillStyle = "rgba(255,255,255,0.88)";
+        ctx.font = `900 ${Math.round(8 * SCALE)}px 'Fredoka', sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(label.toUpperCase(), cx, medalY - R * 0.32);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.shadowBlur = Math.round(4 * SCALE);
+        ctx.font = `900 ${Math.round(24 * SCALE)}px 'Fredoka', sans-serif`;
+        ctx.fillText(String(score), cx, medalY + R * 0.22);
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = `${Math.round(8 * SCALE)}px serif`;
+        ctx.fillText("★", cx, medalY + R * 0.70);
+
+        ctx.restore();
+      };
+
+      drawMedal(pretestCX, "Pretest", pretestScore ?? 0, "#1b3d82", "#3a65c0");
+      drawMedal(posttestCX, "Posttest", posttestScore ?? 0, "#1d5c1d", "#368a36");
+    };
+
+    // Method 1: Try drawing from background SVG directly
+    try {
+      const svgImg = await new Promise<HTMLImageElement>((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => {
+          // Retry without any query or attributes
+          const fallbackImg = new Image();
+          fallbackImg.onload = () => resolve(fallbackImg);
+          fallbackImg.onerror = reject;
+          fallbackImg.src = "/assets/bg-sertifikat.svg";
+        };
+        img.src = "/assets/bg-sertifikat.svg";
+      });
+
+      const canvas = document.createElement("canvas");
+      canvas.width = W;
+      canvas.height = H;
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(svgImg, 0, 0, W, H);
+      drawCertificateDetails(canvas);
+      return canvas;
+    } catch (imgLoadErr) {
+      console.warn("Direct SVG Image load to canvas failed, attempting html2canvas fallback:", imgLoadErr);
+    }
+
+    // Method 2: Fallback to html2canvas on the rendered DOM element
+    if (certRef.current) {
+      try {
+        const html2canvas = (await import("html2canvas")).default;
+        const canvas = await html2canvas(certRef.current, {
+          scale: 2.5,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: "#ffffff",
+          logging: false
+        });
+        return canvas;
+      } catch (h2cErr) {
+        console.warn("html2canvas fallback failed, generating vector template canvas:", h2cErr);
+      }
+    }
+
+    // Method 3: Pure canvas generated certificate template fallback
     const canvas = document.createElement("canvas");
     canvas.width = W;
     canvas.height = H;
     const ctx = canvas.getContext("2d")!;
 
-    ctx.drawImage(svgImg, 0, 0, W, H);
-    const SCALE = W / 842;
+    // Background base
+    ctx.fillStyle = "#fffdf7";
+    ctx.fillRect(0, 0, W, H);
 
-    // Student Name
-    ctx.save();
+    // Decorative Borders
+    ctx.strokeStyle = "#1b3d82";
+    ctx.lineWidth = Math.round(18 * (W / 842));
+    ctx.strokeRect(30, 30, W - 60, H - 60);
+
+    ctx.strokeStyle = "#d4a82a";
+    ctx.lineWidth = Math.round(6 * (W / 842));
+    ctx.strokeRect(60, 60, W - 120, H - 120);
+
+    // Title
+    ctx.fillStyle = "#1b3d82";
+    ctx.font = `900 ${Math.round(42 * (W / 842))}px 'Fredoka', sans-serif`;
     ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    ctx.fillText("SERTIFIKAT KELULUSAN", W / 2, H * 0.25);
 
-    const nameY = H * 0.485;
-    const fontSp = Math.round(36 * SCALE);
-    ctx.font = `900 ${fontSp}px 'Fredoka', 'Nunito', sans-serif`;
+    ctx.fillStyle = "#a07820";
+    ctx.font = `700 ${Math.round(18 * (W / 842))}px 'Nunito', sans-serif`;
+    ctx.fillText("DEDIGMA - PETUALANGAN BUDAYA", W / 2, H * 0.32);
 
-    const depth = Math.round(3 * (SCALE / 2.946));
-    ctx.fillStyle = "#3d2400";
-    for (let i = depth; i > 0; i--) {
-      ctx.fillText(studentName, W / 2, nameY + i, W * 0.65);
-    }
+    ctx.fillStyle = "#555555";
+    ctx.font = `italic ${Math.round(14 * (W / 842))}px 'Nunito', sans-serif`;
+    ctx.fillText("Diberikan kepada:", W / 2, H * 0.40);
 
-    const textGrad = ctx.createLinearGradient(0, nameY - fontSp / 2, 0, nameY + fontSp / 2);
-    textGrad.addColorStop(0, "#fff7ad");
-    textGrad.addColorStop(0.35, "#ffd700");
-    textGrad.addColorStop(0.7, "#d49b00");
-    textGrad.addColorStop(1, "#996d00");
-
-    ctx.fillStyle = textGrad;
-    ctx.shadowColor = "rgba(61, 36, 0, 0.5)";
-    ctx.shadowBlur = Math.round(6 * SCALE);
-    ctx.shadowOffsetY = Math.round(3 * SCALE);
-    ctx.fillText(studentName, W / 2, nameY, W * 0.65);
-
-    ctx.strokeStyle = "#3d2400";
-    ctx.lineWidth = Math.round(1 * SCALE);
-    ctx.strokeText(studentName, W / 2, nameY, W * 0.65);
-    ctx.restore();
-
-    // Description text
-    ctx.save();
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#4a3728";
-    ctx.font = `700 ${Math.round(12 * SCALE)}px 'Nunito', sans-serif`;
-    ctx.fillText(
-      "ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.",
-      W / 2,
-      H * 0.61,
-      W * 0.60
-    );
-    ctx.restore();
-
-    // Date
-    ctx.save();
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#888888";
-    ctx.font = `italic ${Math.round(11 * SCALE)}px 'Nunito', sans-serif`;
-    ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, W / 2, H * 0.645);
-    ctx.restore();
-
-    // Medal Badges
-    const R = Math.round(40 * SCALE);
-    const medalY = H * 0.72;
-    const pretestCX = W / 2 - R - Math.round(16 * SCALE);
-    const posttestCX = W / 2 + R + Math.round(16 * SCALE);
-
-    const drawMedal = (cx: number, label: string, score: number, darkColor: string, lightColor: string) => {
-      ctx.save();
-
-      const gradient = ctx.createRadialGradient(cx, medalY, R * 0.5, cx, medalY, R);
-      gradient.addColorStop(0, "#f5e6a3");
-      gradient.addColorStop(0.5, "#d4a82a");
-      gradient.addColorStop(1, "#a07820");
-      ctx.beginPath();
-      ctx.arc(cx, medalY, R, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
-      ctx.fill();
-
-      const innerGrad = ctx.createRadialGradient(cx - R * 0.2, medalY - R * 0.2, R * 0.05, cx, medalY, R * 0.82);
-      innerGrad.addColorStop(0, lightColor);
-      innerGrad.addColorStop(1, darkColor);
-      ctx.beginPath();
-      ctx.arc(cx, medalY, R * 0.82, 0, Math.PI * 2);
-      ctx.fillStyle = innerGrad;
-      ctx.fill();
-
-      ctx.fillStyle = "rgba(255,255,255,0.88)";
-      ctx.font = `900 ${Math.round(8 * SCALE)}px 'Fredoka', sans-serif`;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(label.toUpperCase(), cx, medalY - R * 0.32);
-
-      ctx.fillStyle = "#ffffff";
-      ctx.shadowColor = "rgba(0,0,0,0.3)";
-      ctx.shadowBlur = Math.round(4 * SCALE);
-      ctx.font = `900 ${Math.round(24 * SCALE)}px 'Fredoka', sans-serif`;
-      ctx.fillText(String(score), cx, medalY + R * 0.22);
-
-      ctx.shadowBlur = 0;
-      ctx.fillStyle = "rgba(255,255,255,0.55)";
-      ctx.font = `${Math.round(8 * SCALE)}px serif`;
-      ctx.fillText("★", cx, medalY + R * 0.70);
-
-      ctx.restore();
-    };
-
-    drawMedal(pretestCX, "Pretest", pretestScore ?? 0, "#1b3d82", "#3a65c0");
-    drawMedal(posttestCX, "Posttest", posttestScore ?? 0, "#1d5c1d", "#368a36");
-
+    drawCertificateDetails(canvas);
     return canvas;
   };
 
@@ -230,20 +304,21 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       pdf.addImage(imgData, "PNG", 0, 0, 297, 210);
       const pdfBlob = pdf.output("blob");
 
-      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      // Always show preview modal with explicit download and share options
+      setShowImageModal({ pngUrl: imgData, pdfBlob });
 
-      // Trigger standard PDF download
-      pdf.save(fileName);
-      playSFX("badge");
-      toast.success("Sertifikat berhasil diunduh!");
-
-      // On mobile, also display the modal with direct save & share options so users have 100% guarantee
-      if (isMobile) {
-        setShowImageModal({ pngUrl: imgData, pdfBlob });
+      // Try automatic PDF download
+      try {
+        pdf.save(fileName);
+      } catch (saveErr) {
+        console.warn("pdf.save direct trigger failed, modal provides manual fallback:", saveErr);
       }
+
+      playSFX("badge");
+      toast.success("Sertifikat berhasil disiapkan! Pilih opsi unduh/simpan di bawah.");
     } catch (err) {
       console.error("Error generating PDF:", err);
-      toast.error("Terjadi kesalahan saat mengunduh sertifikat.");
+      toast.error("Terjadi kesalahan saat memproses sertifikat.");
     } finally {
       setIsGenerating(false);
     }
@@ -252,7 +327,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
   const handleDownloadPng = (pngUrl: string) => {
     const safeName = studentName.trim().replace(/\s+/g, "_") || "Siswa";
     triggerBrowserDownload(pngUrl, `Sertifikat_DEDIGMA_${safeName}.png`);
-    toast.success("Gambar PNG berhasil diunduh!");
+    toast.success("Gambar PNG sedang diunduh / disimpan!");
   };
 
   const handleDownloadPdfBlob = (pdfBlob?: Blob) => {
@@ -260,30 +335,45 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
     const safeName = studentName.trim().replace(/\s+/g, "_") || "Siswa";
     const blobUrl = URL.createObjectURL(pdfBlob);
     triggerBrowserDownload(blobUrl, `Sertifikat_DEDIGMA_${safeName}.pdf`);
-    toast.success("File PDF berhasil diunduh!");
+    toast.success("File PDF sedang diunduh / disimpan!");
+  };
+
+  const handleOpenInNewTab = (pdfBlob?: Blob, pngUrl?: string) => {
+    if (pdfBlob) {
+      const blobUrl = URL.createObjectURL(pdfBlob);
+      window.open(blobUrl, "_blank");
+    } else if (pngUrl) {
+      window.open(pngUrl, "_blank");
+    }
   };
 
   const handleNativeShare = async (pngUrl: string, pdfBlob?: Blob) => {
     const safeName = studentName.trim().replace(/\s+/g, "_") || "Siswa";
     try {
-      if (navigator.share) {
-        if (pdfBlob && navigator.canShare && navigator.canShare({ files: [new File([pdfBlob], `Sertifikat_${safeName}.pdf`, { type: "application/pdf" })] })) {
-          const file = new File([pdfBlob], `Sertifikat_DEDIGMA_${safeName}.pdf`, { type: "application/pdf" });
-          await navigator.share({
-            title: "Sertifikat Kelulusan DEDIGMA",
-            text: `Selamat kepada ${studentName} atas kelulusan Petualangan Budaya DEDIGMA!`,
-            files: [file]
-          });
-          return;
+      if (typeof navigator !== "undefined" && navigator.share) {
+        if (pdfBlob && navigator.canShare) {
+          try {
+            const file = new File([pdfBlob], `Sertifikat_DEDIGMA_${safeName}.pdf`, { type: "application/pdf" });
+            if (navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                title: "Sertifikat Kelulusan DEDIGMA",
+                text: `Selamat kepada ${studentName} atas kelulusan Petualangan Budaya DEDIGMA!`,
+                files: [file]
+              });
+              return;
+            }
+          } catch (fileShareErr) {
+            console.warn("File share failed, trying text/url share fallback:", fileShareErr);
+          }
         }
 
-        // Fallback share URL/text
+        // Fallback text share
         await navigator.share({
           title: "Sertifikat DEDIGMA",
           text: `Sertifikat Kelulusan DEDIGMA - ${studentName}`
         });
       } else {
-        toast.info("Fitur berbagi tidak didukung di browser ini. Gunakan tombol unduh di atas.");
+        toast.info("Fitur berbagi tidak didukung di perangkat/browser ini. Gunakan tombol unduh file di atas.");
       }
     } catch (e) {
       console.log("Share cancelled or not supported", e);
@@ -475,15 +565,21 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
                 <span>Simpan Gambar PNG</span>
               </button>
 
-              {typeof navigator !== "undefined" && "share" in navigator && (
-                <button
-                  onClick={() => handleNativeShare(showImageModal.pngUrl, showImageModal.pdfBlob)}
-                  className="sm:col-span-2 flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-900 font-['Fredoka'] font-extrabold text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-md transition-transform active:scale-95 cursor-pointer"
-                >
-                  <Share2 size={16} />
-                  <span>Simpan ke File / Bagikan (Share)</span>
-                </button>
-              )}
+              <button
+                onClick={() => handleOpenInNewTab(showImageModal.pdfBlob, showImageModal.pngUrl)}
+                className="flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 text-white font-['Fredoka'] font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-md transition-transform active:scale-95 cursor-pointer"
+              >
+                <ExternalLink size={16} />
+                <span>Lihat / Cetak Langsung</span>
+              </button>
+
+              <button
+                onClick={() => handleNativeShare(showImageModal.pngUrl, showImageModal.pdfBlob)}
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-900 font-['Fredoka'] font-extrabold text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-md transition-transform active:scale-95 cursor-pointer"
+              >
+                <Share2 size={16} />
+                <span>Simpan ke HP / Bagikan</span>
+              </button>
             </div>
 
             {/* Mobile Long Press Hint */}
