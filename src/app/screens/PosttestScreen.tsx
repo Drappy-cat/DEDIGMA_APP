@@ -9,7 +9,7 @@ import { syncPosttestToSupabase } from "../services/supabase";
 import { usePerformance } from "../hooks/usePerformance";
 
 interface PosttestScreenProps {
-  onComplete: (score: number) => void;
+  onComplete: (score: number, answers: (number | null)[]) => void;
   onBack: () => void;
 }
 
@@ -81,11 +81,11 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
       const correctCount = answers.filter((a, i) => a === POSTTEST_QUESTIONS[i].jawaban).length;
       const finalScore = Math.round((correctCount / POSTTEST_QUESTIONS.length) * 100);
 
-      // Sync posttest score immediately to Supabase database
-      syncPosttestToSupabase({ userName, kelas, score: finalScore });
-
       localStorage.removeItem(currentKey);
-      localStorage.removeItem(answersKey);
+      localStorage.setItem(answersKey, JSON.stringify(answers));
+
+      // Sync posttest score and answers immediately to Supabase database
+      syncPosttestToSupabase({ userName, kelas, score: finalScore, answers });
 
       fireConfetti();
       playSFX("badge");
@@ -186,7 +186,7 @@ export const PosttestScreen: React.FC<PosttestScreenProps> = ({ onComplete, onBa
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: 0.2 }}
-            onClick={() => onComplete(score)}
+            onClick={() => onComplete(score, answers)}
             className="w-full bg-gradient-to-b from-[#f5a32b] via-[#e58e1d] to-[#d87c14] hover:from-[#f7ad3d] hover:to-[#e2861a] border-2 border-[#fff5ce] text-white font-['Fredoka'] font-extrabold rounded-full py-3.5 sm:py-4 text-base sm:text-lg shadow-xl transition-transform active:scale-95 cursor-pointer uppercase tracking-wider border-b-4 flex items-center justify-center gap-2"
           >
             <span>Lihat Lencana & Sertifikat</span>

@@ -603,17 +603,17 @@ function AppContent() {
 
               {screen === "pretest" && (
                 <PretestScreen
-                  onComplete={(score) => {
+                  onComplete={(score, answers) => {
                     setPretestScore(score);
                     setGameState((prev) => {
                       const updated = {
                         ...prev,
-                        pretest: { score }
+                        pretest: { score, answers }
                       };
                       saveGameState(updated, userName);
                       return updated;
                     });
-                    syncPretestToSupabase({ userName, kelas, score });
+                    syncPretestToSupabase({ userName, kelas, score, answers });
                     navigateTo("peta-misi");
                   }}
                   onBack={() => navigateTo("splash")}
@@ -622,17 +622,17 @@ function AppContent() {
 
               {screen === "posttest" && (
                 <PosttestScreen
-                  onComplete={(score) => {
+                  onComplete={(score, answers) => {
                     setPosttestScore(score);
                     setGameState((prev) => {
                       const updated = {
                         ...prev,
-                        posttest: { ...prev.posttest, score }
+                        posttest: { ...prev.posttest, score, answers }
                       };
                       saveGameState(updated, userName);
                       return updated;
                     });
-                    syncPosttestToSupabase({ userName, kelas, score });
+                    syncPosttestToSupabase({ userName, kelas, score, answers });
                     navigateTo("lencana");
                   }}
                   onBack={() => navigateTo("peta-misi")}

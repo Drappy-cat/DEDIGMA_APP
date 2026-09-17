@@ -138,9 +138,10 @@ export interface GameState {
   badges: BadgeId[];
   pretest: {
     score: number | null;
+    answers?: (number | null)[];
   };
   posttest: {
-    answers: Record<number, number>;
+    answers?: Record<number, number> | (number | null)[];
     score: number | null;
   };
 }

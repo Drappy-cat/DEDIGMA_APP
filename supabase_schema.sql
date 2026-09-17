@@ -34,8 +34,10 @@ CREATE TABLE IF NOT EXISTS public.pretest_results (
   user_name TEXT NOT NULL UNIQUE,
   kelas TEXT NOT NULL DEFAULT '5',
   pretest_score INT NOT NULL DEFAULT 0,
+  answers JSONB DEFAULT '[]'::jsonb,
   completed_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+ALTER TABLE public.pretest_results ADD COLUMN IF NOT EXISTS answers JSONB DEFAULT '[]'::jsonb;
 
 -- 4. TABEL HASIL POSTTEST KUIS
 CREATE TABLE IF NOT EXISTS public.posttest_results (
@@ -43,8 +45,10 @@ CREATE TABLE IF NOT EXISTS public.posttest_results (
   user_name TEXT NOT NULL UNIQUE,
   kelas TEXT NOT NULL DEFAULT '5',
   posttest_score INT NOT NULL DEFAULT 0,
+  answers JSONB DEFAULT '[]'::jsonb,
   completed_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+ALTER TABLE public.posttest_results ADD COLUMN IF NOT EXISTS answers JSONB DEFAULT '[]'::jsonb;
 
 -- 5. TABEL KONTROL LOCK/UNLOCK MISI PER KELAS (DASHBOARD GURU)
 CREATE TABLE IF NOT EXISTS public.class_locks (

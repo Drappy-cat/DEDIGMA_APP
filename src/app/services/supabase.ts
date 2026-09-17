@@ -77,6 +77,7 @@ export interface SupabasePretest {
   user_name: string;
   kelas: string;
   pretest_score: number;
+  answers?: (number | null)[];
   completed_at?: string;
 }
 
@@ -85,6 +86,7 @@ export interface SupabasePosttest {
   user_name: string;
   kelas: string;
   posttest_score: number;
+  answers?: (number | null)[];
   completed_at?: string;
 }
 
@@ -213,7 +215,17 @@ export async function syncPretestToSupabase(data: {
   userName: string;
   kelas: string;
   score: number;
+  answers?: (number | null)[];
 }) {
+  // Always preserve answers locally as offline & immediate guarantee
+  if (data.answers && typeof window !== "undefined") {
+    try {
+      localStorage.setItem(`dedigma_pretest_answers_${data.userName}`, JSON.stringify(data.answers));
+    } catch (e) {
+      console.warn("Could not save pretest answers to localStorage:", e);
+    }
+  }
+
   if (!supabase || !isSupabaseConfigured()) return false;
 
   try {
@@ -223,21 +235,35 @@ export async function syncPretestToSupabase(data: {
       .eq("user_name", data.userName)
       .maybeSingle();
 
+    const payload: Record<string, any> = {
+      pretest_score: data.score,
+      completed_at: new Date().toISOString()
+    };
+    if (data.answers) {
+      payload.answers = data.answers;
+    }
+
     let error;
     if (existing) {
-      const res = await supabase.from("pretest_results").update({
-        pretest_score: data.score,
-        completed_at: new Date().toISOString()
-      }).eq("user_name", data.userName);
+      const res = await supabase.from("pretest_results").update(payload).eq("user_name", data.userName);
       error = res.error;
     } else {
-      const res = await supabase.from("pretest_results").insert({
-        user_name: data.userName,
-        kelas: data.kelas,
-        pretest_score: data.score,
-        completed_at: new Date().toISOString()
-      });
+      payload.user_name = data.userName;
+      payload.kelas = data.kelas;
+      const res = await supabase.from("pretest_results").insert(payload);
       error = res.error;
+    }
+
+    // Graceful fallback if column 'answers' is not yet present in Supabase table
+    if (error && error.message && error.message.toLowerCase().includes("answers")) {
+      delete payload.answers;
+      if (existing) {
+        const fallbackRes = await supabase.from("pretest_results").update(payload).eq("user_name", data.userName);
+        error = fallbackRes.error;
+      } else {
+        const fallbackRes = await supabase.from("pretest_results").insert(payload);
+        error = fallbackRes.error;
+      }
     }
 
     if (error) {
@@ -258,7 +284,17 @@ export async function syncPosttestToSupabase(data: {
   userName: string;
   kelas: string;
   score: number;
+  answers?: (number | null)[];
 }) {
+  // Always preserve answers locally as offline & immediate guarantee
+  if (data.answers && typeof window !== "undefined") {
+    try {
+      localStorage.setItem(`dedigma_posttest_answers_${data.userName}`, JSON.stringify(data.answers));
+    } catch (e) {
+      console.warn("Could not save posttest answers to localStorage:", e);
+    }
+  }
+
   if (!supabase || !isSupabaseConfigured()) return false;
 
   try {
@@ -268,21 +304,35 @@ export async function syncPosttestToSupabase(data: {
       .eq("user_name", data.userName)
       .maybeSingle();
 
+    const payload: Record<string, any> = {
+      posttest_score: data.score,
+      completed_at: new Date().toISOString()
+    };
+    if (data.answers) {
+      payload.answers = data.answers;
+    }
+
     let error;
     if (existing) {
-      const res = await supabase.from("posttest_results").update({
-        posttest_score: data.score,
-        completed_at: new Date().toISOString()
-      }).eq("user_name", data.userName);
+      const res = await supabase.from("posttest_results").update(payload).eq("user_name", data.userName);
       error = res.error;
     } else {
-      const res = await supabase.from("posttest_results").insert({
-        user_name: data.userName,
-        kelas: data.kelas,
-        posttest_score: data.score,
-        completed_at: new Date().toISOString()
-      });
+      payload.user_name = data.userName;
+      payload.kelas = data.kelas;
+      const res = await supabase.from("posttest_results").insert(payload);
       error = res.error;
+    }
+
+    // Graceful fallback if column 'answers' is not yet present in Supabase table
+    if (error && error.message && error.message.toLowerCase().includes("answers")) {
+      delete payload.answers;
+      if (existing) {
+        const fallbackRes = await supabase.from("posttest_results").update(payload).eq("user_name", data.userName);
+        error = fallbackRes.error;
+      } else {
+        const fallbackRes = await supabase.from("posttest_results").insert(payload);
+        error = fallbackRes.error;
+      }
     }
 
     if (error) {
