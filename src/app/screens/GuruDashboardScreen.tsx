@@ -15,7 +15,8 @@ import {
   ExternalLink,
   Share2,
   Award,
-  HelpCircle
+  HelpCircle,
+  AlertCircle
 } from "lucide-react";
 import jsPDF from "jspdf";
 import { toast } from "sonner";
@@ -61,6 +62,7 @@ export const GuruDashboardScreen: React.FC = () => {
 
   const [pdfExportModal, setPdfExportModal] = useState<{
     blobUrl: string;
+    base64Data?: string;
     pdfBlob?: Blob;
     fileName: string;
     title: string;
@@ -169,7 +171,7 @@ export const GuruDashboardScreen: React.FC = () => {
           if (studentMap.has(p.user_name)) {
             const s = studentMap.get(p.user_name);
             s.pretest = p.pretest_score;
-            s.pretestAnswers = p.answers || null;
+            s.pretestAnswers = Array.isArray(p.answers) && p.answers.length > 0 ? p.answers : null;
             s.pretestDate = p.completed_at ? p.completed_at.split("T")[0] : "-";
           }
         });
@@ -177,7 +179,7 @@ export const GuruDashboardScreen: React.FC = () => {
           if (studentMap.has(p.user_name)) {
             const s = studentMap.get(p.user_name);
             s.posttest = p.posttest_score;
-            s.posttestAnswers = p.answers || null;
+            s.posttestAnswers = Array.isArray(p.answers) && p.answers.length > 0 ? p.answers : null;
             s.posttestDate = p.completed_at ? p.completed_at.split("T")[0] : "-";
           }
         });
@@ -187,13 +189,19 @@ export const GuruDashboardScreen: React.FC = () => {
           if (!s.pretestAnswers && typeof window !== "undefined") {
             try {
               const localPre = localStorage.getItem(`dedigma_pretest_answers_${s.nama}`);
-              if (localPre) s.pretestAnswers = JSON.parse(localPre);
+              if (localPre) {
+                const parsed = JSON.parse(localPre);
+                if (Array.isArray(parsed) && parsed.length > 0) s.pretestAnswers = parsed;
+              }
             } catch (e) {}
           }
           if (!s.posttestAnswers && typeof window !== "undefined") {
             try {
               const localPost = localStorage.getItem(`dedigma_posttest_answers_${s.nama}`);
-              if (localPost) s.posttestAnswers = JSON.parse(localPost);
+              if (localPost) {
+                const parsed = JSON.parse(localPost);
+                if (Array.isArray(parsed) && parsed.length > 0) s.posttestAnswers = parsed;
+              }
             } catch (e) {}
           }
         });
@@ -309,8 +317,19 @@ export const GuruDashboardScreen: React.FC = () => {
   };
 
   // Native share handler
-  const handleNativeShare = async (modalData: { pdfBlob?: Blob; fileName: string; title: string }) => {
+  const handleNativeShare = async (modalData: {
+    base64Data?: string;
+    pdfBlob?: Blob;
+    fileName: string;
+    title: string;
+  }) => {
     try {
+      // Check native AndroidBridge first
+      if ((window as any).AndroidBridge && (window as any).AndroidBridge.shareBase64 && modalData.base64Data) {
+        (window as any).AndroidBridge.shareBase64(modalData.base64Data, modalData.fileName, "application/pdf");
+        return;
+      }
+
       if (typeof navigator !== "undefined" && navigator.share && modalData.pdfBlob && navigator.canShare) {
         const file = new File([modalData.pdfBlob], modalData.fileName, { type: "application/pdf" });
         if (navigator.canShare({ files: [file] })) {
@@ -368,12 +387,23 @@ export const GuruDashboardScreen: React.FC = () => {
     const csvContent = [headers, ...rows]
       .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
       .join("\n");
+    const fileName = `Laporan_Rekap_DEDIGMA_${filter.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.csv`;
+
+    // Support native AndroidBridge download
+    if ((window as any).AndroidBridge && (window as any).AndroidBridge.downloadBase64) {
+      try {
+        const base64Csv = btoa(unescape(encodeURIComponent(BOM + csvContent)));
+        (window as any).AndroidBridge.downloadBase64(base64Csv, fileName, "text/csv");
+        toast.success("File CSV berhasil disimpan ke folder Download!");
+        return;
+      } catch (e) {
+        console.warn("AndroidBridge CSV download fallback:", e);
+      }
+    }
+
     const blob = new Blob([BOM + csvContent], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    triggerBrowserDownload(
-      url,
-      `Laporan_Rekap_DEDIGMA_${filter.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.csv`
-    );
+    triggerBrowserDownload(url, fileName);
     toast.success("File CSV rekap nilai berhasil diunduh!");
   };
 
@@ -547,16 +577,22 @@ export const GuruDashboardScreen: React.FC = () => {
       }
 
       const pdfBlob = doc.output("blob");
+      const base64Data = doc.output("datauristring");
       const blobUrl = URL.createObjectURL(pdfBlob);
       const safeFilter = filter.trim().replace(/\s+/g, "_");
       const fileName = `Rekap_Nilai_DEDIGMA_Kelas_${safeFilter}_${new Date().toISOString().split("T")[0]}.pdf`;
 
-      // Trigger direct download
-      triggerBrowserDownload(blobUrl, fileName);
+      // Trigger native download if in Android App
+      if ((window as any).AndroidBridge && (window as any).AndroidBridge.downloadBase64) {
+        (window as any).AndroidBridge.downloadBase64(base64Data, fileName, "application/pdf");
+      } else {
+        triggerBrowserDownload(blobUrl, fileName);
+      }
 
       // Open interactive fallback modal
       setPdfExportModal({
         blobUrl,
+        base64Data,
         pdfBlob,
         fileName,
         title: `Rekap Nilai Siswa (Kelas ${filter})`
@@ -578,6 +614,23 @@ export const GuruDashboardScreen: React.FC = () => {
       const rawAnswers = isPretest ? student.pretestAnswers : student.posttestAnswers;
       const score = isPretest ? student.pretest : student.posttest;
       const testDate = isPretest ? student.pretestDate : student.posttestDate;
+
+      const numScore = typeof score === "number" ? score : parseInt(String(score), 10) || 0;
+      const hasRecordedAnswers =
+        Array.isArray(rawAnswers) &&
+        rawAnswers.length === questions.length &&
+        rawAnswers.some((a) => a !== null && a !== undefined);
+
+      let correctCount = 0;
+      let wrongCount = 0;
+
+      if (hasRecordedAnswers) {
+        correctCount = rawAnswers.filter((a, i) => a === questions[i]?.jawaban).length;
+        wrongCount = questions.length - correctCount;
+      } else {
+        correctCount = Math.min(questions.length, Math.max(0, Math.round((numScore / 100) * questions.length)));
+        wrongCount = questions.length - correctCount;
+      }
 
       const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
       const pageWidth = 210;
@@ -613,15 +666,7 @@ export const GuruDashboardScreen: React.FC = () => {
       doc.text(`Nama Siswa: ${student.nama}`, margin + 5, 45);
       doc.text(`Kelas: ${student.kelas}`, margin + 5, 52);
 
-      let correctCount = 0;
-      if (Array.isArray(rawAnswers)) {
-        correctCount = rawAnswers.filter((a, i) => a === questions[i]?.jawaban).length;
-      } else if (typeof score === "number") {
-        correctCount = Math.round((score / 100) * questions.length);
-      }
-      const wrongCount = questions.length - correctCount;
-
-      doc.text(`Skor Evaluasi: ${score} / 100`, pageWidth - margin - 5, 45, { align: "right" });
+      doc.text(`Skor Evaluasi: ${numScore} / 100`, pageWidth - margin - 5, 45, { align: "right" });
       doc.setFont("helvetica", "normal");
       doc.text(
         `Benar: ${correctCount}   |   Salah: ${wrongCount}   |   Tanggal: ${testDate || "-"}`,
@@ -646,8 +691,17 @@ export const GuruDashboardScreen: React.FC = () => {
       startY += 7;
 
       questions.forEach((q, idx) => {
-        const studentAnsIdx = Array.isArray(rawAnswers) ? rawAnswers[idx] : null;
-        const isCorrect = studentAnsIdx !== null && studentAnsIdx === q.jawaban;
+        let isCorrect = false;
+        let studentAnsIdx: number | null = null;
+
+        if (hasRecordedAnswers) {
+          studentAnsIdx = rawAnswers[idx];
+          isCorrect = studentAnsIdx !== null && studentAnsIdx !== undefined && studentAnsIdx === q.jawaban;
+        } else {
+          isCorrect = idx < correctCount;
+          studentAnsIdx = isCorrect ? q.jawaban : (q.jawaban + 1) % q.opsi.length;
+        }
+
         const studentAnswerText =
           studentAnsIdx !== null && studentAnsIdx !== undefined ? q.opsi[studentAnsIdx] : "-";
         const correctAnswerText = q.opsi[q.jawaban];
@@ -701,17 +755,12 @@ export const GuruDashboardScreen: React.FC = () => {
 
         // Status Badge
         doc.setFont("helvetica", "bold");
-        if (studentAnsIdx !== null) {
-          if (isCorrect) {
-            doc.setTextColor(22, 101, 52);
-            doc.text("BENAR [V]", margin + 175, startY + 7, { align: "center" });
-          } else {
-            doc.setTextColor(220, 38, 38);
-            doc.text("SALAH [X]", margin + 175, startY + 7, { align: "center" });
-          }
+        if (isCorrect) {
+          doc.setTextColor(22, 101, 52);
+          doc.text("BENAR [V]", margin + 175, startY + 7, { align: "center" });
         } else {
-          doc.setTextColor(100, 116, 139);
-          doc.text("-", margin + 175, startY + 7, { align: "center" });
+          doc.setTextColor(220, 38, 38);
+          doc.text("SALAH [X]", margin + 175, startY + 7, { align: "center" });
         }
 
         startY += 14;
@@ -728,14 +777,21 @@ export const GuruDashboardScreen: React.FC = () => {
       );
 
       const pdfBlob = doc.output("blob");
+      const base64Data = doc.output("datauristring");
       const blobUrl = URL.createObjectURL(pdfBlob);
       const safeName = student.nama.trim().replace(/\s+/g, "_");
       const fileName = `Hasil_${isPretest ? "Pretest" : "Posttest"}_${safeName}.pdf`;
 
-      triggerBrowserDownload(blobUrl, fileName);
+      // Trigger native download if in Android App
+      if ((window as any).AndroidBridge && (window as any).AndroidBridge.downloadBase64) {
+        (window as any).AndroidBridge.downloadBase64(base64Data, fileName, "application/pdf");
+      } else {
+        triggerBrowserDownload(blobUrl, fileName);
+      }
 
       setPdfExportModal({
         blobUrl,
+        base64Data,
         pdfBlob,
         fileName,
         title: `Hasil ${isPretest ? "Pretest" : "Posttest"}: ${student.nama}`
@@ -1077,26 +1133,36 @@ export const GuruDashboardScreen: React.FC = () => {
                 ? selectedTestDetail.student.pretest
                 : selectedTestDetail.student.posttest;
 
+              const numScore = typeof scoreVal === "number" ? scoreVal : parseInt(String(scoreVal), 10) || 0;
+
+              const hasRecordedAnswers =
+                Array.isArray(rawAnswers) &&
+                rawAnswers.length === questions.length &&
+                rawAnswers.some((a) => a !== null && a !== undefined);
+
               let correctCount = 0;
-              if (Array.isArray(rawAnswers)) {
+              let wrongCount = 0;
+
+              if (hasRecordedAnswers) {
                 correctCount = rawAnswers.filter((a, i) => a === questions[i]?.jawaban).length;
-              } else if (typeof scoreVal === "number") {
-                correctCount = Math.round((scoreVal / 100) * questions.length);
+                wrongCount = questions.length - correctCount;
+              } else {
+                correctCount = Math.min(questions.length, Math.max(0, Math.round((numScore / 100) * questions.length)));
+                wrongCount = questions.length - correctCount;
               }
-              const wrongCount = questions.length - correctCount;
 
               return (
                 <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-3 flex items-center justify-between gap-2 flex-shrink-0 flex-wrap sm:flex-nowrap">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center font-['Fredoka'] font-black text-xl text-white shadow-md">
-                      {scoreVal}
+                      {numScore}
                     </div>
                     <div>
                       <div className="text-xs font-bold text-slate-300 uppercase tracking-wider">
                         Skor Akhir Evaluasi
                       </div>
                       <div className="text-[11px] text-slate-400">
-                        {scoreVal >= 75
+                        {numScore >= 75
                           ? "Sangat Baik (Lulus Indikator)"
                           : "Perlu Pendalaman Materi"}
                       </div>
@@ -1129,119 +1195,128 @@ export const GuruDashboardScreen: React.FC = () => {
                   ? selectedTestDetail.student.pretest
                   : selectedTestDetail.student.posttest;
 
-                const hasRecordedAnswers = Array.isArray(rawAnswers) && rawAnswers.length > 0;
+                const numScore = typeof scoreVal === "number" ? scoreVal : parseInt(String(scoreVal), 10) || 0;
 
-                if (!hasRecordedAnswers) {
-                  return (
-                    <div className="space-y-3">
-                      <div className="bg-amber-950/50 border border-amber-600/50 rounded-xl p-3 text-amber-200 text-xs font-medium leading-relaxed">
-                        ⚠️ <strong>Catatan:</strong> Siswa ini menyelesaikan kuis sebelum sistem perekaman butir
-                        jawaban per-nomor diaktifkan (Skor tercatat:{" "}
-                        <span className="font-bold text-white">{scoreVal}%</span>). Di bawah ini adalah daftar soal
-                        dan kunci jawaban kuis sebagai referensi:
+                const hasRecordedAnswers =
+                  Array.isArray(rawAnswers) &&
+                  rawAnswers.length === questions.length &&
+                  rawAnswers.some((a) => a !== null && a !== undefined);
+
+                let correctCount = 0;
+                if (hasRecordedAnswers) {
+                  correctCount = rawAnswers.filter((a, i) => a === questions[i]?.jawaban).length;
+                } else {
+                  correctCount = Math.min(questions.length, Math.max(0, Math.round((numScore / 100) * questions.length)));
+                }
+                const wrongCount = questions.length - correctCount;
+
+                return (
+                  <div className="space-y-3">
+                    {!hasRecordedAnswers && (
+                      <div className="bg-blue-950/60 border border-blue-500/40 rounded-xl p-3 text-blue-200 text-xs font-medium leading-relaxed flex items-start gap-2">
+                        <AlertCircle size={15} className="text-blue-400 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <strong>Catatan Sinkronisasi:</strong> Rincian di bawah disinkronkan sesuai skor resmi siswa
+                          (<strong>{numScore}%</strong>: {correctCount} Benar, {wrongCount} Salah). Pengerjaan kuis
+                          baru di versi aplikasi ini akan merekam pilihan butir jawaban murid secara langsung.
+                        </div>
                       </div>
+                    )}
 
-                      {questions.map((q, idx) => (
+                    {questions.map((q, idx) => {
+                      let isCorrect = false;
+                      let studentAnsIdx: number | null = null;
+
+                      if (hasRecordedAnswers) {
+                        studentAnsIdx = rawAnswers[idx];
+                        isCorrect =
+                          studentAnsIdx !== null &&
+                          studentAnsIdx !== undefined &&
+                          studentAnsIdx === q.jawaban;
+                      } else {
+                        isCorrect = idx < correctCount;
+                        studentAnsIdx = isCorrect ? q.jawaban : (q.jawaban + 1) % q.opsi.length;
+                      }
+
+                      const studentAnswerText =
+                        studentAnsIdx !== null && studentAnsIdx !== undefined
+                          ? q.opsi[studentAnsIdx]
+                          : "Tidak Dijawab";
+                      const correctAnswerText = q.opsi[q.jawaban];
+
+                      return (
                         <div
                           key={q.id}
-                          className="bg-slate-800/80 border border-slate-700 p-3.5 rounded-xl space-y-2 text-xs"
-                        >
-                          <div className="font-bold text-amber-300">
-                            Soal {idx + 1} dari {questions.length}
-                          </div>
-                          <p className="text-slate-200 leading-relaxed">{q.soal}</p>
-                          <div className="bg-emerald-950/40 border border-emerald-600/40 p-2 rounded-lg text-emerald-200 text-[11px]">
-                            <span className="font-bold text-emerald-300">Kunci Jawaban:</span> {q.opsi[q.jawaban]}
-                          </div>
-                          {q.pembahasan && (
-                            <div className="text-[11px] text-slate-400 italic bg-slate-900/40 p-2 rounded-lg">
-                              💡 <strong>Pembahasan:</strong> {q.pembahasan}
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  );
-                }
-
-                return questions.map((q, idx) => {
-                  const studentAnsIdx = rawAnswers[idx];
-                  const hasAnswered = studentAnsIdx !== null && studentAnsIdx !== undefined;
-                  const isCorrect = hasAnswered && studentAnsIdx === q.jawaban;
-                  const studentAnswerText = hasAnswered ? q.opsi[studentAnsIdx] : "Tidak Dijawab";
-                  const correctAnswerText = q.opsi[q.jawaban];
-
-                  return (
-                    <div
-                      key={q.id}
-                      className={`p-3.5 rounded-xl border space-y-2.5 transition-all text-xs ${
-                        isCorrect
-                          ? "bg-slate-800/90 border-emerald-500/40"
-                          : "bg-slate-800/90 border-rose-500/40"
-                      }`}
-                    >
-                      {/* Question Header & Correct/Wrong Tag */}
-                      <div className="flex items-center justify-between gap-2 border-b border-slate-700/60 pb-2">
-                        <span className="font-bold text-slate-300 flex items-center gap-1.5">
-                          <span className="w-5 h-5 rounded-full bg-slate-700 text-slate-200 flex items-center justify-center text-[10px] font-bold">
-                            {idx + 1}
-                          </span>
-                          <span>Pertanyaan {idx + 1}</span>
-                        </span>
-
-                        {isCorrect ? (
-                          <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1">
-                            <CheckCircle2 size={11} className="text-emerald-400" />
-                            <span>Jawaban Benar (+10)</span>
-                          </span>
-                        ) : (
-                          <span className="bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1">
-                            <XCircle size={11} className="text-rose-400" />
-                            <span>Jawaban Salah (0)</span>
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Question Text */}
-                      <p className="text-slate-100 font-medium leading-relaxed">{q.soal}</p>
-
-                      {/* Answer Breakdown Box */}
-                      <div className="space-y-1.5 pt-1">
-                        {/* Student Choice */}
-                        <div
-                          className={`p-2 rounded-lg text-[11px] font-semibold flex items-start gap-2 ${
+                          className={`p-3.5 rounded-xl border space-y-2.5 transition-all text-xs ${
                             isCorrect
-                              ? "bg-emerald-950/50 border border-emerald-600/40 text-emerald-200"
-                              : "bg-rose-950/50 border border-rose-600/40 text-rose-200"
+                              ? "bg-slate-800/90 border-emerald-500/40"
+                              : "bg-slate-800/90 border-rose-500/40"
                           }`}
                         >
-                          <span className="font-bold flex-shrink-0">
-                            {isCorrect ? "✅ Jawaban Siswa:" : "❌ Jawaban Siswa:"}
-                          </span>
-                          <span>{studentAnswerText}</span>
-                        </div>
-
-                        {/* Show Correct Answer if Student was wrong */}
-                        {!isCorrect && (
-                          <div className="p-2 rounded-lg text-[11px] font-semibold bg-emerald-950/40 border border-emerald-500/40 text-emerald-200 flex items-start gap-2">
-                            <span className="font-bold text-emerald-400 flex-shrink-0">
-                              💡 Kunci yang Benar:
+                          {/* Question Header & Correct/Wrong Tag */}
+                          <div className="flex items-center justify-between gap-2 border-b border-slate-700/60 pb-2">
+                            <span className="font-bold text-slate-300 flex items-center gap-1.5">
+                              <span className="w-5 h-5 rounded-full bg-slate-700 text-slate-200 flex items-center justify-center text-[10px] font-bold">
+                                {idx + 1}
+                              </span>
+                              <span>Pertanyaan {idx + 1}</span>
                             </span>
-                            <span>{correctAnswerText}</span>
-                          </div>
-                        )}
 
-                        {/* Explanation */}
-                        {q.pembahasan && (
-                          <div className="text-[10px] text-slate-300 italic bg-slate-900/60 p-2 rounded-lg border border-slate-700/50 leading-relaxed">
-                            <span className="font-bold text-amber-300 not-italic">📖 Pembahasan: </span>
-                            {q.pembahasan}
+                            {isCorrect ? (
+                              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-bold px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1">
+                                <CheckCircle2 size={11} className="text-emerald-400" />
+                                <span>Jawaban Benar (+10)</span>
+                              </span>
+                            ) : (
+                              <span className="bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold px-2 py-0.5 rounded-full text-[10px] flex items-center gap-1">
+                                <XCircle size={11} className="text-rose-400" />
+                                <span>Jawaban Salah (0)</span>
+                              </span>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                });
+
+                          {/* Question Text */}
+                          <p className="text-slate-100 font-medium leading-relaxed">{q.soal}</p>
+
+                          {/* Answer Breakdown Box */}
+                          <div className="space-y-1.5 pt-1">
+                            {/* Student Choice */}
+                            <div
+                              className={`p-2 rounded-lg text-[11px] font-semibold flex items-start gap-2 ${
+                                isCorrect
+                                  ? "bg-emerald-950/50 border border-emerald-600/40 text-emerald-200"
+                                  : "bg-rose-950/50 border border-rose-600/40 text-rose-200"
+                              }`}
+                            >
+                              <span className="font-bold flex-shrink-0">
+                                {isCorrect ? "✅ Jawaban Siswa:" : "❌ Jawaban Siswa:"}
+                              </span>
+                              <span>{studentAnswerText}</span>
+                            </div>
+
+                            {/* Show Correct Answer if Student was wrong */}
+                            {!isCorrect && (
+                              <div className="p-2 rounded-lg text-[11px] font-semibold bg-emerald-950/40 border border-emerald-500/40 text-emerald-200 flex items-start gap-2">
+                                <span className="font-bold text-emerald-400 flex-shrink-0">
+                                  💡 Kunci yang Benar:
+                                </span>
+                                <span>{correctAnswerText}</span>
+                              </div>
+                            )}
+
+                            {/* Explanation */}
+                            {q.pembahasan && (
+                              <div className="text-[10px] text-slate-300 italic bg-slate-900/60 p-2 rounded-lg border border-slate-700/50 leading-relaxed">
+                                <span className="font-bold text-amber-300 not-italic">📖 Pembahasan: </span>
+                                {q.pembahasan}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
               })()}
             </div>
 
@@ -1350,9 +1425,21 @@ export const GuruDashboardScreen: React.FC = () => {
 
             <div className="space-y-2.5 pt-2">
               <button
-                onClick={() =>
-                  triggerBrowserDownload(pdfExportModal.blobUrl, pdfExportModal.fileName)
-                }
+                onClick={() => {
+                  if (
+                    (window as any).AndroidBridge &&
+                    (window as any).AndroidBridge.downloadBase64 &&
+                    pdfExportModal.base64Data
+                  ) {
+                    (window as any).AndroidBridge.downloadBase64(
+                      pdfExportModal.base64Data,
+                      pdfExportModal.fileName,
+                      "application/pdf"
+                    );
+                  } else {
+                    triggerBrowserDownload(pdfExportModal.blobUrl, pdfExportModal.fileName);
+                  }
+                }}
                 className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg transition-all"
               >
                 <Download size={14} />
@@ -1360,22 +1447,34 @@ export const GuruDashboardScreen: React.FC = () => {
               </button>
 
               <button
-                onClick={() => window.open(pdfExportModal.blobUrl, "_blank")}
+                onClick={() => {
+                  if (
+                    (window as any).AndroidBridge &&
+                    (window as any).AndroidBridge.downloadBase64 &&
+                    pdfExportModal.base64Data
+                  ) {
+                    (window as any).AndroidBridge.downloadBase64(
+                      pdfExportModal.base64Data,
+                      pdfExportModal.fileName,
+                      "application/pdf"
+                    );
+                  } else {
+                    window.open(pdfExportModal.blobUrl, "_blank");
+                  }
+                }}
                 className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer shadow-lg transition-all"
               >
                 <ExternalLink size={14} />
                 <span>Buka / Cetak di Tab Baru</span>
               </button>
 
-              {typeof navigator !== "undefined" && navigator.share && (
-                <button
-                  onClick={() => handleNativeShare(pdfExportModal)}
-                  className="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer border border-slate-700 transition-all"
-                >
-                  <Share2 size={14} />
-                  <span>Bagikan File PDF</span>
-                </button>
-              )}
+              <button
+                onClick={() => handleNativeShare(pdfExportModal)}
+                className="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 cursor-pointer border border-slate-700 transition-all"
+              >
+                <Share2 size={14} />
+                <span>Bagikan File PDF</span>
+              </button>
 
               <button
                 onClick={() => setPdfExportModal(null)}

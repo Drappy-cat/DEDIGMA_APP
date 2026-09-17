@@ -24,7 +24,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
   const { playNarrator, stopNarrator, playSFX } = useAudio();
   const [isGenerating, setIsGenerating] = useState(false);
   const [scale, setScale] = useState(1);
-  const [showImageModal, setShowImageModal] = useState<{ pngUrl: string; pdfBlob?: Blob } | null>(null);
+  const [showImageModal, setShowImageModal] = useState<{ pngUrl: string; pdfBlob?: Blob; pdfBase64?: string } | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const certRef = useRef<HTMLDivElement>(null);
 
@@ -118,85 +118,139 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
 
       const depth = Math.round(3 * (SCALE / 2.946));
       ctx.fillStyle = "#3d2400";
-      for (let i = depth; i > 0; i--) {
-        ctx.fillText(studentName, canvas.width / 2, nameY + i, canvas.width * 0.65);
+      for (let i = 1; i <= depth; i++) {
+        ctx.fillText(studentName, canvas.width / 2, nameY + i);
       }
 
-      const textGrad = ctx.createLinearGradient(0, nameY - fontSp / 2, 0, nameY + fontSp / 2);
-      textGrad.addColorStop(0, "#fff7ad");
-      textGrad.addColorStop(0.35, "#ffd700");
-      textGrad.addColorStop(0.7, "#d49b00");
-      textGrad.addColorStop(1, "#996d00");
-
-      ctx.fillStyle = textGrad;
-      ctx.shadowColor = "rgba(61, 36, 0, 0.5)";
-      ctx.shadowBlur = Math.round(6 * SCALE);
-      ctx.shadowOffsetY = Math.round(3 * SCALE);
-      ctx.fillText(studentName, canvas.width / 2, nameY, canvas.width * 0.65);
-
-      ctx.strokeStyle = "#3d2400";
-      ctx.lineWidth = Math.round(1 * SCALE);
-      ctx.strokeText(studentName, canvas.width / 2, nameY, canvas.width * 0.65);
+      const grad = ctx.createLinearGradient(0, nameY - fontSp / 2, 0, nameY + fontSp / 2);
+      grad.addColorStop(0, "#fff7ad");
+      grad.addColorStop(0.35, "#ffd700");
+      grad.addColorStop(0.70, "#d49b00");
+      grad.addColorStop(1, "#996d00");
+      ctx.fillStyle = grad;
+      ctx.fillText(studentName, canvas.width / 2, nameY);
       ctx.restore();
 
-      // Description text
+      // Description
       ctx.save();
       ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
       ctx.fillStyle = "#4a3728";
-      ctx.font = `700 ${Math.round(12 * SCALE)}px 'Nunito', sans-serif`;
+      ctx.font = `700 ${Math.round(11 * SCALE)}px 'Nunito', sans-serif`;
       ctx.fillText(
         "ATAS KEBERHASILANNYA MENYELESAIKAN SELURUH MISI DALAM PETUALANGAN DEDIGMA.",
         canvas.width / 2,
-        canvas.height * 0.61,
-        canvas.width * 0.60
+        canvas.height * 0.825
       );
+
+      ctx.fillStyle = "#555555";
+      ctx.font = `italic 500 ${Math.round(10 * SCALE)}px 'Nunito', sans-serif`;
+      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, canvas.width / 2, canvas.height * 0.852);
       ctx.restore();
 
-      // Date
-      ctx.save();
-      ctx.textAlign = "center";
-      ctx.fillStyle = "#888888";
-      ctx.font = `italic ${Math.round(11 * SCALE)}px 'Nunito', sans-serif`;
-      ctx.fillText(`yang dilaksanakan pada tanggal ${today}.`, canvas.width / 2, canvas.height * 0.645);
-      ctx.restore();
+      // Mission badges
+      const missions = [
+        { id: 1, label: "Misi 1", score: missionScores[1] || 0, cx: canvas.width * 0.23 },
+        { id: 2, label: "Misi 2", score: missionScores[2] || 0, cx: canvas.width * 0.35 },
+        { id: 3, label: "Misi 3", score: missionScores[3] || 0, cx: canvas.width * 0.47 },
+      ];
 
-      // Medal Badges
-      const R = Math.round(40 * SCALE);
-      const medalY = canvas.height * 0.72;
-      const pretestCX = canvas.width / 2 - R - Math.round(16 * SCALE);
-      const posttestCX = canvas.width / 2 + R + Math.round(16 * SCALE);
+      const badgeY = canvas.height * 0.63;
+      const R = Math.round(28 * SCALE);
 
-      const drawMedal = (cx: number, label: string, score: number, darkColor: string, lightColor: string) => {
+      missions.forEach((m) => {
         ctx.save();
+        ctx.shadowColor = "rgba(0,0,0,0.18)";
+        ctx.shadowBlur = Math.round(8 * SCALE);
+        ctx.shadowOffsetY = Math.round(3 * SCALE);
 
-        const gradient = ctx.createRadialGradient(cx, medalY, R * 0.5, cx, medalY, R);
-        gradient.addColorStop(0, "#f5e6a3");
-        gradient.addColorStop(0.5, "#d4a82a");
-        gradient.addColorStop(1, "#a07820");
+        const medalGrad = ctx.createLinearGradient(m.cx - R, badgeY - R, m.cx + R, badgeY + R);
+        medalGrad.addColorStop(0, "#ffe875");
+        medalGrad.addColorStop(0.4, "#f5a623");
+        medalGrad.addColorStop(1, "#c47d00");
+
         ctx.beginPath();
-        ctx.arc(cx, medalY, R, 0, Math.PI * 2);
-        ctx.fillStyle = gradient;
+        ctx.arc(m.cx, badgeY, R, 0, Math.PI * 2);
+        ctx.fillStyle = medalGrad;
         ctx.fill();
 
-        const innerGrad = ctx.createRadialGradient(cx - R * 0.2, medalY - R * 0.2, R * 0.05, cx, medalY, R * 0.82);
-        innerGrad.addColorStop(0, lightColor);
-        innerGrad.addColorStop(1, darkColor);
-        ctx.beginPath();
-        ctx.arc(cx, medalY, R * 0.82, 0, Math.PI * 2);
-        ctx.fillStyle = innerGrad;
-        ctx.fill();
+        ctx.lineWidth = Math.max(2, Math.round(3 * (SCALE / 2.946)));
+        ctx.strokeStyle = "#8a5200";
+        ctx.stroke();
 
-        ctx.fillStyle = "rgba(255,255,255,0.88)";
-        ctx.font = `900 ${Math.round(8 * SCALE)}px 'Fredoka', sans-serif`;
+        ctx.beginPath();
+        ctx.arc(m.cx, badgeY, R - Math.round(4 * SCALE), 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(255,255,255,0.45)";
+        ctx.lineWidth = Math.round(1.5 * SCALE);
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(label.toUpperCase(), cx, medalY - R * 0.32);
+
+        ctx.fillStyle = "#fff8d0";
+        ctx.font = `bold ${Math.round(8 * SCALE)}px 'Fredoka', sans-serif`;
+        ctx.fillText(m.label, m.cx, badgeY - R * 0.38);
 
         ctx.fillStyle = "#ffffff";
-        ctx.shadowColor = "rgba(0,0,0,0.3)";
-        ctx.shadowBlur = Math.round(4 * SCALE);
-        ctx.font = `900 ${Math.round(24 * SCALE)}px 'Fredoka', sans-serif`;
-        ctx.fillText(String(score), cx, medalY + R * 0.22);
+        ctx.shadowColor = "rgba(0,0,0,0.4)";
+        ctx.shadowBlur = Math.round(3 * SCALE);
+        ctx.font = `900 ${Math.round(15 * SCALE)}px 'Fredoka', sans-serif`;
+        ctx.fillText(`${m.score}%`, m.cx, badgeY + R * 0.08);
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "rgba(255,255,255,0.55)";
+        ctx.font = `${Math.round(8 * SCALE)}px serif`;
+        ctx.fillText("★", m.cx, badgeY + R * 0.65);
+
+        ctx.restore();
+      });
+
+      // Pretest & Posttest Badges
+      const medalY = canvas.height * 0.63;
+      const pretestCX = canvas.width * 0.62;
+      const posttestCX = canvas.width * 0.74;
+
+      const drawMedal = (cx: number, label: string, score: number, colorStart: string, colorEnd: string) => {
+        ctx.save();
+        ctx.shadowColor = "rgba(0,0,0,0.18)";
+        ctx.shadowBlur = Math.round(8 * SCALE);
+        ctx.shadowOffsetY = Math.round(3 * SCALE);
+
+        const medalGrad = ctx.createLinearGradient(cx - R, medalY - R, cx + R, medalY + R);
+        medalGrad.addColorStop(0, colorStart);
+        medalGrad.addColorStop(1, colorEnd);
+
+        ctx.beginPath();
+        ctx.arc(cx, medalY, R, 0, Math.PI * 2);
+        ctx.fillStyle = medalGrad;
+        ctx.fill();
+
+        ctx.lineWidth = Math.max(2, Math.round(3 * (SCALE / 2.946)));
+        ctx.strokeStyle = "#ffffff";
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(cx, medalY, R - Math.round(4 * SCALE), 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(255,255,255,0.45)";
+        ctx.lineWidth = Math.round(1.5 * SCALE);
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        ctx.fillStyle = "#e0f2fe";
+        ctx.font = `bold ${Math.round(7.5 * SCALE)}px 'Fredoka', sans-serif`;
+        ctx.fillText(label, cx, medalY - R * 0.38);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.shadowColor = "rgba(0,0,0,0.4)";
+        ctx.shadowBlur = Math.round(3 * SCALE);
+        ctx.font = `900 ${Math.round(15 * SCALE)}px 'Fredoka', sans-serif`;
+        ctx.fillText(`${score}`, cx, medalY + R * 0.08);
 
         ctx.shadowBlur = 0;
         ctx.fillStyle = "rgba(255,255,255,0.55)";
@@ -298,24 +352,29 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
       const imgData = canvas.toDataURL("image/png", 1.0);
       const safeName = studentName.trim().replace(/\s+/g, "_") || "Siswa";
       const fileName = `Sertifikat_DEDIGMA_${safeName}.pdf`;
-      const pngName = `Sertifikat_DEDIGMA_${safeName}.png`;
 
       const pdf = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
       pdf.addImage(imgData, "PNG", 0, 0, 297, 210);
       const pdfBlob = pdf.output("blob");
+      const pdfBase64 = pdf.output("datauristring");
 
       // Always show preview modal with explicit download and share options
-      setShowImageModal({ pngUrl: imgData, pdfBlob });
+      setShowImageModal({ pngUrl: imgData, pdfBlob, pdfBase64 });
 
-      // Try automatic PDF download
-      try {
-        pdf.save(fileName);
-      } catch (saveErr) {
-        console.warn("pdf.save direct trigger failed, modal provides manual fallback:", saveErr);
+      // Native AndroidBridge direct download
+      if ((window as any).AndroidBridge && (window as any).AndroidBridge.downloadBase64) {
+        (window as any).AndroidBridge.downloadBase64(pdfBase64, fileName, "application/pdf");
+      } else {
+        // Browser fallback
+        try {
+          pdf.save(fileName);
+        } catch (saveErr) {
+          console.warn("pdf.save direct trigger failed, modal provides manual fallback:", saveErr);
+        }
       }
 
       playSFX("badge");
-      toast.success("Sertifikat berhasil disiapkan! Pilih opsi unduh/simpan di bawah.");
+      toast.success("Sertifikat berhasil disiapkan! File disimpan di folder Download.");
     } catch (err) {
       console.error("Error generating PDF:", err);
       toast.error("Terjadi kesalahan saat memproses sertifikat.");
@@ -326,19 +385,40 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
 
   const handleDownloadPng = (pngUrl: string) => {
     const safeName = studentName.trim().replace(/\s+/g, "_") || "Siswa";
-    triggerBrowserDownload(pngUrl, `Sertifikat_DEDIGMA_${safeName}.png`);
+    const fileName = `Sertifikat_DEDIGMA_${safeName}.png`;
+
+    if ((window as any).AndroidBridge && (window as any).AndroidBridge.downloadBase64) {
+      (window as any).AndroidBridge.downloadBase64(pngUrl, fileName, "image/png");
+      toast.success("Gambar PNG berhasil disimpan ke folder Download!");
+      return;
+    }
+
+    triggerBrowserDownload(pngUrl, fileName);
     toast.success("Gambar PNG sedang diunduh / disimpan!");
   };
 
-  const handleDownloadPdfBlob = (pdfBlob?: Blob) => {
-    if (!pdfBlob) return;
+  const handleDownloadPdfBlob = (pdfBlob?: Blob, pdfBase64?: string) => {
     const safeName = studentName.trim().replace(/\s+/g, "_") || "Siswa";
+    const fileName = `Sertifikat_DEDIGMA_${safeName}.pdf`;
+
+    if ((window as any).AndroidBridge && (window as any).AndroidBridge.downloadBase64 && pdfBase64) {
+      (window as any).AndroidBridge.downloadBase64(pdfBase64, fileName, "application/pdf");
+      toast.success("File PDF berhasil disimpan ke folder Download!");
+      return;
+    }
+
+    if (!pdfBlob) return;
     const blobUrl = URL.createObjectURL(pdfBlob);
-    triggerBrowserDownload(blobUrl, `Sertifikat_DEDIGMA_${safeName}.pdf`);
+    triggerBrowserDownload(blobUrl, fileName);
     toast.success("File PDF sedang diunduh / disimpan!");
   };
 
-  const handleOpenInNewTab = (pdfBlob?: Blob, pngUrl?: string) => {
+  const handleOpenInNewTab = (pdfBlob?: Blob, pngUrl?: string, pdfBase64?: string) => {
+    if ((window as any).AndroidBridge && (window as any).AndroidBridge.downloadBase64 && pdfBase64) {
+      const safeName = studentName.trim().replace(/\s+/g, "_") || "Siswa";
+      (window as any).AndroidBridge.downloadBase64(pdfBase64, `Sertifikat_DEDIGMA_${safeName}.pdf`, "application/pdf");
+      return;
+    }
     if (pdfBlob) {
       const blobUrl = URL.createObjectURL(pdfBlob);
       window.open(blobUrl, "_blank");
@@ -347,8 +427,18 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
     }
   };
 
-  const handleNativeShare = async (pngUrl: string, pdfBlob?: Blob) => {
+  const handleNativeShare = async (pngUrl: string, pdfBlob?: Blob, pdfBase64?: string) => {
     const safeName = studentName.trim().replace(/\s+/g, "_") || "Siswa";
+
+    if ((window as any).AndroidBridge && (window as any).AndroidBridge.shareBase64) {
+      if (pdfBase64) {
+        (window as any).AndroidBridge.shareBase64(pdfBase64, `Sertifikat_DEDIGMA_${safeName}.pdf`, "application/pdf");
+        return;
+      }
+      (window as any).AndroidBridge.shareBase64(pngUrl, `Sertifikat_DEDIGMA_${safeName}.png`, "image/png");
+      return;
+    }
+
     try {
       if (typeof navigator !== "undefined" && navigator.share) {
         if (pdfBlob && navigator.canShare) {
@@ -550,7 +640,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
             {/* Action Buttons Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
               <button
-                onClick={() => handleDownloadPdfBlob(showImageModal.pdfBlob)}
+                onClick={() => handleDownloadPdfBlob(showImageModal.pdfBlob, showImageModal.pdfBase64)}
                 className="flex items-center justify-center gap-2 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-['Fredoka'] font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-md transition-transform active:scale-95 cursor-pointer"
               >
                 <FileText size={16} />
@@ -566,7 +656,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
               </button>
 
               <button
-                onClick={() => handleOpenInNewTab(showImageModal.pdfBlob, showImageModal.pngUrl)}
+                onClick={() => handleOpenInNewTab(showImageModal.pdfBlob, showImageModal.pngUrl, showImageModal.pdfBase64)}
                 className="flex items-center justify-center gap-2 bg-slate-700 hover:bg-slate-600 text-white font-['Fredoka'] font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-md transition-transform active:scale-95 cursor-pointer"
               >
                 <ExternalLink size={16} />
@@ -574,7 +664,7 @@ export const SertifikatScreen: React.FC<SertifikatScreenProps> = ({
               </button>
 
               <button
-                onClick={() => handleNativeShare(showImageModal.pngUrl, showImageModal.pdfBlob)}
+                onClick={() => handleNativeShare(showImageModal.pngUrl, showImageModal.pdfBlob, showImageModal.pdfBase64)}
                 className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-900 font-['Fredoka'] font-extrabold text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-md transition-transform active:scale-95 cursor-pointer"
               >
                 <Share2 size={16} />
